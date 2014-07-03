@@ -1,21 +1,12 @@
 package dom.nota;
 
-import java.util.List;
-
-import javax.jdo.identity.ObjectIdentity;
-
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
-import org.apache.isis.applib.query.QueryDefault;
+import org.joda.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.ObjectIdGenerator;
-import com.fasterxml.jackson.databind.deser.impl.ObjectIdValueProperty;
-
-import dom.sector.Sector;
+import dom.sectores.Sector;
 
 @Named("Notas")
 public class NotaRepositorio {
@@ -41,9 +32,26 @@ public class NotaRepositorio {
 	// //////////////////////////////////////
 	@Named("Agregar")
 	@MemberOrder(sequence = "10")
-	public String addNota() {
+	public Nota addNota(
+			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("De:") Sector sector,
+			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Para:") String destino,
+			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Descripción:") String descripcion			
+			) {
 //		return nuevaNota(sector, destino, descripcion);
-		return "";
+		return nuevaNota(sector,destino,descripcion,this.currentUserName());
+	}
+
+	private Nota nuevaNota(final Sector sector,final String destino,
+			final String descripcion, final String currentUserName) {
+		final Nota unaNota = this.container.newTransientInstance(Nota.class);
+		unaNota.setNro_nota(1);
+		unaNota.setFecha(LocalDate.now());
+		unaNota.setTipo(1);
+		unaNota.setDescripcion(descripcion);
+		unaNota.setHabilitado(true);
+		container.persistIfNotAlready(unaNota);
+		container.flush();
+		return unaNota;
 	}
 
 	/**
