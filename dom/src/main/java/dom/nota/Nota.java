@@ -6,6 +6,7 @@ import javax.jdo.annotations.VersionStrategy;
 import org.apache.isis.applib.annotation.Audited;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
 
@@ -39,6 +40,7 @@ public class Nota extends Documento {
 
 	private int nro_nota;
 
+	@Disabled
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@MemberOrder(sequence = "0")
 	public int getNro_nota() {
