@@ -1,9 +1,15 @@
 package dom.sector;
 
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import javax.jdo.annotations.Element;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Join;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Audited;
+import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Hidden;
@@ -13,6 +19,8 @@ import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.util.ObjectContracts;
 
+import dom.documento.Documento;
+
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
@@ -20,7 +28,7 @@ import org.apache.isis.applib.util.ObjectContracts;
 @javax.jdo.annotations.Queries({
 		@javax.jdo.annotations.Query(name = "autoCompletePorNombreSector", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.sector.Sector "
-				+ "WHERE nombre_Sector.indexOf(:nombreSector) >= 0"),
+				+ "WHERE nombre_sector.indexOf(:nombre_sector) >= 0"),
 		@javax.jdo.annotations.Query(name = "todosLosSectoresTrue", language = "JDOQL", value = "SELECT FROM dom.sector.Sector "
 				+ " WHERE habilitado == true"),
 		@javax.jdo.annotations.Query(name = "todosLosSectores", language = "JDOQL", value = "SELECT FROM dom.sector.Sector "),
@@ -35,10 +43,10 @@ import org.apache.isis.applib.util.ObjectContracts;
 		@javax.jdo.annotations.Query(name = "buscarPorNombre", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.sector.Sector "
 				+ "WHERE "
-				+ " nombre_Sector.indexOf(:nombreSector) >= 0") })
+				+ " nombre_sector.indexOf(:nombre_sector) >= 0") })
 @ObjectType("SECTORES")
 @Audited
-// @AutoComplete(repository = SectorRepositorio.class, action = "autoComplete")
+ @AutoComplete(repository = SectorRepositorio.class, action = "autoComplete")
 @Bookmarkable
 public class Sector implements Comparable<Sector> {
 
@@ -159,4 +167,51 @@ public class Sector implements Comparable<Sector> {
 		return ObjectContracts.compare(this, sector, "nombre_sector");
 	}
 
+	// //////////////////////////////////////
+	// Relacion Sector/Documento
+	// //////////////////////////////////////
+	// {{ Documentos (Collection)
+	@Join
+	@Element(dependent = "False")
+	private SortedSet<Documento> documentos = new TreeSet<Documento>();
+
+	@MemberOrder(sequence = "1")
+	public SortedSet<Documento> getDocumentos() {
+		return documentos;
+	}
+
+	public void setDocumentos(final SortedSet<Documento> documentos) {
+		this.documentos = documentos;
+	}
+	// }}
+
+	public void addToDocumento(final Documento unDocumento) {
+		// check for no-op
+		if (unDocumento == null
+				|| getDocumentos().contains(unDocumento)) {
+			return;
+		}
+		// dissociate arg from its current parent (if any).
+		unDocumento.clearSector();
+		// associate arg
+		unDocumento.setSector(this);
+		getDocumentos().add(unDocumento);
+		// additional business logic
+//		onAddToDocumento(unDocumento);
+	}
+
+	public void removeFromDocumento(
+			final Documento unDocumento) {
+		// check for no-op
+		if (unDocumento == null
+				|| !getDocumentos().contains(unDocumento)) {
+			return;
+		}
+		// dissociate arg
+		unDocumento.setSector(null);
+		getDocumentos().remove(unDocumento);
+		// additional business logic
+//		onRemoveFromDocumento(unDocumento);
+	}
+	
 }
