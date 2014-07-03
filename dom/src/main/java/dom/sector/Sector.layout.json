@@ -1,0 +1,107 @@
+{
+  "actions": {
+    "downloadLayout": {
+      "named": {
+        "value": "Download Layout"
+      }
+    },
+    "remove": {
+      "named": {
+        "value": "Eliminar Persona"
+      }
+    },
+    "add": {
+      "named": {
+        "value": "Buscar Persona"
+      }
+    },
+    "addTecnico": {
+      "named": {
+        "value": "Agregar Tecnico"
+      }
+    },
+    "addUsuario": {
+      "named": {
+        "value": "Agregar Usuario"
+      }
+    }
+  },
+  "columns": [
+    {
+      "span": 3,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "nombreSector": {
+              "describedAs": {
+                "value": "Nombre del Sector:"
+              },
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "complete": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 5
+              }
+            },
+            "creadoPor": {
+              "hidden": {
+                "where": "ALL_TABLES"
+              },
+              "typicalLength": {
+                "value": 25
+              }
+            }
+          }
+        },
+        "Detalles": {
+          "members": {
+            "estaHabilitado": {
+              "hidden": {},
+              "disabled": {},
+              "typicalLength": {
+                "value": 5
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 9,
+      "collections": {
+        "persona": {
+          "actions": {
+          "add": {
+            "named": {
+              "value": "Buscar Persona"
+            }
+          },
+          "addTecnico": {
+            "named": {
+              "value": "Agregar Tecnico"
+            }
+          },
+          "addUsuario": {
+            "named": {
+              "value": "Agregar Usuario"
+            }
+          }},
+          "paged": {
+            "value": 12
+          }
+        }
+      }
+    }
+  ]
+}
