@@ -12,6 +12,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Where;
@@ -38,7 +39,7 @@ public abstract class Documento implements Comparable<Documento> {
 	// }
 
 	private LocalDate fecha;
-
+	@Disabled
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@MemberOrder(sequence = "20")
 	public LocalDate getFecha() {
@@ -53,7 +54,7 @@ public abstract class Documento implements Comparable<Documento> {
 	 * tipo - 1:Nota - 2:Memo - 3:Resoluciones - 4:Disposiciones - 5:Expedientes
 	 */
 	private int tipo;
-
+	@Disabled
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@MemberOrder(sequence = "30")
 	public int getTipo() {
@@ -77,7 +78,7 @@ public abstract class Documento implements Comparable<Documento> {
 	}
 
 	private Boolean habilitado;
-
+	@Hidden
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@MemberOrder(sequence = "60")
 	public Boolean getHabilitado() {
@@ -119,7 +120,7 @@ public abstract class Documento implements Comparable<Documento> {
 	// //////////////////////////////////////
 
 	private String creadoPor;
-
+	@Disabled
 	@Hidden(where = Where.ALL_TABLES)
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	public String getCreadoPor() {
@@ -169,9 +170,8 @@ public abstract class Documento implements Comparable<Documento> {
 	// {{ PropertyName (property)
 	private Sector sector;
 
-	@MemberOrder(sequence = "1")
-	@Column(allowsNull = "True")
-	@Persistent(mappedBy = "documentos")
+	@MemberOrder(sequence = "100")
+	@javax.jdo.annotations.Column(allowsNull ="False")
 	public Sector getSector() {
 		return sector;
 	}
@@ -182,7 +182,8 @@ public abstract class Documento implements Comparable<Documento> {
 	// }}
 	public void clearSector() {
 		// TODO Auto-generated method stub
-		
+		if(this.getSector()!=null)
+			this.setSector(null);
 	}
 
 	// //////////////////////////////////////
