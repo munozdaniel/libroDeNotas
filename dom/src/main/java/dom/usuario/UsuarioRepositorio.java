@@ -59,7 +59,7 @@ public class UsuarioRepositorio {
 		unUsuario.setEmail(email);
 		unUsuario.setHabilitado(true);
 		unUsuario.setCreadoPor(creadoPor);
-		sector.add(unUsuario);
+//		sector.add(unUsuario);
 		container.persistIfNotAlready(unUsuario);
 		container.flush();
 		return unUsuario;

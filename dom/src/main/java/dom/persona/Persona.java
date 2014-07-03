@@ -142,7 +142,7 @@ public abstract class Persona {
 	
 	@MemberOrder(sequence = "110")
 	@Named("Modificar Sector")
-	public Persona modify(
+	public Persona mod(
 			final Sector sector) {
 		Sector currentSector = getSector();
 		// check for no-op
@@ -151,7 +151,7 @@ public abstract class Persona {
 			return this;
 		}
 		// delegate to parent to associate
-		sector.add(this);
+//		sector.add(this);
 		// additional business logic
 		//onModifySector(currentSector,	sector);
 		return this;
@@ -163,7 +163,7 @@ public abstract class Persona {
 	
 	@Named("Sector")
 	@DescribedAs("Buscar el Sector")
-	public List<Sector> autoComplete0Modify(final @MinLength(2) String search) {
+	public List<Sector> autoComplete0Mod(final @MinLength(2) String search) {
 		return sectorRepositorio.autoComplete(search);
 	}
 	
@@ -180,7 +180,7 @@ public abstract class Persona {
 			return this;
 		}
 		// delegate to parent to dissociate
-		currentSector.remove(this);
+//		currentSector.remove(this);
 		
 		return this;
 		// additional business logic

@@ -65,7 +65,7 @@ public class TecnicoRepositorio {
 		if(sector!=null)
 		{	
 			unTecnico.setSector(sector);
-			sector.add(unTecnico);
+//			sector.add(unTecnico);
 		}
 		unTecnico.setCantidadComputadora(cantidadComputadora);
 		container.persistIfNotAlready(unTecnico);
