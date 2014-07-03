@@ -1,8 +1,15 @@
 package dom.documento;
 
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Hidden;
@@ -10,6 +17,8 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.util.ObjectContracts;
 import org.joda.time.LocalDate;
+
+import dom.sector.Sector;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.SUBCLASS_TABLE)
@@ -121,21 +130,7 @@ public abstract class Documento implements Comparable<Documento> {
 		this.creadoPor = creadoPor;
 	}
 
-	// //////////////////////////////////////
-	// DueBy (property)
-	// //////////////////////////////////////
 
-	@javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
-	private LocalDate dueBy;
-
-	@javax.jdo.annotations.Column(allowsNull = "true")
-	public LocalDate getDueBy() {
-		return dueBy;
-	}
-
-	public void setDueBy(final LocalDate dueBy) {
-		this.dueBy = dueBy;
-	}
 
 	// //////////////////////////////////////
 	// RELACION: Documento - Nota
@@ -171,6 +166,25 @@ public abstract class Documento implements Comparable<Documento> {
 	// this.id_sector = id_sector;
 	// }
 
+	// {{ PropertyName (property)
+	private Sector sector;
+
+	@MemberOrder(sequence = "1")
+	@Column(allowsNull = "True")
+	@Persistent(mappedBy = "documentos")
+	public Sector getSector() {
+		return sector;
+	}
+
+	public void setSector(final Sector sector) {
+		this.sector = sector;
+	}
+	// }}
+	public void clearSector() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	// //////////////////////////////////////
 	// Implementando los metodos de comparable
 	// //////////////////////////////////////
@@ -187,5 +201,7 @@ public abstract class Documento implements Comparable<Documento> {
 	@SuppressWarnings("unused")
 	@javax.inject.Inject
 	private DomainObjectContainer container;
+
+
 
 }
