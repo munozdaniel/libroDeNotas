@@ -195,7 +195,7 @@ public class Sector implements Comparable<Sector> {
 		unDocumento.clearSector();
 		// associate arg
 		unDocumento.setSector(this);
-		getDocumentos().add(unDocumento);
+		this.getDocumentos().add(unDocumento);
 		// additional business logic
 //		onAddToDocumento(unDocumento);
 	}
@@ -209,9 +209,14 @@ public class Sector implements Comparable<Sector> {
 		}
 		// dissociate arg
 		unDocumento.setSector(null);
-		getDocumentos().remove(unDocumento);
+		this.getDocumentos().remove(unDocumento);
 		// additional business logic
-//		onRemoveFromDocumento(unDocumento);
+		onRemoveFromDocumento(unDocumento);
+	}
+
+	private void onRemoveFromDocumento(Documento unDocumento) {
+		// TODO Auto-generated method stub
+		unDocumento.setHabilitado(false);
 	}
 	
 }
