@@ -14,13 +14,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.projecttype</groupId>
-		<artifactId>informatica</artifactId>
+		<groupId>com.imps</groupId>
+		<artifactId>libroDeNotas</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>informatica-dom</artifactId>
-	<name>Informatica Wicket/Restful/JDO DOM</name>
+	<artifactId>libroDeNotas-dom</artifactId>
+	<name>LibroDeNotas Wicket/Restful/JDO DOM</name>
 
 	<build>
 		<resources>
