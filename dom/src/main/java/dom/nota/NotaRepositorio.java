@@ -16,7 +16,6 @@ import org.joda.time.LocalDate;
 
 import dom.sector.Sector;
 import dom.sector.SectorRepositorio;
-import dom.tecnico.Tecnico;
 
 @Named("Notas")
 public class NotaRepositorio {
@@ -48,7 +47,7 @@ public class NotaRepositorio {
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
 	public Nota addNota(
-			final @Optional @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("De:") Sector sector,
+			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("De:") Sector sector,
 			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Para:") String destino,
 			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Descripción:") String descripcion) {
 		// return nuevaNota(sector, destino, descripcion);
@@ -57,7 +56,7 @@ public class NotaRepositorio {
 
 	@Programmatic
 	private Nota nuevaNota(final Sector sector, final String destino,
-			final String descripcion, final String currentUserName) {
+			final String descripcion, final String creadoPor) {
 		final Nota unaNota = this.container.newTransientInstance(Nota.class);
 		int nro = recuperarNroNota();
 		nro += 1;
@@ -68,6 +67,7 @@ public class NotaRepositorio {
 		unaNota.setTipo(1);
 		unaNota.setDescripcion(descripcion.toUpperCase().trim());
 		unaNota.setHabilitado(true);
+		unaNota.setCreadoPor(creadoPor);
 		container.persistIfNotAlready(unaNota);
 		container.flush();
 		return unaNota;
@@ -75,13 +75,13 @@ public class NotaRepositorio {
 
 	@Programmatic
 	private int recuperarNroNota() {
-		final Integer nroNota = this.container
-				.uniqueMatch(new QueryDefault<Integer>(Integer.class,
+		final Nota nota = this.container
+				.uniqueMatch(new QueryDefault<Nota>(Nota.class,
 						"buscarUltimaNotaTrue"));
-		if (nroNota == null || nroNota == 0)
+		if (nota == null )
 			return 0;
 		else
-			return nroNota;
+			return nota.getNro_nota();
 	}
 
 	// //////////////////////////////////////
