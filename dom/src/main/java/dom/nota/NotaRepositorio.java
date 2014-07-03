@@ -8,7 +8,6 @@ import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.query.QueryDefault;
@@ -68,6 +67,9 @@ public class NotaRepositorio {
 		unaNota.setDescripcion(descripcion.toUpperCase().trim());
 		unaNota.setHabilitado(true);
 		unaNota.setCreadoPor(creadoPor);
+		unaNota.setDestino(destino);
+		unaNota.setSector(sector);
+//		sector.addToDocumento(unaNota);
 		container.persistIfNotAlready(unaNota);
 		container.flush();
 		return unaNota;
@@ -75,10 +77,9 @@ public class NotaRepositorio {
 
 	@Programmatic
 	private int recuperarNroNota() {
-		final Nota nota = this.container
-				.uniqueMatch(new QueryDefault<Nota>(Nota.class,
-						"buscarUltimaNotaTrue"));
-		if (nota == null )
+		final Nota nota = this.container.firstMatch(new QueryDefault<Nota>(
+				Nota.class, "buscarUltimaNotaTrue"));
+		if (nota == null)
 			return 0;
 		else
 			return nota.getNro_nota();
@@ -90,16 +91,30 @@ public class NotaRepositorio {
 
 	@Named("Sector")
 	@DescribedAs("Buscar el Sector en mayuscula")
-	public List<Sector> autoComplete0AddNota(
-			final @MinLength(2) String search) {
+	public List<Sector> autoComplete0AddNota(final @MinLength(2) String search) {
 		return sectorRepositorio.autoComplete(search);
 	}
 
 	@Programmatic
 	public List<Nota> autoComplete(final String destino) {
 		return container.allMatches(new QueryDefault<Nota>(Nota.class,
-				"autoCompletarDestino",
-				"destino",destino));
+				"autoCompletarDestino", "destino", destino));
+	}
+
+	// //////////////////////////////////////
+	// Listar Notas
+	// //////////////////////////////////////
+
+	@MemberOrder(sequence = "20")
+	public List<Nota> listar() {
+		final List<Nota> listaTecnicos = this.container
+				.allMatches(new QueryDefault<Nota>(Nota.class,
+						"listarHabilitados"));
+		if (listaTecnicos.isEmpty()) {
+			this.container.warnUser("No hay tecnicos cargados en el sistema");
+		}
+		return listaTecnicos;
+
 	}
 
 	// //////////////////////////////////////
