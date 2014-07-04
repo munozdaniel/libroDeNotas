@@ -8,6 +8,7 @@ import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
 
 import dom.documento.Documento;
@@ -43,6 +44,7 @@ public class Nota extends Documento {
 	@Disabled
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@MemberOrder(sequence = "0")
+	@Named("Nº")
 	public int getNro_nota() {
 		return nro_nota;
 	}
@@ -53,8 +55,9 @@ public class Nota extends Documento {
 
 	private String destino;
 
+	@Named("Destino")
 	@javax.jdo.annotations.Column(allowsNull = "false")
-	@MemberOrder(sequence = "10")
+	@MemberOrder(sequence = "40")
 	public String getDestino() {
 		return destino;
 	}
