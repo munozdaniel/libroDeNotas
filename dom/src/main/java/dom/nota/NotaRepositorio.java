@@ -89,10 +89,14 @@ public class NotaRepositorio {
 	// Buscar Tecnico
 	// //////////////////////////////////////
 
+//	@Named("Sector")
+//	@DescribedAs("Buscar el Sector en mayuscula")
+//	public List<Sector> autoComplete0AddNota(final @MinLength(2) String search) {
+//		return sectorRepositorio.autoComplete(search);
+//	}
 	@Named("Sector")
-	@DescribedAs("Buscar el Sector en mayuscula")
-	public List<Sector> autoComplete0AddNota(final @MinLength(2) String search) {
-		return sectorRepositorio.autoComplete(search);
+	public List<Sector> choices0AddNota() {
+		return sectorRepositorio.listar(); // TODO: return list of choices for property
 	}
 
 	@Programmatic
@@ -107,13 +111,13 @@ public class NotaRepositorio {
 
 	@MemberOrder(sequence = "20")
 	public List<Nota> listar() {
-		final List<Nota> listaTecnicos = this.container
+		final List<Nota> listaNotas = this.container
 				.allMatches(new QueryDefault<Nota>(Nota.class,
 						"listarHabilitados"));
-		if (listaTecnicos.isEmpty()) {
+		if (listaNotas.isEmpty()) {
 			this.container.warnUser("No hay tecnicos cargados en el sistema");
 		}
-		return listaTecnicos;
+		return listaNotas;
 
 	}
 
