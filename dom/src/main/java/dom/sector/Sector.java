@@ -32,14 +32,6 @@ import dom.documento.Documento;
 		@javax.jdo.annotations.Query(name = "todosLosSectoresTrue", language = "JDOQL", value = "SELECT FROM dom.sector.Sector "
 				+ " WHERE habilitado == true"),
 		@javax.jdo.annotations.Query(name = "todosLosSectores", language = "JDOQL", value = "SELECT FROM dom.sector.Sector "),
-		@javax.jdo.annotations.Query(name = "eliminarSectorFalse", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.sector.Sector "
-				+ "WHERE creadoPor == :creadoPor "
-				+ "   && habilitado == true"),
-		@javax.jdo.annotations.Query(name = "eliminarSectorTrue", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.sector.Sector "
-				+ "WHERE creadoPor == :creadoPor "
-				+ "   && habilitado == true"),
 		@javax.jdo.annotations.Query(name = "buscarPorNombre", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.sector.Sector "
 				+ "WHERE "
