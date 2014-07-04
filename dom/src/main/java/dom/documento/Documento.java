@@ -1,20 +1,17 @@
 package dom.documento;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
 
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.MultiLine;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.util.ObjectContracts;
 import org.joda.time.LocalDate;
@@ -39,9 +36,11 @@ public abstract class Documento implements Comparable<Documento> {
 	// }
 
 	private LocalDate fecha;
+
 	@Disabled
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@MemberOrder(sequence = "20")
+	@Named("Fecha")
 	public LocalDate getFecha() {
 		return fecha;
 	}
@@ -54,8 +53,11 @@ public abstract class Documento implements Comparable<Documento> {
 	 * tipo - 1:Nota - 2:Memo - 3:Resoluciones - 4:Disposiciones - 5:Expedientes
 	 */
 	private int tipo;
+
 	@Disabled
+	@Hidden
 	@javax.jdo.annotations.Column(allowsNull = "false")
+	@DescribedAs("Tipo de Documento")
 	@MemberOrder(sequence = "30")
 	public int getTipo() {
 		return tipo;
@@ -67,8 +69,11 @@ public abstract class Documento implements Comparable<Documento> {
 
 	private String descripcion;
 
+	@Named("Descripcion")
 	@javax.jdo.annotations.Column(allowsNull = "false")
-	@MemberOrder(sequence = "50")
+	@MemberOrder(sequence = "100")
+	@MultiLine
+	@MaxLength(150)
 	public String getDescripcion() {
 		return descripcion;
 	}
@@ -78,6 +83,7 @@ public abstract class Documento implements Comparable<Documento> {
 	}
 
 	private Boolean habilitado;
+
 	@Hidden
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@MemberOrder(sequence = "60")
@@ -120,8 +126,9 @@ public abstract class Documento implements Comparable<Documento> {
 	// //////////////////////////////////////
 
 	private String creadoPor;
+
 	@Disabled
-	@Hidden(where = Where.ALL_TABLES)
+	@Hidden
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	public String getCreadoPor() {
 		return creadoPor;
@@ -130,8 +137,6 @@ public abstract class Documento implements Comparable<Documento> {
 	public void setCreadoPor(String creadoPor) {
 		this.creadoPor = creadoPor;
 	}
-
-
 
 	// //////////////////////////////////////
 	// RELACION: Documento - Nota
@@ -170,8 +175,9 @@ public abstract class Documento implements Comparable<Documento> {
 	// {{ PropertyName (property)
 	private Sector sector;
 
-	@MemberOrder(sequence = "100")
-	@javax.jdo.annotations.Column(allowsNull ="False")
+	@MemberOrder(sequence = "22")
+	@javax.jdo.annotations.Column(allowsNull = "False")
+	@Named("Origen")
 	public Sector getSector() {
 		return sector;
 	}
@@ -179,10 +185,11 @@ public abstract class Documento implements Comparable<Documento> {
 	public void setSector(final Sector sector) {
 		this.sector = sector;
 	}
+
 	// }}
 	public void clearSector() {
 		// TODO Auto-generated method stub
-		if(this.getSector()!=null)
+		if (this.getSector() != null)
 			this.setSector(null);
 	}
 
@@ -202,7 +209,5 @@ public abstract class Documento implements Comparable<Documento> {
 	@SuppressWarnings("unused")
 	@javax.inject.Inject
 	private DomainObjectContainer container;
-
-
 
 }
