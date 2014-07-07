@@ -38,7 +38,7 @@ import dom.documento.Documento;
 				+ " nombre_sector.indexOf(:nombre_sector) >= 0") })
 @ObjectType("SECTORES")
 @Audited
- @AutoComplete(repository = SectorRepositorio.class, action = "autoComplete")
+@AutoComplete(repository = SectorRepositorio.class, action = "autoComplete")
 @Bookmarkable
 public class Sector implements Comparable<Sector> {
 
@@ -72,8 +72,22 @@ public class Sector implements Comparable<Sector> {
 		this.nombre_sector = nombre_sector;
 	}
 
+	private String responsable;
+
+	@javax.jdo.annotations.Column(allowsNull = "false")
+	@RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*")
+	@MemberOrder(sequence = "11")
+	public String getResponsable() {
+		return responsable;
+	}
+
+	public void setResponsable(String responsable) {
+		this.responsable = responsable;
+	}
+
 	private Boolean resolucion;
 
+	@Hidden
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@MemberOrder(sequence = "20")
 	public Boolean getResolucion() {
@@ -84,21 +98,9 @@ public class Sector implements Comparable<Sector> {
 		this.resolucion = resolucion;
 	}
 
-	private String responsable;
-
-	@javax.jdo.annotations.Column(allowsNull = "false")
-	@RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*")
-	@MemberOrder(sequence = "30")
-	public String getResponsable() {
-		return responsable;
-	}
-
-	public void setResponsable(String responsable) {
-		this.responsable = responsable;
-	}
-
 	private Boolean disposicion;
 
+	@Hidden
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@MemberOrder(sequence = "40")
 	public Boolean getDisposicion() {
@@ -111,6 +113,7 @@ public class Sector implements Comparable<Sector> {
 
 	private Boolean expediente;
 
+	@Hidden
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@MemberOrder(sequence = "50")
 	public Boolean getExpediente() {
@@ -127,7 +130,7 @@ public class Sector implements Comparable<Sector> {
 
 	private String creadoPor;
 
-	@Hidden(where = Where.ALL_TABLES)
+	@Hidden
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	public String getCreadoPor() {
 		return creadoPor;
@@ -175,12 +178,12 @@ public class Sector implements Comparable<Sector> {
 	public void setDocumentos(final SortedSet<Documento> documentos) {
 		this.documentos = documentos;
 	}
+
 	// }}
 
 	public void addToDocumento(final Documento unDocumento) {
 		// check for no-op
-		if (unDocumento == null
-				|| getDocumentos().contains(unDocumento)) {
+		if (unDocumento == null || getDocumentos().contains(unDocumento)) {
 			return;
 		}
 		// dissociate arg from its current parent (if any).
@@ -189,14 +192,12 @@ public class Sector implements Comparable<Sector> {
 		unDocumento.setSector(this);
 		this.getDocumentos().add(unDocumento);
 		// additional business logic
-//		onAddToDocumento(unDocumento);
+		// onAddToDocumento(unDocumento);
 	}
 
-	public void removeFromDocumento(
-			final Documento unDocumento) {
+	public void removeFromDocumento(final Documento unDocumento) {
 		// check for no-op
-		if (unDocumento == null
-				|| !getDocumentos().contains(unDocumento)) {
+		if (unDocumento == null || !getDocumentos().contains(unDocumento)) {
 			return;
 		}
 		// dissociate arg
@@ -210,5 +211,5 @@ public class Sector implements Comparable<Sector> {
 		// TODO Auto-generated method stub
 		unDocumento.setHabilitado(false);
 	}
-	
+
 }
