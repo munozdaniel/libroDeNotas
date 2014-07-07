@@ -4,29 +4,50 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Audited;
+import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
 
 import dom.documento.Documento;
 
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
-@javax.jdo.annotations.DatastoreIdentity(
-        strategy=javax.jdo.annotations.IdGeneratorStrategy.IDENTITY,
-         column="id")
-@javax.jdo.annotations.Version(
-        strategy=VersionStrategy.VERSION_NUMBER, 
-        column="version")
-@javax.jdo.annotations.Uniques({
-    @javax.jdo.annotations.Unique(
-            name="Tecnico_nro_resolucion_must_be_unique", 
-            members={"nro_resolucion"})
-})
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id")
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
+@javax.jdo.annotations.Uniques({ @javax.jdo.annotations.Unique(name = "Resoluciones_nro_resolucion_must_be_unique", members = { "nro_resolucion" }) })
+@javax.jdo.annotations.Queries({
+		@javax.jdo.annotations.Query(name = "autoCompletarDestino", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.resoluciones.resoluciones "
+				+ "WHERE sector.getNombre_sector().indexOf(:nombreSector) >= 0"),
+		@javax.jdo.annotations.Query(name = "buscarUltimaResolucionTrue", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.resoluciones.resoluciones "
+				+ "WHERE habilitado == true"),
+		@javax.jdo.annotations.Query(name = "buscarUltimaResolucionFalse", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.resoluciones.resoluciones "
+				+ "WHERE habilitado == false"),
+		@javax.jdo.annotations.Query(name = "listarHabilitados", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.resoluciones.resoluciones "
+				+ "WHERE  habilitado == true"),
+		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.resoluciones.resoluciones  ") })
 @ObjectType("RESOLUCIONES")
 @Audited
-// @AutoComplete(repository=TecnicoRepositorio.class, action="autoComplete") //
+@AutoComplete(repository = ResolucionesRepositorio.class, action = "autoComplete")
+//
 @Bookmarkable
 public class Resoluciones extends Documento {
+
+	// //////////////////////////////////////
+	// Identification in the UI
+	// //////////////////////////////////////
+
+	public String title() {
+		return "RESOLUCION Nº " + this.getNro_resolucion();
+	}
+
+	public String iconName() {
+		return "Tecnico";
+	}
 
 	private int nro_resolucion;
 
