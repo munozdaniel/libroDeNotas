@@ -4,6 +4,7 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Audited;
+import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
@@ -15,7 +16,7 @@ import dom.documento.Documento;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
 @ObjectType("DISPOSICION")
 @Audited
-// @AutoComplete(repository = TecnicoRepositorio.class, action = "autoComplete")
+ @AutoComplete(repository = DisposicionRepositorio.class, action = "autoComplete")
 @Bookmarkable
 public class Disposicion extends Documento {
 
