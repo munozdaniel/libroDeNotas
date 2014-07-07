@@ -4,6 +4,7 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Audited;
+import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -17,26 +18,39 @@ import dom.sector.Sector;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
 @javax.jdo.annotations.Uniques({ @javax.jdo.annotations.Unique(name = "Tecnico_nro_memo_must_be_unique", members = { "nro_memo" }) })
 @javax.jdo.annotations.Queries({
-	@javax.jdo.annotations.Query(name = "autoCompletarDestino", language = "JDOQL", value = "SELECT "
-			+ "FROM dom.memo.Memo "
-			+ "WHERE destinoSector.indexOf(:destinoSector) >= 0"),
-	@javax.jdo.annotations.Query(name = "buscarUltimoMemoTrue", language = "JDOQL", value = "SELECT "
-			+ "FROM dom.memo.Memo " + "WHERE habilitado == true"),
-	@javax.jdo.annotations.Query(name = "buscarUltimoMemoFalse", language = "JDOQL", value = "SELECT "
-			+ "FROM dom.memo.Memo " + "WHERE habilitado == false"),
-	@javax.jdo.annotations.Query(name = "buscarPorNroMemo", language = "JDOQL", value = "SELECT "
-			+ "FROM dom.memo.Memo "
-			+ "WHERE  "
-			+ "nro_nota.indexOf(:nro_nota) >= 0"),
-	@javax.jdo.annotations.Query(name = "listarHabilitados", language = "JDOQL", value = "SELECT "
-			+ "FROM dom.memo.Memo " + "WHERE  habilitado == true"),
-	@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
-			+ "FROM dom.memo.Memo ") })
+		@javax.jdo.annotations.Query(name = "autoCompletarDestino", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.memo.Memo "
+				+ "WHERE destinoSector.indexOf(:destinoSector) >= 0"),
+		@javax.jdo.annotations.Query(name = "buscarUltimoMemoTrue", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.memo.Memo " + "WHERE habilitado == true"),
+		@javax.jdo.annotations.Query(name = "buscarUltimoMemoFalse", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.memo.Memo " + "WHERE habilitado == false"),
+		@javax.jdo.annotations.Query(name = "buscarPorNroMemo", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.memo.Memo "
+				+ "WHERE  "
+				+ "nro_nota.indexOf(:nro_nota) >= 0"),
+		@javax.jdo.annotations.Query(name = "listarHabilitados", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.memo.Memo " + "WHERE  habilitado == true"),
+		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.memo.Memo ") })
 @ObjectType("MEMO")
 @Audited
-// @AutoComplete(repository=TecnicoRepositorio.class, action="autoComplete") //
+@AutoComplete(repository = MemoRepositorio.class, action = "autoComplete")
+//
 @Bookmarkable
 public class Memo extends Documento {
+
+	// //////////////////////////////////////
+	// Identification in the UI
+	// //////////////////////////////////////
+
+	public String title() {
+		return "MEMO Nº " + this.getNro_memo();
+	}
+
+	public String iconName() {
+		return "Tecnico";
+	}
 
 	private int nro_memo;
 
