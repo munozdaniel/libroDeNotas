@@ -63,9 +63,11 @@ public class SectorRepositorio {
 		return unSector;
 	}
 
-	// //////////////////////////////////////
-	// ListarTodos
-	// //////////////////////////////////////
+	/**
+	 * listar Devuelve todos los sectores.
+	 * 
+	 * @return
+	 */
 	@MemberOrder(sequence = "20")
 	public List<Sector> listar() {
 		final List<Sector> listarSectores = this.container
@@ -89,22 +91,76 @@ public class SectorRepositorio {
 			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Nombre") @MinLength(2) String nombreSector) {
 		final List<Sector> listarSectores = this.container
 				.allMatches(new QueryDefault<Sector>(Sector.class,
-						"buscarPorNombre", "nombre_sector", nombreSector.toUpperCase()
-								.trim()));
+						"buscarPorNombre", "nombre_sector", nombreSector
+								.toUpperCase().trim()));
 		if (listarSectores.isEmpty())
 			this.container
 					.warnUser("No se encontraron sectores cargados en el sistema.");
 		return listarSectores;
 	}
 
-	// //////////////////////////////////////
-	// AutoComplete: Servicio utilizado por Sector.
-	// //////////////////////////////////////
+	/**
+	 * autoComplete
+	 * 
+	 * @param buscarNombreSector
+	 * @return
+	 */
 	@Programmatic
 	public List<Sector> autoComplete(final String buscarNombreSector) {
 		return container.allMatches(new QueryDefault<Sector>(Sector.class,
 				"autoCompletePorNombreSector", "nombre_sector",
 				buscarNombreSector.toUpperCase().trim()));
+	}
+
+	/**
+	 * listarDisposiciones
+	 * 
+	 * @return
+	 */
+	@Programmatic
+	@MemberOrder(sequence = "20")
+	public List<Sector> listarDisposiciones() {
+		final List<Sector> listarSectores = this.container
+				.allMatches(new QueryDefault<Sector>(Sector.class,
+						"sectoresDisposiciones"));
+		if (listarSectores.isEmpty())
+			this.container
+					.warnUser("No se encontraron sectores cargados en el sistema.");
+		return listarSectores;
+	}
+
+	/**
+	 * listarResoluciones
+	 * 
+	 * @return
+	 */
+	@Programmatic
+	@MemberOrder(sequence = "20")
+	public List<Sector> listarResoluciones() {
+		final List<Sector> listarSectores = this.container
+				.allMatches(new QueryDefault<Sector>(Sector.class,
+						"sectoresResoluciones"));
+		if (listarSectores.isEmpty())
+			this.container
+					.warnUser("No se encontraron sectores cargados en el sistema.");
+		return listarSectores;
+	}
+
+	/**
+	 * listarExpediente
+	 * 
+	 * @return
+	 */
+	@Programmatic
+	@MemberOrder(sequence = "20")
+	public List<Sector> listarExpediente() {
+		final List<Sector> listarSectores = this.container
+				.allMatches(new QueryDefault<Sector>(Sector.class,
+						"sectoresExpediente"));
+		if (listarSectores.isEmpty())
+			this.container
+					.warnUser("No se encontraron sectores cargados en el sistema.");
+		return listarSectores;
 	}
 
 	// //////////////////////////////////////
