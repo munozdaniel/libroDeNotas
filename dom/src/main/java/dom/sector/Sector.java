@@ -3,9 +3,9 @@ package dom.sector;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.annotations.Element;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Join;
+import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Audited;
@@ -16,7 +16,6 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.RegEx;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.util.ObjectContracts;
 
 import dom.documento.Documento;
@@ -24,14 +23,21 @@ import dom.documento.Documento;
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
-@javax.jdo.annotations.Uniques({ @javax.jdo.annotations.Unique(name = "Sector_nombre_Sector_must_be_unique", members = { "nombre_sector" }) })
+@javax.jdo.annotations.Uniques({ @javax.jdo.annotations.Unique(name = "nombre_Sector_must_be_unique", members = { "nombre_sector" }) })
 @javax.jdo.annotations.Queries({
 		@javax.jdo.annotations.Query(name = "autoCompletePorNombreSector", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.sector.Sector "
 				+ "WHERE nombre_sector.indexOf(:nombre_sector) >= 0"),
-		@javax.jdo.annotations.Query(name = "todosLosSectoresTrue", language = "JDOQL", value = "SELECT FROM dom.sector.Sector "
-				+ " WHERE habilitado == true"),
-		@javax.jdo.annotations.Query(name = "todosLosSectores", language = "JDOQL", value = "SELECT FROM dom.sector.Sector "),
+		@javax.jdo.annotations.Query(name = "todosLosSectoresTrue", language = "JDOQL", value = "SELECT "
+				+ " FROM dom.sector.Sector " + " WHERE habilitado == true"),
+		@javax.jdo.annotations.Query(name = "todosLosSectores", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.sector.Sector "),
+		@javax.jdo.annotations.Query(name = "sectoresDisposiciones", language = "JDOQL", value = "SELECT "
+				+ " FROM dom.sector.Sector " + " WHERE disposicion==true"),
+		@javax.jdo.annotations.Query(name = "sectoresResoluciones", language = "JDOQL", value = "SELECT "
+				+ " FROM dom.sector.Sector " + " WHERE resolucion==true"),
+		@javax.jdo.annotations.Query(name = "sectoresExpediente", language = "JDOQL", value = "SELECT "
+				+ " FROM dom.sector.Sector " + " WHERE expediente==true"),
 		@javax.jdo.annotations.Query(name = "buscarPorNombre", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.sector.Sector "
 				+ "WHERE "
@@ -167,7 +173,7 @@ public class Sector implements Comparable<Sector> {
 	// //////////////////////////////////////
 	// {{ Documentos (Collection)
 	@Join
-	@Element(dependent = "False")
+	@Persistent(mappedBy = "sector", dependentElement = "False")
 	private SortedSet<Documento> documentos = new TreeSet<Documento>();
 
 	@MemberOrder(sequence = "1")
@@ -181,16 +187,17 @@ public class Sector implements Comparable<Sector> {
 
 	// }}
 
-	public void addToDocumento(final Documento unDocumento) {
+	public Sector addToDocumento(final Documento unDocumento) {
 		// check for no-op
 		if (unDocumento == null || getDocumentos().contains(unDocumento)) {
-			return;
+			return this;
 		}
 		// dissociate arg from its current parent (if any).
 		unDocumento.clearSector();
 		// associate arg
 		unDocumento.setSector(this);
 		this.getDocumentos().add(unDocumento);
+		return this;
 		// additional business logic
 		// onAddToDocumento(unDocumento);
 	}
