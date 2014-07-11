@@ -1,5 +1,4 @@
 package dom.documento;
-
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -12,7 +11,6 @@ import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.util.ObjectContracts;
 import org.joda.time.LocalDate;
 
@@ -176,7 +174,7 @@ public abstract class Documento implements Comparable<Documento> {
 	private Sector sector;
 
 	@MemberOrder(sequence = "22")
-	@javax.jdo.annotations.Column(allowsNull = "False")
+	@javax.jdo.annotations.Column(allowsNull = "True")
 	@Named("Origen")
 	public Sector getSector() {
 		return sector;
@@ -209,5 +207,7 @@ public abstract class Documento implements Comparable<Documento> {
 	@SuppressWarnings("unused")
 	@javax.inject.Inject
 	private DomainObjectContainer container;
+
+	  
 
 }
