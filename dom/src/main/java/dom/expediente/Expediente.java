@@ -3,21 +3,42 @@ package dom.expediente;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Audited;
+import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
 
 import dom.documento.Documento;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
-@javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id")
+@javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id_documento")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
-@javax.jdo.annotations.Uniques({ @javax.jdo.annotations.Unique(name = "Tecnico_apellido_must_be_unique", members = {
-		"nro_expediente"}) })
+@javax.jdo.annotations.Uniques({ @javax.jdo.annotations.Unique(name = "nroExpediente_must_be_unique", members = { "id_documento" }) })
+@javax.jdo.annotations.Queries({
+		@javax.jdo.annotations.Query(name = "autoCompletarDestino", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.expediente.Expediente "
+				+ "WHERE destinoSector.indexOf(:destinoSector) >= 0"),
+		@javax.jdo.annotations.Query(name = "buscarUltimoExpedienteTrue", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.expediente.Expediente "
+				+ "WHERE habilitado == true"),
+		@javax.jdo.annotations.Query(name = "buscarUltimoExpedienteFalse", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.expediente.Expediente "
+				+ "WHERE habilitado == false"),
+		@javax.jdo.annotations.Query(name = "buscarPorNroExpediente", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.expediente.Expediente "
+				+ "WHERE  "
+				+ "nro_nota.indexOf(:nro_nota) >= 0"),
+		@javax.jdo.annotations.Query(name = "listarHabilitados", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.expediente.Expediente "
+				+ "WHERE  habilitado == true"),
+		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.expediente.Expediente ") })
 @ObjectType("EXPEDIENTE")
 @Audited
-// @AutoComplete(repository=TecnicoRepositorio.class, action="autoComplete") //
+@AutoComplete(repository = ExpedienteRepositorio.class, action = "autoComplete")
 @Bookmarkable
 public class Expediente extends Documento {
 
@@ -38,7 +59,6 @@ public class Expediente extends Documento {
 	// //////////////////////////////////////
 
 	private int nro_expediente;
-
 	@MemberOrder(sequence = "10")
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	public int getNro_expediente() {
@@ -77,6 +97,7 @@ public class Expediente extends Documento {
 
 	@MemberOrder(sequence = "40")
 	@javax.jdo.annotations.Column(allowsNull = "false")
+	@MaxLength(1)
 	public String getExpte_cod_letra() {
 		return expte_cod_letra;
 	}
@@ -97,4 +118,20 @@ public class Expediente extends Documento {
 		this.expte_cod_anio = expte_cod_anio;
 	}
 
+//	public void loading() {
+//		this.expedienteRepositorio.listar();
+//	}
+//
+//	public void loaded() {
+//		this.expedienteRepositorio.listar();
+//	}
+
+	// //////////////////////////////////////
+	// Injected Services
+	// //////////////////////////////////////
+
+	@javax.inject.Inject
+	private DomainObjectContainer container;
+	@javax.inject.Inject
+	private ExpedienteRepositorio expedienteRepositorio;
 }
