@@ -16,7 +16,7 @@ import dom.documento.Documento;
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id_documento")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
-@javax.jdo.annotations.Uniques({ @javax.jdo.annotations.Unique(name = "Nota_nro_nota_must_be_unique", members = { "id_documento" }) })
+@javax.jdo.annotations.Uniques({ @javax.jdo.annotations.Unique(name = "nro_nota_must_be_unique", members = { "id_documento" }) })
 @javax.jdo.annotations.Queries({
 		@javax.jdo.annotations.Query(name = "autoCompletarDestino", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota "
@@ -37,7 +37,7 @@ import dom.documento.Documento;
 @Audited
 @AutoComplete(repository = NotaRepositorio.class, action = "autoComplete")
 @Bookmarkable
-public class Nota extends Documento {
+public class Nota extends Documento  {
 
 	private int nro_nota;
 
@@ -66,4 +66,5 @@ public class Nota extends Documento {
 		this.destino = destino;
 	}
 
+	
 }
