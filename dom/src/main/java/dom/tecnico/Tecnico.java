@@ -3,7 +3,6 @@ package dom.tecnico;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -15,7 +14,6 @@ import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
-import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.PublishedAction;
 import org.apache.isis.applib.util.ObjectContracts;
 
