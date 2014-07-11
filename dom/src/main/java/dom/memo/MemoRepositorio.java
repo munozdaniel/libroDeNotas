@@ -115,12 +115,12 @@ public class MemoRepositorio {
 	// Listar Memos
 	// //////////////////////////////////////
 
-	 @MemberOrder(sequence = "20")
-	 public List<Memo> listar() {
-	 final List<Memo> listaMemo = this.container
-	 .allMatches(new QueryDefault<Memo>(Memo.class,
-	 "listarHabilitados"));
-	 if (listaMemo.isEmpty()) {
+	@MemberOrder(sequence = "20")
+	public List<Memo> listar() {
+		final List<Memo> listaMemo = this.container
+				.allMatches(new QueryDefault<Memo>(Memo.class,
+						"listarHabilitados"));
+		if (listaMemo.isEmpty()) {
 	 this.container.warnUser("No hay tecnicos cargados en el sistema");
 	 }
 	 return listaMemo;
