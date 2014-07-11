@@ -12,11 +12,27 @@ import org.apache.isis.applib.annotation.ObjectType;
 import dom.documento.Documento;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
-@javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id")
+@javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id_documento")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
+@javax.jdo.annotations.Uniques({ @javax.jdo.annotations.Unique(name = "nroDisposicion_must_be_unique", members = { "id_documento" }) })
+@javax.jdo.annotations.Queries({
+		@javax.jdo.annotations.Query(name = "autoCompletarDestino", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.disposiciones.Disposicion "
+				+ "WHERE destinoSector.indexOf(:destinoSector) >= 0"),
+		@javax.jdo.annotations.Query(name = "buscarUltimaDisposicionTrue", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.disposiciones.Disposicion "
+				+ "WHERE habilitado == true"),
+		@javax.jdo.annotations.Query(name = "buscarUltimaDisposicionFalse", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.disposiciones.Disposicion "
+				+ "WHERE habilitado == false"),
+		@javax.jdo.annotations.Query(name = "listarHabilitados", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.disposiciones.Disposicion "
+				+ "WHERE  habilitado == true"),
+		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.disposiciones.Disposicion ") })
 @ObjectType("DISPOSICION")
 @Audited
- @AutoComplete(repository = DisposicionRepositorio.class, action = "autoComplete")
+@AutoComplete(repository = DisposicionRepositorio.class, action = "autoComplete")
 @Bookmarkable
 public class Disposicion extends Documento {
 
@@ -35,7 +51,7 @@ public class Disposicion extends Documento {
 	// //////////////////////////////////////
 	// Identification in the UI
 	// //////////////////////////////////////
-	
+
 	private int nro_Disposicion;
 
 	@MemberOrder(sequence = "10")
