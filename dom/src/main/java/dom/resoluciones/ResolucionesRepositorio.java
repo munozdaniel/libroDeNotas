@@ -1,6 +1,5 @@
 package dom.resoluciones;
 
-import java.util.Formatter;
 import java.util.List;
 
 import org.apache.isis.applib.DomainObjectContainer;
@@ -40,26 +39,26 @@ public class ResolucionesRepositorio {
 			final @Named("Fecha:") LocalDate fecha,
 			final @Named("De: ") Sector sector,
 			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Descripción:") String descripcion) {
-		return this.nuevoMemo(nro_resolucion, fecha, sector, descripcion,
+		return this.nuevaResolucion(nro_resolucion, fecha, sector, descripcion,
 				this.currentUserName());
 
 	}
 
 	@Programmatic
-	private Resoluciones nuevoMemo(int nro_resolucion, LocalDate fecha,
+	private Resoluciones nuevaResolucion(int nro_resolucion, LocalDate fecha,
 			Sector sector, final String descripcion, String creadoPor) {
-		final Resoluciones unMemo = this.container
+		final Resoluciones unaResolucion = this.container
 				.newTransientInstance(Resoluciones.class);
-		unMemo.setNro_resolucion(nro_resolucion);
-		unMemo.setFecha(fecha);
-		unMemo.setTipo(3);
-		unMemo.setDescripcion(descripcion.toUpperCase().trim());
-		unMemo.setHabilitado(true);
-		unMemo.setCreadoPor(creadoPor);
-		unMemo.setSector(sector);
-		container.persistIfNotAlready(unMemo);
+		unaResolucion.setNro_resolucion(nro_resolucion);
+		unaResolucion.setFecha(fecha);
+		unaResolucion.setTipo(3);
+		unaResolucion.setDescripcion(descripcion.toUpperCase().trim());
+		unaResolucion.setHabilitado(true);
+		unaResolucion.setCreadoPor(creadoPor);
+		unaResolucion.setSector(sector);
+		container.persistIfNotAlready(unaResolucion);
 		container.flush();
-		return unMemo;
+		return unaResolucion;
 	}
 
 	@Programmatic
@@ -71,7 +70,7 @@ public class ResolucionesRepositorio {
 
 	@Named("Sector")
 	public List<Sector> choices2AddResoluciones() {
-		return sectorRepositorio.listar();
+		return sectorRepositorio.listarResoluciones();
 	}
 
 	// //////////////////////////////////////
