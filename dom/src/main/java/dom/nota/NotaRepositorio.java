@@ -68,8 +68,9 @@ public class NotaRepositorio {
 		unaNota.setHabilitado(true);
 		unaNota.setCreadoPor(creadoPor);
 		unaNota.setDestino(destino);
-		unaNota.setSector(sector);
-//		sector.addToDocumento(unaNota);
+		container.warnUser("Sector : "+sector.getNombre_sector());
+//		unaNota.setSector(sector);
+		sector.addToDocumento(unaNota);
 		container.persistIfNotAlready(unaNota);
 		container.flush();
 		return unaNota;
