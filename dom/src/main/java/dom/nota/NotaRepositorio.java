@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import dom.sector.Sector;
 import dom.sector.SectorRepositorio;
@@ -68,7 +69,8 @@ public class NotaRepositorio {
 		unaNota.setHabilitado(true);
 		unaNota.setCreadoPor(creadoPor);
 		unaNota.setDestino(destino);
-		container.warnUser("Sector : "+sector.getNombre_sector());
+		unaNota.setTime(LocalDateTime.now().withMillisOfSecond(3));
+		container.warnUser("Time:: : "+ unaNota.getTime().toString());
 //		unaNota.setSector(sector);
 		sector.addToDocumento(unaNota);
 		container.persistIfNotAlready(unaNota);
