@@ -34,7 +34,9 @@ public abstract class Documento implements Comparable<Documento> {
 
 	private LocalDateTime time;
 
+	@Hidden
 	@javax.jdo.annotations.Column(allowsNull = "false")
+	@Named("system_time")
 	public LocalDateTime getTime() {
 		return time;
 	}
@@ -42,14 +44,16 @@ public abstract class Documento implements Comparable<Documento> {
 	public void setTime(LocalDateTime time) {
 		this.time = time;
 	}
-//	public void loading() {
-//		// TODO: pre-load
-//		this.setTime(LocalDateTime.now());
-//	}
-//
-//	public void loaded() {
-//		// TODO: post-load
-//	}
+	public void loading() {
+		// TODO: pre-load
+		this.setDescripcion("PRE-LOAD ::: RRotisisimo");
+	}
+
+	public void loaded() {
+		// TODO: post-load
+		this.setDescripcion("POST-LOAD ::: ROTo");
+
+	}
 
 	private LocalDate fecha;
 
