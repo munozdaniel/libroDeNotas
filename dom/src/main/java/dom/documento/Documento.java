@@ -1,4 +1,6 @@
 package dom.documento;
+
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -13,25 +15,41 @@ import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.util.ObjectContracts;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import dom.sector.Sector;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.SUBCLASS_TABLE)
 public abstract class Documento implements Comparable<Documento> {
-	// pk private id_documento;
+	// pk
+	// private BigInteger id_documento;
+	// public BigInteger getId_documento() {
+	// return id_documento;
+	// }
+	//
+	// public void setId_documento(BigInteger id_documento) {
+	// this.id_documento = id_documento;
+	// }
 
-	// private int nro_documento;
-	//
-	// @javax.jdo.annotations.Column(allowsNull = "false")
-	// @MemberOrder(sequence = "10")
-	// public int getNro_documento() {
-	// return nro_documento;
-	// }
-	//
-	// public void setNro_documento(int nro_documento) {
-	// this.nro_documento = nro_documento;
-	// }
+	private LocalDateTime time;
+
+	@javax.jdo.annotations.Column(allowsNull = "false")
+	public LocalDateTime getTime() {
+		return time;
+	}
+
+	public void setTime(LocalDateTime time) {
+		this.time = time;
+	}
+//	public void loading() {
+//		// TODO: pre-load
+//		this.setTime(LocalDateTime.now());
+//	}
+//
+//	public void loaded() {
+//		// TODO: post-load
+//	}
 
 	private LocalDate fecha;
 
@@ -174,8 +192,7 @@ public abstract class Documento implements Comparable<Documento> {
 	private Sector sector;
 
 	@MemberOrder(sequence = "22")
-	@javax.jdo.annotations.Column(allowsNull = "True")
-	@Named("Origen")
+	@Column(allowsNull = "False")
 	public Sector getSector() {
 		return sector;
 	}
@@ -184,20 +201,16 @@ public abstract class Documento implements Comparable<Documento> {
 		this.sector = sector;
 	}
 
-	// }}
 	public void clearSector() {
 		// TODO Auto-generated method stub
 		if (this.getSector() != null)
 			this.setSector(null);
 	}
 
-	// //////////////////////////////////////
-	// Implementando los metodos de comparable
-	// //////////////////////////////////////
-
+	// }}
 	@Override
 	public int compareTo(Documento documento) {
-		return ObjectContracts.compare(this, documento, "id_documento");
+		return ObjectContracts.compare(this, documento, "time");
 	}
 
 	// //////////////////////////////////////
@@ -207,7 +220,5 @@ public abstract class Documento implements Comparable<Documento> {
 	@SuppressWarnings("unused")
 	@javax.inject.Inject
 	private DomainObjectContainer container;
-
-	  
 
 }
