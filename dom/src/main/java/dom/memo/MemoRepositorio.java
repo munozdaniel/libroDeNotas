@@ -67,8 +67,9 @@ public class MemoRepositorio {
 		unMemo.setDescripcion(descripcion.toUpperCase().trim());
 		unMemo.setHabilitado(true);
 		unMemo.setCreadoPor(creadoPor);
-		unMemo.setSector(sector);
+//		unMemo.setSector(sector);
 		unMemo.setDestinoSector(destinoSector);
+		sector.addToDocumento(unMemo);
 		container.persistIfNotAlready(unMemo);
 		container.flush();
 		return unMemo;

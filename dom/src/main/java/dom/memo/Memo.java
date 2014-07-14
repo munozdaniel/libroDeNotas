@@ -9,6 +9,7 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
+import org.apache.isis.applib.util.ObjectContracts;
 
 import dom.documento.Documento;
 import dom.sector.Sector;
@@ -143,4 +144,8 @@ public class Memo extends Documento {
 	// }
 	// }
 	// }
+//	@Override
+//	public int compareTo(Documento memo) {
+//		return ObjectContracts.compare(this, memo, "nro_memo");
+//	}
 }
