@@ -55,7 +55,8 @@ public class ResolucionesRepositorio {
 		unaResolucion.setDescripcion(descripcion.toUpperCase().trim());
 		unaResolucion.setHabilitado(true);
 		unaResolucion.setCreadoPor(creadoPor);
-		unaResolucion.setSector(sector);
+		// unaResolucion.setSector(sector);
+		sector.addToDocumento(unaResolucion);
 		container.persistIfNotAlready(unaResolucion);
 		container.flush();
 		return unaResolucion;
