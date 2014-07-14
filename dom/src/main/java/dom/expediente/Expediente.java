@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
+import org.apache.isis.applib.util.ObjectContracts;
 
 import dom.documento.Documento;
 
@@ -130,8 +131,14 @@ public class Expediente extends Documento {
 	// Injected Services
 	// //////////////////////////////////////
 
+	@SuppressWarnings("unused")
 	@javax.inject.Inject
 	private DomainObjectContainer container;
+	@SuppressWarnings("unused")
 	@javax.inject.Inject
 	private ExpedienteRepositorio expedienteRepositorio;
+//	@Override
+//	public int compareTo(Documento expediente) {
+//		return ObjectContracts.compare(this, expediente, "nro_expediente");
+//	}
 }
