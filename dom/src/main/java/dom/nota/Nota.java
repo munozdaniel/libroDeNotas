@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
+import org.apache.isis.applib.util.ObjectContracts;
 
 import dom.documento.Documento;
 
@@ -37,7 +38,19 @@ import dom.documento.Documento;
 @Audited
 @AutoComplete(repository = NotaRepositorio.class, action = "autoComplete")
 @Bookmarkable
-public class Nota extends Documento  {
+public class Nota extends Documento {
+	// //////////////////////////////////////
+	// Identificacion en la UI.
+	// Aparece como item del menu
+	// //////////////////////////////////////
+
+	public String title() {
+		return Nota.class.getName();
+	}
+
+	public String iconName() {
+		return "Sector";
+	}
 
 	private int nro_nota;
 
@@ -65,6 +78,15 @@ public class Nota extends Documento  {
 	public void setDestino(String destino) {
 		this.destino = destino;
 	}
+	// //////////////////////////////////////
+	// Implementando los metodos de comparable
+	// //////////////////////////////////////
+
+//	@Override
+//	public int compareTo(Documento nota) {
+//		return ObjectContracts.compare(this, nota, "nro_nota");
+//	}
+//	
 
 	
 }
