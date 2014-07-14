@@ -8,6 +8,7 @@ import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
+import org.apache.isis.applib.util.ObjectContracts;
 
 import dom.documento.Documento;
 
@@ -63,5 +64,7 @@ public class Disposicion extends Documento {
 	public void setNro_Disposicion(int nro_Disposicion) {
 		this.nro_Disposicion = nro_Disposicion;
 	}
+
+
 
 }
