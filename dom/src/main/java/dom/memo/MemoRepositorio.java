@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import dom.sector.Sector;
 import dom.sector.SectorRepositorio;
@@ -61,13 +62,14 @@ public class MemoRepositorio {
 		nro += 1;
 		formato = new Formatter();
 		formato.format("%04d", nro);
-		unMemo.setNro_memo(Integer.parseInt(000+formato.toString()));
+		unMemo.setNro_memo(Integer.parseInt(000 + formato.toString()));
 		unMemo.setFecha(LocalDate.now());
 		unMemo.setTipo(2);
 		unMemo.setDescripcion(descripcion.toUpperCase().trim());
 		unMemo.setHabilitado(true);
 		unMemo.setCreadoPor(creadoPor);
-//		unMemo.setSector(sector);
+		// unMemo.setSector(sector);
+		unMemo.setTime(LocalDateTime.now().withMillisOfSecond(3));
 		unMemo.setDestinoSector(destinoSector);
 		sector.addToDocumento(unMemo);
 		container.persistIfNotAlready(unMemo);
@@ -75,14 +77,25 @@ public class MemoRepositorio {
 		return unMemo;
 	}
 
+	// @Programmatic
+	// private int recuperarNroMemo() {
+	// final Memo memo = this.container.firstMatch(new QueryDefault<Memo>(
+	// Memo.class, "buscarUltimoMemoTrue"));
+	// if (memo == null)
+	// return 0;
+	// else
+	// return memo.getNro_memo();
+	// }
 	@Programmatic
 	private int recuperarNroMemo() {
-		final Memo memo = this.container.firstMatch(new QueryDefault<Memo>(
-				Memo.class, "buscarUltimoMemoTrue"));
-		if (memo == null)
+		final List<Memo> memos = this.container
+				.allMatches(new QueryDefault<Memo>(Memo.class,
+						"listarHabilitados"));
+
+		if (memos.isEmpty())
 			return 0;
 		else
-			return memo.getNro_memo();
+			return memos.get(memos.size()+1).getNro_memo();
 	}
 
 	// //////////////////////////////////////
@@ -100,17 +113,18 @@ public class MemoRepositorio {
 		return sectorRepositorio.listar(); // TODO: return list of choices for
 											// property
 	}
+
 	@Named("Para")
 	public List<Sector> choices1AddMemo() {
 		return sectorRepositorio.listar(); // TODO: return list of choices for
 											// property
 	}
-	
-	 @Programmatic
-	 public List<Memo> autoComplete(final String destino) {
-	 return container.allMatches(new QueryDefault<Memo>(Memo.class,
-	 "autoCompletarDestino", "destinoSector", destino));
-	 }
+
+	@Programmatic
+	public List<Memo> autoComplete(final String destino) {
+		return container.allMatches(new QueryDefault<Memo>(Memo.class,
+				"autoCompletarDestino", "destinoSector", destino));
+	}
 
 	// //////////////////////////////////////
 	// Listar Memos
@@ -122,11 +136,11 @@ public class MemoRepositorio {
 				.allMatches(new QueryDefault<Memo>(Memo.class,
 						"listarHabilitados"));
 		if (listaMemo.isEmpty()) {
-	 this.container.warnUser("No hay tecnicos cargados en el sistema");
-	 }
-	 return listaMemo;
-	
-	 }
+			this.container.warnUser("No hay tecnicos cargados en el sistema");
+		}
+		return listaMemo;
+
+	}
 
 	// //////////////////////////////////////
 	// CurrentUserName
