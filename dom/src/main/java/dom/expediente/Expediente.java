@@ -10,7 +10,6 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
-import org.apache.isis.applib.util.ObjectContracts;
 
 import dom.documento.Documento;
 
@@ -36,7 +35,16 @@ import dom.documento.Documento;
 				+ "FROM dom.expediente.Expediente "
 				+ "WHERE  habilitado == true"),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.expediente.Expediente ") })
+				+ "FROM dom.expediente.Expediente "),
+		@javax.jdo.annotations.Query(name = "filtrarPorFechaSector", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota "
+				+ "WHERE  (habilitado == true) && (fecha==:fecha && sector==:sector)"),
+		@javax.jdo.annotations.Query(name = "filtrarPorFecha", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota "
+				+ "WHERE  (habilitado == true) && (fecha==:fecha)"),
+		@javax.jdo.annotations.Query(name = "filtrarPorSector", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota "
+				+ "WHERE  (habilitado == true) && (sector==:sector)") })
 @ObjectType("EXPEDIENTE")
 @Audited
 @AutoComplete(repository = ExpedienteRepositorio.class, action = "autoComplete")
@@ -60,6 +68,7 @@ public class Expediente extends Documento {
 	// //////////////////////////////////////
 
 	private int nro_expediente;
+
 	@MemberOrder(sequence = "10")
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	public int getNro_expediente() {
@@ -119,13 +128,13 @@ public class Expediente extends Documento {
 		this.expte_cod_anio = expte_cod_anio;
 	}
 
-//	public void loading() {
-//		this.expedienteRepositorio.listar();
-//	}
-//
-//	public void loaded() {
-//		this.expedienteRepositorio.listar();
-//	}
+	// public void loading() {
+	// this.expedienteRepositorio.listar();
+	// }
+	//
+	// public void loaded() {
+	// this.expedienteRepositorio.listar();
+	// }
 
 	// //////////////////////////////////////
 	// Injected Services
@@ -137,8 +146,8 @@ public class Expediente extends Documento {
 	@SuppressWarnings("unused")
 	@javax.inject.Inject
 	private ExpedienteRepositorio expedienteRepositorio;
-//	@Override
-//	public int compareTo(Documento expediente) {
-//		return ObjectContracts.compare(this, expediente, "nro_expediente");
-//	}
+	// @Override
+	// public int compareTo(Documento expediente) {
+	// return ObjectContracts.compare(this, expediente, "nro_expediente");
+	// }
 }
