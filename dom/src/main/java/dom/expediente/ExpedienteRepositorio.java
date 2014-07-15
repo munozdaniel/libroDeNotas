@@ -11,6 +11,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import dom.memo.Memo;
 import dom.sector.Sector;
@@ -41,13 +42,14 @@ public class ExpedienteRepositorio {
 			final @Named("Inicia: ") Sector sector,
 			final @Named("Codigo: ") @MaxLength(1) String expte_cod_letra,
 			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Motivo:") String descripcion) {
-		return this
-				.nuevoExpediente(expte_cod_letra,sector, descripcion, this.currentUserName());
+		return this.nuevoExpediente(expte_cod_letra, sector, descripcion,
+				this.currentUserName());
 
 	}
 
-	private Expediente nuevoExpediente(final String expte_cod_letra,final Sector sector,
-			final String descripcion, final String creadoPor) {
+	private Expediente nuevoExpediente(final String expte_cod_letra,
+			final Sector sector, final String descripcion,
+			final String creadoPor) {
 		final Expediente unExpediente = this.container
 				.newTransientInstance(Expediente.class);
 		int nro = recuperarNroResolucion();
@@ -64,22 +66,34 @@ public class ExpedienteRepositorio {
 		unExpediente.setCreadoPor(creadoPor);
 		unExpediente.setExpte_cod_anio(LocalDate.now().getYear());
 		unExpediente.setExpte_cod_empresa("IMPS");
-//		unExpediente.setSector(sector);
+		unExpediente.setTime(LocalDateTime.now().withMillisOfSecond(3));
+		// unExpediente.setSector(sector);
 		sector.addToDocumento(unExpediente);
 		container.persistIfNotAlready(unExpediente);
 		container.flush();
 		return unExpediente;
 	}
 
+	// @Programmatic
+	// private int recuperarNroResolucion() {
+	// final Expediente expediente = this.container
+	// .firstMatch(new QueryDefault<Expediente>(Expediente.class,
+	// "buscarUltimoExpedienteTrue"));
+	// if (expediente == null)
+	// return 0;
+	// else
+	// return expediente.getNro_expediente();
+	// }
 	@Programmatic
 	private int recuperarNroResolucion() {
-		final Expediente expediente = this.container
-				.firstMatch(new QueryDefault<Expediente>(Expediente.class,
-						"buscarUltimoExpedienteTrue"));
-		if (expediente == null)
+		final List<Expediente> expedientes = this.container
+				.allMatches(new QueryDefault<Expediente>(Expediente.class,
+						"listarHabilitados"));
+
+		if (expedientes.isEmpty())
 			return 0;
 		else
-			return expediente.getNro_expediente();
+			return expedientes.get(expedientes.size()+1).getNro_expediente();
 	}
 
 	@Named("Sector")
