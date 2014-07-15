@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.query.QueryDefault;
@@ -68,8 +69,8 @@ public class NotaRepositorio {
 		unaNota.setCreadoPor(creadoPor);
 		unaNota.setDestino(destino);
 		unaNota.setTime(LocalDateTime.now().withMillisOfSecond(3));
-		container.warnUser("Time:: : "+ unaNota.getTime().toString());
-//		unaNota.setSector(sector);
+		container.warnUser("Time:: : " + unaNota.getTime().toString());
+		// unaNota.setSector(sector);
 		sector.addToDocumento(unaNota);
 		container.persistIfNotAlready(unaNota);
 		container.flush();
@@ -85,25 +86,28 @@ public class NotaRepositorio {
 		if (notas.isEmpty())
 			return 0;
 		else
-			return notas.get(notas.size()-1).getNro_nota();
+			return notas.get(notas.size() - 1).getNro_nota();
 	}
-	public String numero()
-	{
-		return "CANTIDAD: " + this.recuperarNroNota();
-	}
+
+	// public String numero()
+	// {
+	// return "CANTIDAD: " + this.recuperarNroNota();
+	// }
 
 	// //////////////////////////////////////
 	// Buscar Tecnico
 	// //////////////////////////////////////
 
-//	@Named("Sector")
-//	@DescribedAs("Buscar el Sector en mayuscula")
-//	public List<Sector> autoComplete0AddNota(final @MinLength(2) String search) {
-//		return sectorRepositorio.autoComplete(search);
-//	}
+	// @Named("Sector")
+	// @DescribedAs("Buscar el Sector en mayuscula")
+	// public List<Sector> autoComplete0AddNota(final @MinLength(2) String
+	// search) {
+	// return sectorRepositorio.autoComplete(search);
+	// }
 	@Named("Sector")
 	public List<Sector> choices0AddNota() {
-		return sectorRepositorio.listar(); // TODO: return list of choices for property
+		return sectorRepositorio.listar(); // TODO: return list of choices for
+											// property
 	}
 
 	@Programmatic
@@ -125,6 +129,60 @@ public class NotaRepositorio {
 			this.container.warnUser("No hay tecnicos cargados en el sistema");
 		}
 		return listaNotas;
+
+	}
+
+	// //////////////////////////////////////
+	// Filtrar por Fecha o Sector
+	// //////////////////////////////////////
+	@MemberOrder(sequence = "30")
+	public List<Nota> filtrar(
+			final @Optional @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("De:") Sector sector,
+			final @Optional @Named("Fecha") LocalDate fecha) {
+		if (fecha == null && sector == null) {
+			this.container.warnUser("Sin Filtro");
+			return this.listar();
+
+		} else {
+			if (fecha != null && sector == null) {
+				final List<Nota> notasPorFecha = this.container
+						.allMatches(new QueryDefault<Nota>(Nota.class,
+								"filtrarPorFecha", "fecha", fecha));
+
+				if (notasPorFecha.isEmpty()) {
+					this.container.warnUser("No se encontraron Notas.");
+				}
+				this.container.warnUser("Filtrado por Fechas.");
+
+				return notasPorFecha;
+			} else if (fecha == null && sector != null) {
+				final List<Nota> notasPorSector = this.container
+						.allMatches(new QueryDefault<Nota>(Nota.class,
+								"filtrarPorSector", "sector", sector));
+				this.container.warnUser("Filtrado por Sector.");
+
+				if (notasPorSector.isEmpty()) {
+					this.container.warnUser("No se encontraron Notas.");
+				}
+				return notasPorSector;
+			} else {
+				final List<Nota> notas = this.container
+						.allMatches(new QueryDefault<Nota>(Nota.class,
+								"filtrarPorFechaSector", "fecha", fecha,
+								"sector", sector));
+				this.container.warnUser("Filtrado por Fecha y Sector.");
+
+				if (notas.isEmpty()) {
+					this.container.warnUser("No se encontraron Notas.");
+				}
+				return notas;
+			}
+		}
+	}
+
+	@Named("Sector")
+	public List<Sector> choices0Filtrar() {
+		return sectorRepositorio.listar();
 
 	}
 
