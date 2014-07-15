@@ -10,7 +10,9 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
+import dom.nota.Nota;
 import dom.sector.Sector;
 import dom.sector.SectorRepositorio;
 
@@ -44,7 +46,7 @@ public class DisposicionRepositorio {
 	@Programmatic
 	private Disposicion nuevaDisposicion(final Sector sector,String descripcion, String creadoPor) {
 		final Disposicion unaDisposicion = this.container.newTransientInstance(Disposicion.class);
-		int nro = recuperarNroMemo();
+		int nro = recuperarNroDisposicion();
 		nro += 1;
 		@SuppressWarnings("resource")
 		Formatter formato = new Formatter();
@@ -56,6 +58,7 @@ public class DisposicionRepositorio {
 		unaDisposicion.setHabilitado(true);
 		unaDisposicion.setCreadoPor(creadoPor);
 //		unaDisposicion.setSector(sector);// hay que devolver el sector del usuario que tiene acceso.
+		unaDisposicion.setTime(LocalDateTime.now().withMillisOfSecond(3));
 		sector.addToDocumento(unaDisposicion);
 		container.persistIfNotAlready(unaDisposicion);
 		container.flush();
@@ -68,16 +71,25 @@ public class DisposicionRepositorio {
 											// property
 	}
 
+//	@Programmatic
+//	private int recuperarNroDisposicion() {
+//
+//		final Disposicion disposicion = this.container.firstMatch(new QueryDefault<Disposicion>(
+//				Disposicion.class, "buscarUltimaDisposicionTrue"));
+//		if (disposicion == null)
+//			return 0;
+//		else
+//			return disposicion.getNro_Disposicion();
+//	}
 	@Programmatic
-	private int recuperarNroMemo() {
-		final Disposicion disposicion = this.container.firstMatch(new QueryDefault<Disposicion>(
-				Disposicion.class, "buscarUltimaDisposicionTrue"));
-		if (disposicion == null)
+	private int recuperarNroDisposicion() {
+		final List<Disposicion> disposiciones = this.container.allMatches(new QueryDefault<Disposicion>(Disposicion.class, "listarHabilitados"));
+		
+		if (disposiciones.isEmpty())
 			return 0;
 		else
-			return disposicion.getNro_Disposicion();
+			return disposiciones.get(disposiciones.size()+1).getNro_Disposicion();
 	}
-
 	@Programmatic
 	public List<Disposicion> autoComplete(final String destino) {
 		return container.allMatches(new QueryDefault<Disposicion>(Disposicion.class,
