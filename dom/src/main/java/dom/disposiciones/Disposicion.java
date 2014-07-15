@@ -20,9 +20,9 @@ import dom.documento.Documento;
 		@javax.jdo.annotations.Query(name = "autoCompletarDestino", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.disposiciones.Disposicion "
 				+ "WHERE destinoSector.indexOf(:destinoSector) >= 0"),
-		@javax.jdo.annotations.Query(name = "buscarUltimaDisposicionTrue", language = "JDOQL", value = "SELECT "
+		@javax.jdo.annotations.Query(name = "buscarUltimaDisposicionTrue", language = "JDOQL", value = "SELECT MAX(nro_Disposicion) "
 				+ "FROM dom.disposiciones.Disposicion "
-				+ "WHERE habilitado == true"),
+				),
 		@javax.jdo.annotations.Query(name = "buscarUltimaDisposicionFalse", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.disposiciones.Disposicion "
 				+ "WHERE habilitado == false"),
