@@ -4,9 +4,7 @@ import java.util.Formatter;
 import java.util.List;
 
 import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
@@ -80,12 +78,18 @@ public class NotaRepositorio {
 
 	@Programmatic
 	private int recuperarNroNota() {
-		final Nota nota = this.container.firstMatch(new QueryDefault<Nota>(
-				Nota.class, "buscarUltimaNotaTrue"));
-		if (nota == null)
+		final List<Nota> notas = this.container
+				.allMatches(new QueryDefault<Nota>(Nota.class,
+						"listarHabilitados"));
+
+		if (notas.isEmpty())
 			return 0;
 		else
-			return nota.getNro_nota();
+			return notas.get(notas.size()-1).getNro_nota();
+	}
+	public String numero()
+	{
+		return "CANTIDAD: " + this.recuperarNroNota();
 	}
 
 	// //////////////////////////////////////
