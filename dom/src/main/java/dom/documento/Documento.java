@@ -44,16 +44,7 @@ public abstract class Documento implements Comparable<Documento> {
 	public void setTime(LocalDateTime time) {
 		this.time = time;
 	}
-	public void loading() {
-		// TODO: pre-load
-		this.setDescripcion("PRE-LOAD ::: RRotisisimo");
-	}
 
-	public void loaded() {
-		// TODO: post-load
-		this.setDescripcion("POST-LOAD ::: ROTo");
-
-	}
 
 	private LocalDate fecha;
 
