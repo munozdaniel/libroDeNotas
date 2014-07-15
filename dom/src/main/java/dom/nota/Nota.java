@@ -10,7 +10,6 @@ import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
-import org.apache.isis.applib.util.ObjectContracts;
 
 import dom.documento.Documento;
 
@@ -22,8 +21,8 @@ import dom.documento.Documento;
 		@javax.jdo.annotations.Query(name = "autoCompletarDestino", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota "
 				+ "WHERE destino.indexOf(:destino) >= 0"),
-		@javax.jdo.annotations.Query(name = "buscarUltimaNotaTrue", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Nota " + "WHERE habilitado == true"),
+		@javax.jdo.annotations.Query(name = "buscarUltimaNotaTrue", language = "JDOQL", value = "SELECT MAX(nro_nota) "
+				+ "FROM dom.nota.Nota " ),
 		@javax.jdo.annotations.Query(name = "buscarUltimaNotaFalse", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota " + "WHERE habilitado == false"),
 		@javax.jdo.annotations.Query(name = "buscarPorNroNota", language = "JDOQL", value = "SELECT "
