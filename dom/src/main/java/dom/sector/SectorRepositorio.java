@@ -6,6 +6,7 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.query.QueryDefault;
@@ -37,9 +38,9 @@ public class SectorRepositorio {
 	public Sector agregar(
 			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Nombre") String nombre_sector,
 			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Responsable") String responsable,
-			final @Named("Disposicion") Boolean disposicion,
-			final @Named("Expediente") Boolean expediente,
-			final @Named("Resolucion") Boolean resolucion) {
+			final @Optional @Named("Disposicion") Boolean disposicion,
+			final @Optional @Named("Expediente") Boolean expediente,
+			final @Optional @Named("Resolucion") Boolean resolucion) {
 		return nuevoSector(nombre_sector, responsable, disposicion, expediente,
 				resolucion, this.currentUserName());
 	}

@@ -49,7 +49,8 @@ import dom.documento.Documento;
 public class Sector implements Comparable<Sector> {
 
 	// //////////////////////////////////////
-	// Identificacion en la UI. Aparece como item del menu
+	// Identificacion en la UI.
+	// Aparece como item del menu
 	// //////////////////////////////////////
 
 	public String title() {
