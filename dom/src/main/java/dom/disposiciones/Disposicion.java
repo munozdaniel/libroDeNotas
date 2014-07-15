@@ -8,7 +8,6 @@ import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
-import org.apache.isis.applib.util.ObjectContracts;
 
 import dom.documento.Documento;
 
@@ -21,8 +20,7 @@ import dom.documento.Documento;
 				+ "FROM dom.disposiciones.Disposicion "
 				+ "WHERE destinoSector.indexOf(:destinoSector) >= 0"),
 		@javax.jdo.annotations.Query(name = "buscarUltimaDisposicionTrue", language = "JDOQL", value = "SELECT MAX(nro_Disposicion) "
-				+ "FROM dom.disposiciones.Disposicion "
-				),
+				+ "FROM dom.disposiciones.Disposicion "),
 		@javax.jdo.annotations.Query(name = "buscarUltimaDisposicionFalse", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.disposiciones.Disposicion "
 				+ "WHERE habilitado == false"),
@@ -30,7 +28,16 @@ import dom.documento.Documento;
 				+ "FROM dom.disposiciones.Disposicion "
 				+ "WHERE  habilitado == true"),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.disposiciones.Disposicion ") })
+				+ "FROM dom.disposiciones.Disposicion "),
+		@javax.jdo.annotations.Query(name = "filtrarPorFechaSector", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.disposiciones.Disposicion  "
+				+ "WHERE  (habilitado == true) && (fecha==:fecha && sector==:sector)"),
+		@javax.jdo.annotations.Query(name = "filtrarPorFecha", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.disposiciones.Disposicion "
+				+ "WHERE  (habilitado == true) && (fecha==:fecha)"),
+		@javax.jdo.annotations.Query(name = "filtrarPorSector", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.disposiciones.Disposicion  "
+				+ "WHERE  (habilitado == true) && (sector==:sector)") })
 @ObjectType("DISPOSICION")
 @Audited
 @AutoComplete(repository = DisposicionRepositorio.class, action = "autoComplete")
@@ -64,7 +71,5 @@ public class Disposicion extends Documento {
 	public void setNro_Disposicion(int nro_Disposicion) {
 		this.nro_Disposicion = nro_Disposicion;
 	}
-
-
 
 }
