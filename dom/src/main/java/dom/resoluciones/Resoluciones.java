@@ -29,7 +29,16 @@ import dom.documento.Documento;
 				+ "FROM dom.resoluciones.resoluciones "
 				+ "WHERE  habilitado == true"),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.resoluciones.resoluciones  ") })
+				+ "FROM dom.resoluciones.resoluciones  "),
+		@javax.jdo.annotations.Query(name = "filtrarPorFechaSector", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota "
+				+ "WHERE  (habilitado == true) && (fecha==:fecha && sector==:sector)"),
+		@javax.jdo.annotations.Query(name = "filtrarPorFecha", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota "
+				+ "WHERE  (habilitado == true) && (fecha==:fecha)"),
+		@javax.jdo.annotations.Query(name = "filtrarPorSector", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota "
+				+ "WHERE  (habilitado == true) && (sector==:sector)") })
 @ObjectType("RESOLUCIONES")
 @Audited
 @AutoComplete(repository = ResolucionesRepositorio.class, action = "autoComplete")
@@ -60,5 +69,10 @@ public class Resoluciones extends Documento {
 	public void setNro_resolucion(int nro_resolucion) {
 		this.nro_resolucion = nro_resolucion;
 	}
+
+	// @Override
+	// public int compareTo(Documento resolucion) {
+	// return ObjectContracts.compare(this, resolucion, "nro_resolucion");
+	// }
 
 }
