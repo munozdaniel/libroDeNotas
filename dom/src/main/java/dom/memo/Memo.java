@@ -9,7 +9,6 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
-import org.apache.isis.applib.util.ObjectContracts;
 
 import dom.documento.Documento;
 import dom.sector.Sector;
@@ -33,7 +32,16 @@ import dom.sector.Sector;
 		@javax.jdo.annotations.Query(name = "listarHabilitados", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.memo.Memo " + "WHERE  habilitado == true"),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.memo.Memo ") })
+				+ "FROM dom.memo.Memo "),
+		@javax.jdo.annotations.Query(name = "filtrarPorFechaSector", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota "
+				+ "WHERE  (habilitado == true) && (fecha==:fecha && sector==:sector)"),
+		@javax.jdo.annotations.Query(name = "filtrarPorFecha", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota "
+				+ "WHERE  (habilitado == true) && (fecha==:fecha)"),
+		@javax.jdo.annotations.Query(name = "filtrarPorSector", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota "
+				+ "WHERE  (habilitado == true) && (sector==:sector)") })
 @ObjectType("MEMO")
 @Audited
 @AutoComplete(repository = MemoRepositorio.class, action = "autoComplete")
@@ -144,8 +152,8 @@ public class Memo extends Documento {
 	// }
 	// }
 	// }
-//	@Override
-//	public int compareTo(Documento memo) {
-//		return ObjectContracts.compare(this, memo, "nro_memo");
-//	}
+	// @Override
+	// public int compareTo(Documento memo) {
+	// return ObjectContracts.compare(this, memo, "nro_memo");
+	// }
 }
