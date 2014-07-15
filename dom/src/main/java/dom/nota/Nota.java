@@ -22,7 +22,7 @@ import dom.documento.Documento;
 				+ "FROM dom.nota.Nota "
 				+ "WHERE destino.indexOf(:destino) >= 0"),
 		@javax.jdo.annotations.Query(name = "buscarUltimaNotaTrue", language = "JDOQL", value = "SELECT MAX(nro_nota) "
-				+ "FROM dom.nota.Nota " ),
+				+ "FROM dom.nota.Nota "),
 		@javax.jdo.annotations.Query(name = "buscarUltimaNotaFalse", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota " + "WHERE habilitado == false"),
 		@javax.jdo.annotations.Query(name = "buscarPorNroNota", language = "JDOQL", value = "SELECT "
@@ -32,7 +32,16 @@ import dom.documento.Documento;
 		@javax.jdo.annotations.Query(name = "listarHabilitados", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota " + "WHERE  habilitado == true"),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Nota ") })
+				+ "FROM dom.nota.Nota "),
+		@javax.jdo.annotations.Query(name = "filtrarPorFechaSector", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota "
+				+ "WHERE  (habilitado == true) && (fecha==:fecha && sector==:sector)"),
+		@javax.jdo.annotations.Query(name = "filtrarPorFecha", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota "
+				+ "WHERE  (habilitado == true) && (fecha==:fecha)"),
+		@javax.jdo.annotations.Query(name = "filtrarPorSector", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota "
+				+ "WHERE  (habilitado == true) && (sector==:sector)") })
 @ObjectType("NOTA")
 @Audited
 @AutoComplete(repository = NotaRepositorio.class, action = "autoComplete")
@@ -81,11 +90,10 @@ public class Nota extends Documento {
 	// Implementando los metodos de comparable
 	// //////////////////////////////////////
 
-//	@Override
-//	public int compareTo(Documento nota) {
-//		return ObjectContracts.compare(this, nota, "nro_nota");
-//	}
-//	
+	// @Override
+	// public int compareTo(Documento nota) {
+	// return ObjectContracts.compare(this, nota, "nro_nota");
+	// }
+	//
 
-	
 }
