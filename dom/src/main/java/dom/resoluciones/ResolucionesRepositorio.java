@@ -9,6 +9,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import dom.sector.Sector;
 import dom.sector.SectorRepositorio;
@@ -56,6 +57,7 @@ public class ResolucionesRepositorio {
 		unaResolucion.setHabilitado(true);
 		unaResolucion.setCreadoPor(creadoPor);
 		// unaResolucion.setSector(sector);
+		unaResolucion.setTime(LocalDateTime.now().withMillisOfSecond(3));
 		sector.addToDocumento(unaResolucion);
 		container.persistIfNotAlready(unaResolucion);
 		container.flush();
