@@ -1,0 +1,50 @@
+{
+  "columns": [
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 12,
+      "collections": {
+        "analysisByCategory": {
+          "paged": {
+            "value": 12
+          },
+          "render": {
+            "value": "EAGERLY"
+          },
+          "disabled": {},
+          "named": {
+            "value": "Todas las Notas"
+          }
+        }
+      }
+    }
+  ],
+  "actions": {
+    "downloadLayout": {
+      "named": {
+        "value": "Download Layout"
+      }
+    },
+    "viewModelInit": {
+      "named": {
+        "value": "View Model Init"
+      }
+    },
+    "viewModelMemento": {
+      "named": {
+        "value": "View Model Memento"
+      }
+    }
+  }
+}
