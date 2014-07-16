@@ -37,6 +37,7 @@ public abstract class Documento implements Comparable<Documento> {
 	@Hidden
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Named("system_time")
+	@MemberOrder(sequence = "100")
 	public LocalDateTime getTime() {
 		return time;
 	}
@@ -50,7 +51,7 @@ public abstract class Documento implements Comparable<Documento> {
 
 	@Disabled
 	@javax.jdo.annotations.Column(allowsNull = "false")
-	@MemberOrder(sequence = "20")
+	@MemberOrder(name="Datos Generales" ,sequence = "20")
 	@Named("Fecha")
 	public LocalDate getFecha() {
 		return fecha;
@@ -82,9 +83,9 @@ public abstract class Documento implements Comparable<Documento> {
 
 	@Named("Descripcion")
 	@javax.jdo.annotations.Column(allowsNull = "false")
-	@MemberOrder(sequence = "100")
+	@MemberOrder(name="Observaciones" ,sequence = "50")
 	@MultiLine
-	@MaxLength(150)
+	@MaxLength(200)
 	public String getDescripcion() {
 		return descripcion;
 	}
@@ -138,8 +139,8 @@ public abstract class Documento implements Comparable<Documento> {
 
 	private String creadoPor;
 
-	@Disabled
 	@Hidden
+	@Disabled
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	public String getCreadoPor() {
 		return creadoPor;
@@ -186,8 +187,9 @@ public abstract class Documento implements Comparable<Documento> {
 	// {{ PropertyName (property)
 	private Sector sector;
 
-	@MemberOrder(sequence = "22")
+	@MemberOrder(name="Datos Generales" ,sequence = "30")
 	@Column(allowsNull = "False")
+	@Named("Origen")
 	public Sector getSector() {
 		return sector;
 	}
