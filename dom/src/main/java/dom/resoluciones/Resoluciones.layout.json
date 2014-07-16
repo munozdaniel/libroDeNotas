@@ -1,0 +1,90 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "nro_resolucion": {
+              "typicalLength": {
+                "value": 9
+              }
+            },
+            "fecha": {
+              "disabled": {},
+              "named": {
+                "value": "Fecha"
+              },
+              "typicalLength": {
+                "value": 12
+              }
+            },
+            "sector": {},
+            "tipo": {
+              "hidden": {},
+              "disabled": {},
+              "describedAs": {
+                "value": "Tipo de Documento"
+              },
+              "typicalLength": {
+                "value": 9
+              }
+            },
+            "habilitado": {
+              "hidden": {},
+              "typicalLength": {
+                "value": 5
+              }
+            },
+            "descripcion": {
+              "named": {
+                "value": "Descripcion"
+              },
+              "typicalLength": {
+                "value": 150
+              },
+              "multiLine": {
+                "numberOfLines": 6
+              }
+            },
+            "creadoPor": {
+              "hidden": {},
+              "disabled": {},
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "time": {
+              "hidden": {},
+              "named": {
+                "value": "system_time"
+              },
+              "typicalLength": {
+                "value": 12
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 8,
+      "collections": {}
+    }
+  ],
+  "actions": {
+    "downloadLayout": {
+      "named": {
+        "value": "Download Layout"
+      }
+    }
+  }
+}

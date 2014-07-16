@@ -1,0 +1,122 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "nombre_sector": {
+              "describedAs": {
+                "value": "Nombre del Sector:"
+              },
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "responsable": {
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "resolucion": {
+              "hidden": {},
+              "typicalLength": {
+                "value": 5
+              }
+            },
+            "disposicion": {
+              "hidden": {},
+              "typicalLength": {
+                "value": 5
+              }
+            },
+            "estaHabilitado": {
+              "hidden": {},
+              "disabled": {},
+              "typicalLength": {
+                "value": 5
+              }
+            },
+            "expediente": {
+              "hidden": {},
+              "typicalLength": {
+                "value": 5
+              }
+            },
+            "creadoPor": {
+              "hidden": {},
+              "typicalLength": {
+                "value": 25
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 8,
+      "collections": {
+        "documentos": {
+          "paged": {
+            "value": 12
+          }
+        }
+      }
+    }
+  ],
+  "actions": {
+    "downloadLayout": {
+      "named": {
+        "value": "Download Layout"
+      }
+    },
+    "addDisposicion": {
+      "named": {
+        "value": "Enviar"
+      }
+    },
+    "addExpediente": {
+      "named": {
+        "value": "Enviar"
+      }
+    },
+    "addMemo": {
+      "named": {
+        "value": "Enviar"
+      }
+    },
+    "addNota": {
+      "named": {
+        "value": "Enviar"
+      }
+    },
+    "addResoluciones": {
+      "named": {
+        "value": "Enviar"
+      }
+    },
+    "filtrar": {
+      "named": {
+        "value": "Filtrar"
+      }
+    },
+    "addToDocumento": {
+      "named": {
+        "value": "Add To Documento"
+      }
+    },
+    "removeFromDocumento": {
+      "named": {
+        "value": "Remove From Documento"
+      }
+    }
+  }
+}
