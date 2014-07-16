@@ -1,0 +1,80 @@
+{
+  "columns": [
+    {
+      "span": 8,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "nro_nota": {
+              "typicalLength": {
+                "value": 5
+              }
+            },
+            "fecha": {
+              "typicalLength": {
+                "value": 12
+              }
+            },
+            "sector": {},
+            "destino": {
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "tipo": {
+              "typicalLength": {
+                "value": 9
+              }
+            },
+            "habilitado": {
+              "typicalLength": {
+                "value": 5
+              }
+            },
+            "creadoPor": {
+              "hidden": {
+                "where": "ALL_TABLES"
+              },
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "dueBy": {
+              "typicalLength": {
+                "value": 12
+              }
+            }
+          }
+        },
+        "Observaciones": {
+          "members": {
+            "descripcion": {
+              "typicalLength": {
+                "value": 25
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "collections": {}
+    }
+  ],
+  "actions": {
+    "downloadLayout": {
+      "named": {
+        "value": "Download Layout"
+      }
+    }
+  }
+}

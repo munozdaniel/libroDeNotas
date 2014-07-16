@@ -7,6 +7,7 @@ import org.apache.isis.applib.annotation.Audited;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.MemberGroupLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
@@ -46,6 +47,7 @@ import dom.documento.Documento;
 @Audited
 @AutoComplete(repository = NotaRepositorio.class, action = "autoComplete")
 @Bookmarkable
+@MemberGroupLayout(columnSpans={3,3,3,3})
 public class Nota extends Documento {
 	// //////////////////////////////////////
 	// Identificacion en la UI.
@@ -53,7 +55,7 @@ public class Nota extends Documento {
 	// //////////////////////////////////////
 
 	public String title() {
-		return Nota.class.getName();
+		return "NOTA Nº "+this.getNro_nota();
 	}
 
 	public String iconName() {
@@ -64,7 +66,7 @@ public class Nota extends Documento {
 
 	@Disabled
 	@javax.jdo.annotations.Column(allowsNull = "false")
-	@MemberOrder(sequence = "0")
+	@MemberOrder(name="Datos Generales" ,sequence = "10")
 	@Named("Nº")
 	public int getNro_nota() {
 		return nro_nota;
@@ -78,7 +80,7 @@ public class Nota extends Documento {
 
 	@Named("Destino")
 	@javax.jdo.annotations.Column(allowsNull = "false")
-	@MemberOrder(sequence = "40")
+	@MemberOrder(name="Datos Generales" ,sequence = "40")
 	public String getDestino() {
 		return destino;
 	}
