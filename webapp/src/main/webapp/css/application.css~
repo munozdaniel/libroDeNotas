@@ -19,7 +19,7 @@
 
 /*
 uncomment to add a logo (in an ../images directory relative to this file)
-*/
+
 #header {
     height: 48px;
     background-image: url("../images/logo.png");
@@ -27,9 +27,9 @@ uncomment to add a logo (in an ../images directory relative to this file)
 }
 
 #header h1 {
-	display: true;
+	display: none;
 }
-
+*/
 
 /*
 example: uncomment to hide the icon
