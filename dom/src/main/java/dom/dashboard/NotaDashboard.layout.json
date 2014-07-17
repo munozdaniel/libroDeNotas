@@ -15,16 +15,52 @@
     {
       "span": 12,
       "collections": {
-        "analysisByCategory": {
+        "allNotas": {
           "paged": {
-            "value": 12
+            "value": 10
           },
           "render": {
             "value": "EAGERLY"
           },
           "disabled": {},
           "named": {
-            "value": "Todas las Notas"
+            "value": "Notas"
+          }
+        },
+        "allMemo": {
+          "paged": {
+            "value": 10
+          },
+          "render": {
+            "value": "EAGERLY"
+          },
+          "disabled": {},
+          "named": {
+            "value": "Memo"
+          }
+        },
+        "allResoluciones": {
+          "paged": {
+            "value": 10
+          },
+          "render": {
+            "value": "EAGERLY"
+          },
+          "disabled": {},
+          "named": {
+            "value": "Resoluciones"
+          }
+        },
+        "allExpedientes": {
+          "paged": {
+            "value": 10
+          },
+          "render": {
+            "value": "EAGERLY"
+          },
+          "disabled": {},
+          "named": {
+            "value": "Expedientes"
           }
         }
       }
