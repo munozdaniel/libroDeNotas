@@ -60,7 +60,7 @@ public class Expediente extends Documento {
 	}
 
 	public String iconName() {
-		return "Tecnico";
+		return "expediente";
 	}
 
 	// //////////////////////////////////////

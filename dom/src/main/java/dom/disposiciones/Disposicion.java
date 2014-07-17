@@ -53,7 +53,7 @@ public class Disposicion extends Documento {
 	}
 
 	public String iconName() {
-		return "Tecnico";
+		return "disposicion";
 	}
 
 	// //////////////////////////////////////

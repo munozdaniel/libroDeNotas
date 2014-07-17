@@ -55,7 +55,7 @@ public class Resoluciones extends Documento {
 	}
 
 	public String iconName() {
-		return "Tecnico";
+		return "resolucion";
 	}
 
 	private int nro_resolucion;

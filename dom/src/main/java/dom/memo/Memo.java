@@ -58,7 +58,7 @@ public class Memo extends Documento {
 	}
 
 	public String iconName() {
-		return "Tecnico";
+		return "memo";
 	}
 
 	private int nro_memo;

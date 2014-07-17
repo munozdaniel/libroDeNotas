@@ -1,5 +1,7 @@
 package dom.documento;
 
+import java.awt.List;
+
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -203,7 +205,7 @@ public abstract class Documento implements Comparable<Documento> {
 		if (this.getSector() != null)
 			this.setSector(null);
 	}
-
+	
 	// }}
 	@Override
 	public int compareTo(Documento documento) {

@@ -20,7 +20,7 @@ import dom.resoluciones.ResolucionesRepositorio;
 
 public class NotaDashboard extends AbstractViewModel {
 	public String title() {
-		return "Dashboard";
+		return "Inicio";
 	}
 
 	public String iconName() {

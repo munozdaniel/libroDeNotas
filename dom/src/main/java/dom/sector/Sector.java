@@ -58,7 +58,7 @@ public class Sector implements Comparable<Sector> {
 	}
 
 	public String iconName() {
-		return "Sector";
+		return "sector";
 	}
 
 	// //////////////////////////////////////

@@ -7,6 +7,7 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Paged;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.query.QueryDefault;
@@ -119,8 +120,9 @@ public class NotaRepositorio {
 	// //////////////////////////////////////
 	// Listar Notas
 	// //////////////////////////////////////
-
+	@Paged(12)
 	@MemberOrder(sequence = "20")
+	
 	public List<Nota> listar() {
 		final List<Nota> listaNotas = this.container
 				.allMatches(new QueryDefault<Nota>(Nota.class,

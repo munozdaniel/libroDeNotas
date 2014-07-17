@@ -59,7 +59,7 @@ public class Nota extends Documento {
 	}
 
 	public String iconName() {
-		return "Sector";
+		return "nota";
 	}
 
 	private int nro_nota;
@@ -88,6 +88,8 @@ public class Nota extends Documento {
 	public void setDestino(String destino) {
 		this.destino = destino;
 	}
+	
+	
 	// //////////////////////////////////////
 	// Implementando los metodos de comparable
 	// //////////////////////////////////////
