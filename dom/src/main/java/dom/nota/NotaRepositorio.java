@@ -122,7 +122,6 @@ public class NotaRepositorio {
 	// //////////////////////////////////////
 	@Paged(12)
 	@MemberOrder(sequence = "20")
-	
 	public List<Nota> listar() {
 		final List<Nota> listaNotas = this.container
 				.allMatches(new QueryDefault<Nota>(Nota.class,
