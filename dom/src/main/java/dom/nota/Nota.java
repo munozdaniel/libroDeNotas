@@ -11,6 +11,7 @@ import org.apache.isis.applib.annotation.MemberGroupLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
+import org.apache.isis.applib.value.Blob;
 
 import dom.documento.Documento;
 
@@ -88,7 +89,22 @@ public class Nota extends Documento {
 	public void setDestino(String destino) {
 		this.destino = destino;
 	}
-	
+	 // //////////////////////////////////////
+    // Attachment (property)
+    // //////////////////////////////////////
+
+    private Blob attachment;
+
+    @javax.jdo.annotations.Persistent(defaultFetchGroup="false")
+    @javax.jdo.annotations.Column(allowsNull="true")
+    public Blob getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(final Blob attachment) {
+        this.attachment = attachment;
+    }
+
 	
 	// //////////////////////////////////////
 	// Implementando los metodos de comparable
