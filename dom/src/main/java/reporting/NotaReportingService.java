@@ -5,7 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
-import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
@@ -30,38 +30,31 @@ public class NotaReportingService {
 
 	private final static String MIME_TYPE_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
-	private final byte[] notaTemplates;
-	private String path;
+	private byte[] toDoItemTemplates;
 
 	public NotaReportingService() throws IOException {
 		final URL templateUrl = Resources.getResource(
-				NotaReportingService.class, "Nota.docx");
-		if (templateUrl != null)
-			path = templateUrl.getPath();
-		notaTemplates = Resources.toByteArray(templateUrl);
+				NotaReportingService.class, "TypicalDocument.docx");
+		toDoItemTemplates = Resources.toByteArray(templateUrl);
 	}
-	@NotContributed(As.ASSOCIATION)
-	@NotInServiceMenu
-	public String htmlInput(Nota unaNota)
-	{
-		return "HTML : "+ asInputHtml(unaNota);
-	}
+
 	@NotContributed(As.ASSOCIATION)
 	// ie contributed as action
 	@NotInServiceMenu
-	public Blob downloadAsDoc(Nota unaNota) throws LoadInputException,
+	@Named("Descargar Documento")
+	public Blob downloadAsDoc(Nota toDoItem) throws LoadInputException,
 			LoadTemplateException, MergeException {
 
-		final String html = asInputHtml(unaNota);
+		final String html = asInputHtml(toDoItem);
 		final byte[] byteArray = mergeToDocx(html);
 
-		final String outputFileName = "Nota-"
-				+ bookmarkService.bookmarkFor(unaNota).getIdentifier()
+		final String outputFileName = "ToDoItem-"
+				+ bookmarkService.bookmarkFor(toDoItem).getIdentifier()
 				+ ".docx";
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
 
-	private static String asInputHtml(Nota unaNota) {
+	private static String asInputHtml(Nota toDoItem) {
 		final Element htmlEl = new Element("html");
 		Document doc = new Document();
 		doc.setRootElement(htmlEl);
@@ -69,15 +62,14 @@ public class NotaReportingService {
 		final Element bodyEl = new Element("body");
 		htmlEl.addContent(bodyEl);
 
-		bodyEl.addContent(newP("nro_nota", "plain", unaNota.getNro_nota() + ""));
-		// bodyEl.addContent(newP("fecha", "date", dueByOf(unaNota)));
-		// bodyEl.addContent(newP("destino", "plain", unaNota.getDestino()));
-		// bodyEl.addContent(newP("DueBy", "date", dueByOf(unaNota)));
+		bodyEl.addContent(newP("descripcion", "plain",
+				toDoItem.getDescripcion()));
+		bodyEl.addContent(newP("destino", "plain", toDoItem.getDestino()));
 
 		// final Element ulDependencies = new Element("ul");
 		// ulDependencies.setAttribute("id", "Dependencies");
-		//
-		// final SortedSet<Nota> dependencies = unaNota.getDependencies();
+
+		// final SortedSet<ToDoItem> dependencies = toDoItem.getDependencies();
 		// for (final ToDoItem dependency : dependencies) {
 		// final Element liDependency = new Element("li");
 		// ulDependencies.addContent(liDependency);
@@ -86,13 +78,14 @@ public class NotaReportingService {
 		// liDependency.addContent(pDependency);
 		// }
 		// bodyEl.addContent(ulDependencies);
-		//
+
 		final String html = new XMLOutputter().outputString(doc);
 		return html;
 	}
 
-	private static String dueByOf(Nota unaNota) {
-		LocalDate dueBy = unaNota.getFecha();
+	@SuppressWarnings("unused")
+	private static String dueByOf(Nota toDoItem) {
+		LocalDate dueBy = toDoItem.getFecha();
 		return dueBy != null ? dueBy.toString("dd/MM/yyyy") : "";
 	}
 
@@ -106,27 +99,13 @@ public class NotaReportingService {
 
 	private byte[] mergeToDocx(final String html) throws LoadInputException,
 			LoadTemplateException, MergeException {
-		// try {
-		// if (path != null)
-		// { 
-		// this.container.warnUser("path : " + path);
-		// }
-		// else
-		// this.container.warnUser("path NULL: ");
-		this.container.warnUser("html : " + html);
 		final ByteArrayInputStream docxTemplateIs = new ByteArrayInputStream(
-				notaTemplates);
+				toDoItemTemplates);
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		docxService.merge(html, docxTemplateIs, baos, MatchingPolicy.LAX);
 		byte[] byteArray = baos.toByteArray();
 		return byteArray;
-		// } catch (LoadTemplateException e) {
-		// this.container.warnUser("e.Mensaje : " + e.getMessage());
-		// this.container.warnUser("e.Cause : " + e.getCause());
-		//
-		// }
-		// return null;
 	}
 
 	// //////////////////////////////////////
@@ -137,6 +116,21 @@ public class NotaReportingService {
 	@javax.inject.Inject
 	private BookmarkService bookmarkService;
 
-	@javax.inject.Inject
-	private DomainObjectContainer container;
+	@NotContributed(As.ASSOCIATION)
+	@NotInServiceMenu
+	public String htmlInput(Nota unaNota) throws IOException {
+		// final URL url = NotaReportingService.class.getResource("Nota.docx");
+		// if(url !=null)
+		// return "HTML : "+ url.toString();
+		// else
+		// return "NULLOO";
+		// final URL templateUrl = Resources.getResource(
+		// NotaReportingService.class, "ToDoItem.docx");
+		// final byte[] notaTemplate = Resources.toByteArray(templateUrl);
+		// return "NOTATEMPLATES: " + notaTemplate.length;
+		final URL templateUrl = Resources.getResource(
+				NotaReportingService.class, "ToDoItem.docx");
+		toDoItemTemplates = Resources.toByteArray(templateUrl);
+		return toDoItemTemplates.toString();
+	}
 }
