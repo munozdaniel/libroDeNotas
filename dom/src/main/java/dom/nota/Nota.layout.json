@@ -63,11 +63,19 @@
             },
             "creadoPor": {
               "hidden": {
-                "where": "ALL_TABLES"
               },
               "disabled": {},
               "typicalLength": {
                 "value": 25
+              }
+            }
+          }
+        },
+        "Destino": {
+          "members": {
+            "destinoSector": {
+              "named": {
+                "value": "Sector"
               }
             }
           }
