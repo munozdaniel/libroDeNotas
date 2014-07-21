@@ -34,7 +34,7 @@ public class NotaReportingService {
 
 	public NotaReportingService() throws IOException {
 		final URL templateUrl = Resources.getResource(
-				NotaReportingService.class, "TypicalDocument.docx");
+				NotaReportingService.class, "Nota.docx");
 		toDoItemTemplates = Resources.toByteArray(templateUrl);
 	}
 
@@ -48,13 +48,13 @@ public class NotaReportingService {
 		final String html = asInputHtml(toDoItem);
 		final byte[] byteArray = mergeToDocx(html);
 
-		final String outputFileName = "ToDoItem-"
+		final String outputFileName = "Nota-"
 				+ bookmarkService.bookmarkFor(toDoItem).getIdentifier()
 				+ ".docx";
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
 
-	private static String asInputHtml(Nota toDoItem) {
+	private static String asInputHtml(Nota unaNota) {
 		final Element htmlEl = new Element("html");
 		Document doc = new Document();
 		doc.setRootElement(htmlEl);
@@ -62,10 +62,14 @@ public class NotaReportingService {
 		final Element bodyEl = new Element("body");
 		htmlEl.addContent(bodyEl);
 
-		bodyEl.addContent(newP("descripcion", "plain",
-				toDoItem.getDescripcion()));
-		bodyEl.addContent(newP("destino", "plain", toDoItem.getDestino()));
-
+		bodyEl.addContent(newP("nro_nota", "plain", unaNota.getNro_nota() + ""));
+		bodyEl.addContent(newP("fecha", "date", fechaACadena(unaNota)));
+		bodyEl.addContent(newP("nombre_sector", "plain", unaNota.getSector()
+				.getNombre_sector()));
+		bodyEl.addContent(newP("responsable", "plain", unaNota.getSector()
+				.getResponsable()));
+		bodyEl.addContent(newP("destino", "plain", unaNota.getDestino()));
+		bodyEl.addContent(newP("descripcion", "plain", unaNota.getDescripcion()));
 		// final Element ulDependencies = new Element("ul");
 		// ulDependencies.setAttribute("id", "Dependencies");
 
@@ -83,9 +87,8 @@ public class NotaReportingService {
 		return html;
 	}
 
-	@SuppressWarnings("unused")
-	private static String dueByOf(Nota toDoItem) {
-		LocalDate dueBy = toDoItem.getFecha();
+	private static String fechaACadena(Nota unaNota) {
+		LocalDate dueBy = unaNota.getFecha();
 		return dueBy != null ? dueBy.toString("dd/MM/yyyy") : "";
 	}
 
@@ -115,22 +118,22 @@ public class NotaReportingService {
 
 	@javax.inject.Inject
 	private BookmarkService bookmarkService;
-
-	@NotContributed(As.ASSOCIATION)
-	@NotInServiceMenu
-	public String htmlInput(Nota unaNota) throws IOException {
-		// final URL url = NotaReportingService.class.getResource("Nota.docx");
-		// if(url !=null)
-		// return "HTML : "+ url.toString();
-		// else
-		// return "NULLOO";
-		// final URL templateUrl = Resources.getResource(
-		// NotaReportingService.class, "ToDoItem.docx");
-		// final byte[] notaTemplate = Resources.toByteArray(templateUrl);
-		// return "NOTATEMPLATES: " + notaTemplate.length;
-		final URL templateUrl = Resources.getResource(
-				NotaReportingService.class, "ToDoItem.docx");
-		toDoItemTemplates = Resources.toByteArray(templateUrl);
-		return toDoItemTemplates.toString();
-	}
+	//
+	// @NotContributed(As.ASSOCIATION)
+	// @NotInServiceMenu
+	// public String htmlInput(Nota unaNota) throws IOException {
+	// // final URL url = NotaReportingService.class.getResource("Nota.docx");
+	// // if(url !=null)
+	// // return "HTML : "+ url.toString();
+	// // else
+	// // return "NULLOO";
+	// // final URL templateUrl = Resources.getResource(
+	// // NotaReportingService.class, "ToDoItem.docx");
+	// // final byte[] notaTemplate = Resources.toByteArray(templateUrl);
+	// // return "NOTATEMPLATES: " + notaTemplate.length;
+	// final URL templateUrl = Resources.getResource(
+	// NotaReportingService.class, "ToDoItem.docx");
+	// toDoItemTemplates = Resources.toByteArray(templateUrl);
+	// return toDoItemTemplates.toString();
+	// }
 }
