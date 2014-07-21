@@ -8,6 +8,7 @@ import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
 
 import dom.documento.Documento;
@@ -83,8 +84,8 @@ public class Memo extends Documento {
 	// }
 
 	private Sector destinoSector;
-
-	@MemberOrder(name = "Sectores", sequence = "20")
+	@Named("Sector")
+	@MemberOrder(name = "Destino", sequence = "20")
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	public Sector getDestinoSector() {
 		return destinoSector;
