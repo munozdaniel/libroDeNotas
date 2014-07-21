@@ -25,7 +25,6 @@ import com.danhaywood.isis.domainservice.docx.LoadTemplateException;
 import com.danhaywood.isis.domainservice.docx.MergeException;
 import com.google.common.io.Resources;
 
-import dom.disposiciones.Disposicion;
 import dom.expediente.Expediente;
 
 
