@@ -95,7 +95,7 @@ public class Sector implements Comparable<Sector> {
 	private Boolean resolucion;
 
 	@Hidden
-	@javax.jdo.annotations.Column(allowsNull = "false")
+	@javax.jdo.annotations.Column(allowsNull = "True")
 	@MemberOrder(sequence = "20")
 	public Boolean getResolucion() {
 		return resolucion;
@@ -108,7 +108,7 @@ public class Sector implements Comparable<Sector> {
 	private Boolean disposicion;
 
 	@Hidden
-	@javax.jdo.annotations.Column(allowsNull = "false")
+	@javax.jdo.annotations.Column(allowsNull = "True")
 	@MemberOrder(sequence = "40")
 	public Boolean getDisposicion() {
 		return disposicion;
@@ -121,7 +121,7 @@ public class Sector implements Comparable<Sector> {
 	private Boolean expediente;
 
 	@Hidden
-	@javax.jdo.annotations.Column(allowsNull = "false")
+	@javax.jdo.annotations.Column(allowsNull = "True")
 	@MemberOrder(sequence = "50")
 	public Boolean getExpediente() {
 		return expediente;
