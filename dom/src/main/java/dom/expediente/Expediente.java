@@ -7,6 +7,7 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Audited;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
@@ -80,7 +81,7 @@ public class Expediente extends Documento {
 	}
 
 	private String expte_cod_empresa;
-
+	@Hidden
 	@MemberOrder(sequence = "20")
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	public String getExpte_cod_empresa() {
@@ -92,7 +93,7 @@ public class Expediente extends Documento {
 	}
 
 	private int expte_cod_numero;
-
+	@Hidden
 	@MemberOrder(sequence = "30")
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	public int getExpte_cod_numero() {
@@ -117,7 +118,7 @@ public class Expediente extends Documento {
 	}
 
 	private int expte_cod_anio;
-
+	@Hidden
 	@MemberOrder(sequence = "50")
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	public int getExpte_cod_anio() {
