@@ -11,6 +11,7 @@ import org.apache.isis.applib.annotation.Paged;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.value.Blob;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
@@ -49,14 +50,15 @@ public class NotaRepositorio {
 	public Nota addNota(
 			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("De:") Sector sector,
 			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Para:") String destino,
-			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Descripción:") String descripcion) {
+			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Descripción:") String descripcion
+			,final @Optional Blob adjunto) {
 		// return nuevaNota(sector, destino, descripcion);
-		return nuevaNota(sector, destino, descripcion, this.currentUserName());
+		return nuevaNota(sector, destino, descripcion, this.currentUserName(),adjunto);
 	}
 
 	@Programmatic
 	private Nota nuevaNota(final Sector sector, final String destino,
-			final String descripcion, final String creadoPor) {
+			final String descripcion, final String creadoPor,final Blob adjunto) {
 		final Nota unaNota = this.container.newTransientInstance(Nota.class);
 		int nro = recuperarNroNota();
 		nro += 1;
@@ -72,6 +74,7 @@ public class NotaRepositorio {
 		unaNota.setTime(LocalDateTime.now().withMillisOfSecond(3));
 		container.warnUser("Time:: : " + unaNota.getTime().toString());
 		// unaNota.setSector(sector);
+		unaNota.setAdjuntar(adjunto);
 		sector.addToDocumento(unaNota);
 		container.persistIfNotAlready(unaNota);
 		container.flush();
