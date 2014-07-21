@@ -9,6 +9,7 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.value.Blob;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
@@ -40,15 +41,16 @@ public class ResolucionesRepositorio {
 			final @Named("Nº Resolucion:") int nro_resolucion,
 			final @Named("Fecha:") LocalDate fecha,
 			final @Named("De: ") Sector sector,
-			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Descripción:") String descripcion) {
+			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Descripción:") String descripcion,
+			final @Optional Blob adjunto) {
 		return this.nuevaResolucion(nro_resolucion, fecha, sector, descripcion,
-				this.currentUserName());
+				this.currentUserName(), adjunto);
 
 	}
 
 	@Programmatic
-	private Resoluciones nuevaResolucion(int nro_resolucion, LocalDate fecha,
-			Sector sector, final String descripcion, String creadoPor) {
+	private Resoluciones nuevaResolucion(final int nro_resolucion,final  LocalDate fecha,
+			final Sector sector, final String descripcion, final String creadoPor, final Blob adjunto) {
 		final Resoluciones unaResolucion = this.container
 				.newTransientInstance(Resoluciones.class);
 		unaResolucion.setNro_resolucion(nro_resolucion);
@@ -58,6 +60,7 @@ public class ResolucionesRepositorio {
 		unaResolucion.setHabilitado(true);
 		unaResolucion.setCreadoPor(creadoPor);
 		// unaResolucion.setSector(sector);
+		unaResolucion.setAdjuntar(adjunto);
 		unaResolucion.setTime(LocalDateTime.now().withMillisOfSecond(3));
 		sector.addToDocumento(unaResolucion);
 		container.persistIfNotAlready(unaResolucion);
