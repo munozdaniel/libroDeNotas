@@ -30,26 +30,26 @@ public class NotaReportingService {
 
 	private final static String MIME_TYPE_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
-	private byte[] toDoItemTemplates;
+	private byte[] templates;
 
 	public NotaReportingService() throws IOException {
 		final URL templateUrl = Resources.getResource(
 				NotaReportingService.class, "Nota.docx");
-		toDoItemTemplates = Resources.toByteArray(templateUrl);
+		templates = Resources.toByteArray(templateUrl);
 	}
 
 	@NotContributed(As.ASSOCIATION)
 	// ie contributed as action
 	@NotInServiceMenu
 	@Named("Descargar Documento")
-	public Blob downloadAsDoc(Nota toDoItem) throws LoadInputException,
+	public Blob downloadAsDoc(Nota unaNota) throws LoadInputException,
 			LoadTemplateException, MergeException {
 
-		final String html = asInputHtml(toDoItem);
+		final String html = asInputHtml(unaNota);
 		final byte[] byteArray = mergeToDocx(html);
 
 		final String outputFileName = "Nota-"
-				+ bookmarkService.bookmarkFor(toDoItem).getIdentifier()
+				+ bookmarkService.bookmarkFor(unaNota).getIdentifier()
 				+ ".docx";
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
@@ -103,7 +103,7 @@ public class NotaReportingService {
 	private byte[] mergeToDocx(final String html) throws LoadInputException,
 			LoadTemplateException, MergeException {
 		final ByteArrayInputStream docxTemplateIs = new ByteArrayInputStream(
-				toDoItemTemplates);
+				templates);
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		docxService.merge(html, docxTemplateIs, baos, MatchingPolicy.LAX);
