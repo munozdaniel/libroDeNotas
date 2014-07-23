@@ -141,7 +141,7 @@
 	</filter>
 	<filter-mapping>
 		<filter-name>WicketFilter</filter-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/wicket/*</url-pattern>
 	</filter-mapping>
 
 
