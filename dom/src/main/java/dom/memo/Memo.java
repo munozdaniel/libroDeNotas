@@ -67,6 +67,7 @@ public class Memo extends Documento {
 	@MemberOrder(sequence = "10")
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Disabled
+	@Named("Nro")
 	public int getNro_memo() {
 		return nro_memo;
 	}

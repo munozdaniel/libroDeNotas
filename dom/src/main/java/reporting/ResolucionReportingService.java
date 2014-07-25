@@ -43,7 +43,7 @@ public class ResolucionReportingService {
 	@NotContributed(As.ASSOCIATION)
 	// ie contributed as action
 	@NotInServiceMenu
-	@Named("Descargar Documento")
+	@Named("Documento Simple")
 	public Blob downloadAsDoc(Resoluciones unaResolucion) throws LoadInputException,
 			LoadTemplateException, MergeException {
 
@@ -55,7 +55,21 @@ public class ResolucionReportingService {
 				+ ".docx";
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
+	@NotContributed(As.ASSOCIATION)
+	@NotInServiceMenu
+	@Named("Documento con Planilla")
+	public Blob downloadAsDocPlanilla(Resoluciones unaResoluciones) throws LoadInputException,
+			LoadTemplateException, MergeException, IOException {
+		final URL templateUrl = Resources.getResource(
+				NotaReportingService.class, "ResolucionesTabla.docx");
+		templates = Resources.toByteArray(templateUrl);
+		final String html = asInputHtml( unaResoluciones);
+		final byte[] byteArray = mergeToDocx(html);
 
+		final String outputFileName = "Resoluciones-"
+				+ bookmarkService.bookmarkFor(unaResoluciones).getIdentifier() + ".docx";
+		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
+	}
 	private static String asInputHtml(Resoluciones unaResolucion) {
 		final Element htmlEl = new Element("html");
 		Document doc = new Document();

@@ -1,6 +1,5 @@
 package reporting;
 
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,7 +26,6 @@ import com.google.common.io.Resources;
 
 import dom.memo.Memo;
 
-
 public class MemoReportingService {
 
 	private final static String MIME_TYPE_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
@@ -43,7 +41,7 @@ public class MemoReportingService {
 	@NotContributed(As.ASSOCIATION)
 	// ie contributed as action
 	@NotInServiceMenu
-	@Named("Descargar Documento")
+	@Named("Documento Simple")
 	public Blob downloadAsDoc(Memo unMemo) throws LoadInputException,
 			LoadTemplateException, MergeException {
 
@@ -51,8 +49,23 @@ public class MemoReportingService {
 		final byte[] byteArray = mergeToDocx(html);
 
 		final String outputFileName = "Memo-"
-				+ bookmarkService.bookmarkFor(unMemo).getIdentifier()
-				+ ".docx";
+				+ bookmarkService.bookmarkFor(unMemo).getIdentifier() + ".docx";
+		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
+	}
+
+	@NotContributed(As.ASSOCIATION)
+	@NotInServiceMenu
+	@Named("Documento con Planilla")
+	public Blob downloadAsDocPlanilla(Memo unMemo) throws LoadInputException,
+			LoadTemplateException, MergeException, IOException {
+		final URL templateUrl = Resources.getResource(
+				NotaReportingService.class, "MemoTabla.docx");
+		templates = Resources.toByteArray(templateUrl);
+		final String html = asInputHtml(unMemo);
+		final byte[] byteArray = mergeToDocx(html);
+
+		final String outputFileName = "Memo-"
+				+ bookmarkService.bookmarkFor(unMemo).getIdentifier() + ".docx";
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
 
@@ -70,7 +83,8 @@ public class MemoReportingService {
 				.getNombre_sector()));
 		bodyEl.addContent(newP("responsable", "plain", unMemo.getSector()
 				.getResponsable()));
-		bodyEl.addContent(newP("destino", "plain", unMemo.getDestinoSector().getNombre_sector()));
+		bodyEl.addContent(newP("destino", "plain", unMemo.getDestinoSector()
+				.getNombre_sector()));
 		bodyEl.addContent(newP("descripcion", "plain", unMemo.getDescripcion()));
 		// final Element ulDependencies = new Element("ul");
 		// ulDependencies.setAttribute("id", "Dependencies");

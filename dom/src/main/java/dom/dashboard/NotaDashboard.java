@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.isis.applib.AbstractViewModel;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
@@ -48,6 +49,8 @@ public class NotaDashboard extends AbstractViewModel {
 	@Render(Type.EAGERLY)
 	@Disabled
 	@MemberOrder(sequence = "10")
+	@MultiLine(numberOfLines = 10)
+	
 	public List<Nota> getAllNotas() {
 		return notaRepositorio.listar();
 	}

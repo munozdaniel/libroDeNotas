@@ -16,6 +16,7 @@ import org.apache.isis.applib.value.Blob;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
+import dom.expediente.Expediente.Letras;
 import dom.sector.Sector;
 import dom.sector.SectorRepositorio;
 
@@ -35,22 +36,22 @@ public class ExpedienteRepositorio {
 	}
 
 	public String iconName() {
-		return "Tecnico";
+		return "expediente";
 	}
 
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
 	public Expediente addExpediente(
 			final @Named("Inicia: ") Sector sector,
-			final @Named("Codigo: ") @MaxLength(1) String expte_cod_letra,
-			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Motivo:") String descripcion,
-			final @Optional Blob adjunto) {
+			final @Named("Codigo: ") @MaxLength(1) Letras expte_cod_letra,
+			final  @Named("Motivo:") String descripcion,
+			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		return this.nuevoExpediente(expte_cod_letra, sector, descripcion,
 				this.currentUserName(),adjunto);
 
 	}
 
-	private Expediente nuevoExpediente(final String expte_cod_letra,
+	private Expediente nuevoExpediente(final Letras expte_cod_letra,
 			final Sector sector, final String descripcion,
 			final String creadoPor, final Blob adjunto) {
 		final Expediente unExpediente = this.container

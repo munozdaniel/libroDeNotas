@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
 
 import dom.documento.Documento;
@@ -70,6 +71,7 @@ public class Expediente extends Documento {
 
 	private int nro_expediente;
 
+	@Named("Nro")
 	@MemberOrder(sequence = "10")
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	public int getNro_expediente() {
@@ -81,6 +83,7 @@ public class Expediente extends Documento {
 	}
 
 	private String expte_cod_empresa;
+
 	@Hidden
 	@MemberOrder(sequence = "20")
 	@javax.jdo.annotations.Column(allowsNull = "false")
@@ -92,32 +95,37 @@ public class Expediente extends Documento {
 		this.expte_cod_empresa = expte_cod_empresa;
 	}
 
-	private int expte_cod_numero;
-	@Hidden
-	@MemberOrder(sequence = "30")
-	@javax.jdo.annotations.Column(allowsNull = "false")
-	public int getExpte_cod_numero() {
-		return expte_cod_numero;
-	}
-
-	public void setExpte_cod_numero(int expte_cod_numero) {
-		this.expte_cod_numero = expte_cod_numero;
-	}
-
-	private String expte_cod_letra;
+	// private int expte_cod_numero;
+	//
+	// @Hidden
+	// @MemberOrder(sequence = "30")
+	// @javax.jdo.annotations.Column(allowsNull = "false")
+	// public int getExpte_cod_numero() {
+	// return expte_cod_numero;
+	// }
+	//
+	// public void setExpte_cod_numero(int expte_cod_numero) {
+	// this.expte_cod_numero = expte_cod_numero;
+	// }
+	public enum Letras {
+		A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z
+		}
+	private Letras expte_cod_letra;
 
 	@MemberOrder(sequence = "40")
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@MaxLength(1)
-	public String getExpte_cod_letra() {
+	@Named("Codigo")
+	public Letras getExpte_cod_letra() {
 		return expte_cod_letra;
 	}
 
-	public void setExpte_cod_letra(String expte_cod_letra) {
+	public void setExpte_cod_letra(Letras expte_cod_letra) {
 		this.expte_cod_letra = expte_cod_letra;
 	}
 
 	private int expte_cod_anio;
+
 	@Hidden
 	@MemberOrder(sequence = "50")
 	@javax.jdo.annotations.Column(allowsNull = "false")

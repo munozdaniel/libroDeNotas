@@ -1,6 +1,5 @@
 package reporting;
 
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,7 +26,6 @@ import com.google.common.io.Resources;
 
 import dom.disposiciones.Disposicion;
 
-
 public class DisposicionReportingService {
 
 	private final static String MIME_TYPE_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
@@ -43,9 +41,9 @@ public class DisposicionReportingService {
 	@NotContributed(As.ASSOCIATION)
 	// ie contributed as action
 	@NotInServiceMenu
-	@Named("Descargar Documento")
-	public Blob downloadAsDoc(Disposicion unaDisposicion) throws LoadInputException,
-			LoadTemplateException, MergeException {
+	@Named("Documento Simple")
+	public Blob downloadAsDoc(Disposicion unaDisposicion)
+			throws LoadInputException, LoadTemplateException, MergeException {
 
 		final String html = asInputHtml(unaDisposicion);
 		final byte[] byteArray = mergeToDocx(html);
@@ -53,6 +51,22 @@ public class DisposicionReportingService {
 		final String outputFileName = "Disposicion-"
 				+ bookmarkService.bookmarkFor(unaDisposicion).getIdentifier()
 				+ ".docx";
+		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
+	}
+
+	@NotContributed(As.ASSOCIATION)
+	@NotInServiceMenu
+	@Named("Documento con Planilla")
+	public Blob downloadAsDocPlanilla(Disposicion unaDisposicion) throws LoadInputException,
+			LoadTemplateException, MergeException, IOException {
+		final URL templateUrl = Resources.getResource(
+				NotaReportingService.class, "DisposicionTabla.docx");
+		templates = Resources.toByteArray(templateUrl);
+		final String html = asInputHtml( unaDisposicion);
+		final byte[] byteArray = mergeToDocx(html);
+
+		final String outputFileName = "Disposicion-"
+				+ bookmarkService.bookmarkFor(unaDisposicion).getIdentifier() + ".docx";
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
 
@@ -64,13 +78,15 @@ public class DisposicionReportingService {
 		final Element bodyEl = new Element("body");
 		htmlEl.addContent(bodyEl);
 
-		bodyEl.addContent(newP("nro_nota", "plain", unaDisposicion.getNro_Disposicion() + ""));
+		bodyEl.addContent(newP("nro_nota", "plain",
+				unaDisposicion.getNro_Disposicion() + ""));
 		bodyEl.addContent(newP("fecha", "date", fechaACadena(unaDisposicion)));
-		bodyEl.addContent(newP("nombre_sector", "plain", unaDisposicion.getSector()
-				.getNombre_sector()));
-		bodyEl.addContent(newP("responsable", "plain", unaDisposicion.getSector()
-				.getResponsable()));
-		bodyEl.addContent(newP("descripcion", "plain", unaDisposicion.getDescripcion()));
+		bodyEl.addContent(newP("nombre_sector", "plain", unaDisposicion
+				.getSector().getNombre_sector()));
+		bodyEl.addContent(newP("responsable", "plain", unaDisposicion
+				.getSector().getResponsable()));
+		bodyEl.addContent(newP("descripcion", "plain",
+				unaDisposicion.getDescripcion()));
 		// final Element ulDependencies = new Element("ul");
 		// ulDependencies.setAttribute("id", "Dependencies");
 

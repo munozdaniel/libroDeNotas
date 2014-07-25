@@ -33,15 +33,15 @@ public class DisposicionRepositorio {
 	}
 
 	public String iconName() {
-		return "Tecnico";
+		return "disposicion";
 	}
 
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
 	public Disposicion addDisposicion(
 			final @Named("Sector") Sector sector,
-			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Descripción:") String descripcion,
-			final @Optional Blob adjunto) {
+			final @Named("Descripción:") String descripcion,
+			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		return this.nuevaDisposicion(sector, descripcion,
 				this.currentUserName(), adjunto);
 
@@ -122,7 +122,7 @@ public class DisposicionRepositorio {
 				.allMatches(new QueryDefault<Disposicion>(Disposicion.class,
 						"listar"));
 		if (listaMemo.isEmpty()) {
-			this.container.warnUser("No hay tecnicos cargados en el sistema");
+			this.container.warnUser("No hay Disposiciones cargados en el sistema");
 		}
 		return listaMemo;
 

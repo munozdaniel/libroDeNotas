@@ -1,7 +1,5 @@
 package dom.documento;
 
-import java.awt.List;
-
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -25,15 +23,6 @@ import dom.sector.Sector;
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.SUBCLASS_TABLE)
 public abstract class Documento implements Comparable<Documento> {
-	// pk
-	// private BigInteger id_documento;
-	// public BigInteger getId_documento() {
-	// return id_documento;
-	// }
-	//
-	// public void setId_documento(BigInteger id_documento) {
-	// this.id_documento = id_documento;
-	// }
 
 	private LocalDateTime time;
 
@@ -170,41 +159,6 @@ public abstract class Documento implements Comparable<Documento> {
 		this.creadoPor = creadoPor;
 	}
 
-	// //////////////////////////////////////
-	// RELACION: Documento - Nota
-	// //////////////////////////////////////
-
-	// {{ Nota (property)
-	// private Nota nota;
-	//
-	// @MemberOrder(sequence = "1")
-	// @Column(allowsNull = "False")
-	// public Nota getNota() {
-	// return nota;
-	// }
-	//
-	// public void setNota(final Nota nota) {
-	// this.nota = nota;
-	// }
-	// }}
-
-	// //////////////////////////////////////
-	// RELACIONES: Documento - Sector
-	// //////////////////////////////////////
-
-	// private int id_sector;
-	//
-	// @javax.jdo.annotations.Column(allowsNull = "false")
-	// @MemberOrder(sequence = "40")
-	// public int getId_sector() {
-	// return id_sector;
-	// }
-	//
-	// public void setId_sector(int id_sector) {
-	// this.id_sector = id_sector;
-	// }
-
-	// {{ PropertyName (property)
 	private Sector sector;
 
 	@MemberOrder(name="Datos Generales" ,sequence = "30")
@@ -219,7 +173,6 @@ public abstract class Documento implements Comparable<Documento> {
 	}
 
 	public void clearSector() {
-		// TODO Auto-generated method stub
 		if (this.getSector() != null)
 			this.setSector(null);
 	}

@@ -33,7 +33,7 @@ public class MemoRepositorio {
 	}
 
 	public String iconName() {
-		return "Tecnico";
+		return "memo";
 	}
 
 	@Named("Enviar")
@@ -41,8 +41,8 @@ public class MemoRepositorio {
 	public Memo addMemo(
 			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("De:") Sector sector,
 			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Sector:") Sector destinoSector,
-			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Descripción:") String descripcion,
-			final @Optional Blob adjunto) {
+			final  @Named("Descripción:") String descripcion,
+			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		return this.nuevoMemo(sector, destinoSector, descripcion,
 				this.currentUserName(), adjunto);
 
@@ -140,7 +140,7 @@ public class MemoRepositorio {
 				.allMatches(new QueryDefault<Memo>(Memo.class,
 						"listarHabilitados"));
 		if (listaMemo.isEmpty()) {
-			this.container.warnUser("No hay tecnicos cargados en el sistema");
+			this.container.warnUser("No hay Memos cargados en el sistema");
 		}
 		return listaMemo;
 

@@ -43,7 +43,7 @@ public class ExpedienteReportingService {
 	@NotContributed(As.ASSOCIATION)
 	// ie contributed as action
 	@NotInServiceMenu
-	@Named("Descargar Documento")
+	@Named("Documento Simple")
 	public Blob downloadAsDoc(Expediente unExpediente) throws LoadInputException,
 			LoadTemplateException, MergeException {
 
@@ -55,7 +55,22 @@ public class ExpedienteReportingService {
 				+ ".docx";
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
+	@NotContributed(As.ASSOCIATION)
+	@NotInServiceMenu
+	@Named("Documento con Planilla")
+	public Blob downloadAsDocPlanilla(Expediente unExpediente) throws LoadInputException,
+			LoadTemplateException, MergeException, IOException {
+		final URL templateUrl = Resources.getResource(
+				NotaReportingService.class, "ExpedienteTabla.docx");
+		templates = Resources.toByteArray(templateUrl);
+		final String html = asInputHtml(unExpediente);
+		final byte[] byteArray = mergeToDocx(html);
 
+		final String outputFileName = "Expediente-"
+				+ bookmarkService.bookmarkFor(unExpediente).getIdentifier()
+				+ ".docx";
+		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
+	}
 	private static String asInputHtml(Expediente unExpediente) {
 		final Element htmlEl = new Element("html");
 		Document doc = new Document();
@@ -73,8 +88,7 @@ public class ExpedienteReportingService {
 		bodyEl.addContent(newP("descripcion", "plain", unExpediente.getDescripcion()));
 		bodyEl.addContent(newP("expte_cod_anio", "plain", unExpediente.getExpte_cod_anio()+""));
 		bodyEl.addContent(newP("expte_cod_empresa", "plain", unExpediente.getExpte_cod_empresa()));
-		bodyEl.addContent(newP("expte_cod_letra", "plain", unExpediente.getExpte_cod_letra()));
-		bodyEl.addContent(newP("expte_cod_numero", "plain", unExpediente.getExpte_cod_numero()+""));
+		bodyEl.addContent(newP("expte_cod_letra", "plain", unExpediente.getExpte_cod_letra().name()));
 
 		// final Element ulDependencies = new Element("ul");
 		// ulDependencies.setAttribute("id", "Dependencies");

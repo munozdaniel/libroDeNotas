@@ -32,7 +32,7 @@ public class ResolucionesRepositorio {
 	}
 
 	public String iconName() {
-		return "Tecnico";
+		return "resolucion";
 	}
 
 	@Named("Enviar")
@@ -41,16 +41,17 @@ public class ResolucionesRepositorio {
 			final @Named("Nº Resolucion:") int nro_resolucion,
 			final @Named("Fecha:") LocalDate fecha,
 			final @Named("De: ") Sector sector,
-			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Descripción:") String descripcion,
-			final @Optional Blob adjunto) {
+			final @Named("Descripción:") String descripcion,
+			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		return this.nuevaResolucion(nro_resolucion, fecha, sector, descripcion,
 				this.currentUserName(), adjunto);
 
 	}
 
 	@Programmatic
-	private Resoluciones nuevaResolucion(final int nro_resolucion,final  LocalDate fecha,
-			final Sector sector, final String descripcion, final String creadoPor, final Blob adjunto) {
+	private Resoluciones nuevaResolucion(final int nro_resolucion,
+			final LocalDate fecha, final Sector sector,
+			final String descripcion, final String creadoPor, final Blob adjunto) {
 		final Resoluciones unaResolucion = this.container
 				.newTransientInstance(Resoluciones.class);
 		unaResolucion.setNro_resolucion(nro_resolucion);
@@ -90,7 +91,8 @@ public class ResolucionesRepositorio {
 				.allMatches(new QueryDefault<Resoluciones>(Resoluciones.class,
 						"listarHabilitados"));
 		if (listaMemo.isEmpty()) {
-			this.container.warnUser("No hay tecnicos cargados en el sistema");
+			this.container
+					.warnUser("No hay Resoluciones cargados en el sistema");
 		}
 		return listaMemo;
 

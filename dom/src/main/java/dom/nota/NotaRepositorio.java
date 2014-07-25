@@ -34,7 +34,7 @@ public class NotaRepositorio {
 	}
 
 	public String iconName() {
-		return "Tecnico";
+		return "nota";
 	}
 
 	/**
@@ -50,8 +50,8 @@ public class NotaRepositorio {
 	public Nota addNota(
 			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("De:") Sector sector,
 			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Para:") String destino,
-			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Descripción:") String descripcion
-			,final @Optional Blob adjunto) {
+			final @Named("Descripción:") String descripcion
+			,final @Optional @Named("Ajuntar:") Blob adjunto) {
 		// return nuevaNota(sector, destino, descripcion);
 		return nuevaNota(sector, destino, descripcion, this.currentUserName(),adjunto);
 	}
@@ -72,7 +72,7 @@ public class NotaRepositorio {
 		unaNota.setCreadoPor(creadoPor);
 		unaNota.setDestino(destino);
 		unaNota.setTime(LocalDateTime.now().withMillisOfSecond(3));
-		container.warnUser("Time:: : " + unaNota.getTime().toString());
+		// container.warnUser("Time:: : " + unaNota.getTime().toString());
 		// unaNota.setSector(sector);
 		unaNota.setAdjuntar(adjunto);
 		sector.addToDocumento(unaNota);
@@ -130,7 +130,7 @@ public class NotaRepositorio {
 				.allMatches(new QueryDefault<Nota>(Nota.class,
 						"listarHabilitados"));
 		if (listaNotas.isEmpty()) {
-			this.container.warnUser("No hay tecnicos cargados en el sistema");
+			this.container.warnUser("No hay Notas cargados en el sistema");
 		}
 		return listaNotas;
 

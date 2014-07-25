@@ -11,7 +11,6 @@ import org.apache.isis.applib.annotation.MemberGroupLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
-import org.apache.isis.applib.value.Blob;
 
 import dom.documento.Documento;
 
@@ -68,7 +67,7 @@ public class Nota extends Documento {
 	@Disabled
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@MemberOrder(name="Datos Generales" ,sequence = "10")
-	@Named("Nº")
+	@Named("Nro")
 	public int getNro_nota() {
 		return nro_nota;
 	}

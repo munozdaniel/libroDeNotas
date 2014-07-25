@@ -39,12 +39,28 @@ public class NotaReportingService {
 	}
 
 	@NotContributed(As.ASSOCIATION)
-	// ie contributed as action
 	@NotInServiceMenu
-	@Named("Descargar Documento")
+	@Named("Documento Simple")
 	public Blob downloadAsDoc(Nota unaNota) throws LoadInputException,
 			LoadTemplateException, MergeException {
 
+		final String html = asInputHtml(unaNota);
+		final byte[] byteArray = mergeToDocx(html);
+
+		final String outputFileName = "Nota-"
+				+ bookmarkService.bookmarkFor(unaNota).getIdentifier()
+				+ ".docx";
+		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
+	}
+
+	@NotContributed(As.ASSOCIATION)
+	@NotInServiceMenu
+	@Named("Documento con Planilla")
+	public Blob downloadAsDocPlanilla(Nota unaNota) throws LoadInputException,
+			LoadTemplateException, MergeException, IOException {
+		final URL templateUrl = Resources.getResource(
+				NotaReportingService.class, "NotaTabla.docx");
+		templates = Resources.toByteArray(templateUrl);
 		final String html = asInputHtml(unaNota);
 		final byte[] byteArray = mergeToDocx(html);
 
