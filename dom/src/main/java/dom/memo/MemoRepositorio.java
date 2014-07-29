@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.value.Blob;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
@@ -32,7 +33,7 @@ public class MemoRepositorio {
 	}
 
 	public String iconName() {
-		return "Tecnico";
+		return "memo";
 	}
 
 	@Named("Enviar")
@@ -40,9 +41,10 @@ public class MemoRepositorio {
 	public Memo addMemo(
 			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("De:") Sector sector,
 			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Sector:") Sector destinoSector,
-			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Descripción:") String descripcion) {
+			final  @Named("Descripción:") String descripcion,
+			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		return this.nuevoMemo(sector, destinoSector, descripcion,
-				this.currentUserName());
+				this.currentUserName(), adjunto);
 
 	}
 
@@ -57,7 +59,7 @@ public class MemoRepositorio {
 
 	@Programmatic
 	private Memo nuevoMemo(final Sector sector, final Sector destinoSector,
-			final String descripcion, final String creadoPor) {
+			final String descripcion, final String creadoPor, final Blob adjunto) {
 		final Memo unMemo = this.container.newTransientInstance(Memo.class);
 		int nro = recuperarNroMemo();
 		nro += 1;
@@ -65,6 +67,7 @@ public class MemoRepositorio {
 		formato.format("%04d", nro);
 		unMemo.setNro_memo(Integer.parseInt(000 + formato.toString()));
 		unMemo.setFecha(LocalDate.now());
+		unMemo.setAdjuntar(adjunto);
 		unMemo.setTipo(2);
 		unMemo.setDescripcion(descripcion.toUpperCase().trim());
 		unMemo.setHabilitado(true);
@@ -137,7 +140,7 @@ public class MemoRepositorio {
 				.allMatches(new QueryDefault<Memo>(Memo.class,
 						"listarHabilitados"));
 		if (listaMemo.isEmpty()) {
-			this.container.warnUser("No hay tecnicos cargados en el sistema");
+			this.container.warnUser("No hay Memos cargados en el sistema");
 		}
 		return listaMemo;
 
@@ -191,6 +194,7 @@ public class MemoRepositorio {
 			}
 		}
 	}
+
 	@Named("Sector")
 	public List<Sector> choices0Filtrar() {
 		return sectorRepositorio.listar(); // TODO: return list of choices for

@@ -21,7 +21,8 @@
 uncomment to add a logo (in an ../images directory relative to this file)
 */
 #header {
-    height: 48px;
+    height: 70px;
+width: 400px;
     background-image: url("../images/logo.png");
 	background-repeat: no-repeat;
 }

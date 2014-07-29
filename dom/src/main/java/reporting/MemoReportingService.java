@@ -24,53 +24,52 @@ import com.danhaywood.isis.domainservice.docx.LoadTemplateException;
 import com.danhaywood.isis.domainservice.docx.MergeException;
 import com.google.common.io.Resources;
 
-import dom.nota.Nota;
+import dom.memo.Memo;
 
-public class NotaReportingService {
+public class MemoReportingService {
 
 	private final static String MIME_TYPE_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
 	private byte[] templates;
 
-	public NotaReportingService() throws IOException {
+	public MemoReportingService() throws IOException {
 		final URL templateUrl = Resources.getResource(
-				NotaReportingService.class, "Nota.docx");
+				NotaReportingService.class, "Memo.docx");
 		templates = Resources.toByteArray(templateUrl);
 	}
 
 	@NotContributed(As.ASSOCIATION)
+	// ie contributed as action
 	@NotInServiceMenu
 	@Named("Documento Simple")
-	public Blob downloadAsDoc(Nota unaNota) throws LoadInputException,
+	public Blob downloadAsDoc(Memo unMemo) throws LoadInputException,
 			LoadTemplateException, MergeException {
 
-		final String html = asInputHtml(unaNota);
+		final String html = asInputHtml(unMemo);
 		final byte[] byteArray = mergeToDocx(html);
 
-		final String outputFileName = "Nota-"
-				+ bookmarkService.bookmarkFor(unaNota).getIdentifier()
-				+ ".docx";
+		final String outputFileName = "Memo-"
+				+ bookmarkService.bookmarkFor(unMemo).getIdentifier() + ".docx";
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
 
 	@NotContributed(As.ASSOCIATION)
 	@NotInServiceMenu
 	@Named("Documento con Planilla")
-	public Blob downloadAsDocPlanilla(Nota unaNota) throws LoadInputException,
+	public Blob downloadAsDocPlanilla(Memo unMemo) throws LoadInputException,
 			LoadTemplateException, MergeException, IOException {
 		final URL templateUrl = Resources.getResource(
-				NotaReportingService.class, "NotaTabla.docx");
+				NotaReportingService.class, "MemoTabla.docx");
 		templates = Resources.toByteArray(templateUrl);
-		final String html = asInputHtml(unaNota);
+		final String html = asInputHtml(unMemo);
 		final byte[] byteArray = mergeToDocx(html);
 
-		final String outputFileName = "Nota-"
-				+ bookmarkService.bookmarkFor(unaNota).getIdentifier()
-				+ ".docx";
+		final String outputFileName = "Memo-"
+				+ bookmarkService.bookmarkFor(unMemo).getIdentifier() + ".docx";
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
 
-	private static String asInputHtml(Nota unaNota) {
+	private static String asInputHtml(Memo unMemo) {
 		final Element htmlEl = new Element("html");
 		Document doc = new Document();
 		doc.setRootElement(htmlEl);
@@ -78,14 +77,15 @@ public class NotaReportingService {
 		final Element bodyEl = new Element("body");
 		htmlEl.addContent(bodyEl);
 
-		bodyEl.addContent(newP("nro_nota", "plain", unaNota.getNro_nota() + ""));
-		bodyEl.addContent(newP("fecha", "date", fechaACadena(unaNota)));
-		bodyEl.addContent(newP("nombre_sector", "plain", unaNota.getSector()
+		bodyEl.addContent(newP("nro_nota", "plain", unMemo.getNro_memo() + ""));
+		bodyEl.addContent(newP("fecha", "date", fechaACadena(unMemo)));
+		bodyEl.addContent(newP("nombre_sector", "plain", unMemo.getSector()
 				.getNombre_sector()));
-		bodyEl.addContent(newP("responsable", "plain", unaNota.getSector()
+		bodyEl.addContent(newP("responsable", "plain", unMemo.getSector()
 				.getResponsable()));
-		bodyEl.addContent(newP("destino", "plain", unaNota.getDestino()));
-		bodyEl.addContent(newP("descripcion", "plain", unaNota.getDescripcion()));
+		bodyEl.addContent(newP("destino", "plain", unMemo.getDestinoSector()
+				.getNombre_sector()));
+		bodyEl.addContent(newP("descripcion", "plain", unMemo.getDescripcion()));
 		// final Element ulDependencies = new Element("ul");
 		// ulDependencies.setAttribute("id", "Dependencies");
 
@@ -103,8 +103,8 @@ public class NotaReportingService {
 		return html;
 	}
 
-	private static String fechaACadena(Nota unaNota) {
-		LocalDate dueBy = unaNota.getFecha();
+	private static String fechaACadena(Memo unMemo) {
+		LocalDate dueBy = unMemo.getFecha();
 		return dueBy != null ? dueBy.toString("dd/MM/yyyy") : "";
 	}
 

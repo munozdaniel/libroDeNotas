@@ -1,7 +1,7 @@
 {
   "columns": [
     {
-      "span": 4,
+      "span": 8,
       "memberGroups": {
         "General": {
           "members": {
@@ -20,7 +20,11 @@
                 "value": 12
               }
             },
-            "sector": {},
+            "sector": {
+              "named": {
+                "value": "Origen"
+              }
+            },
             "tipo": {
               "hidden": {},
               "disabled": {},
@@ -35,17 +39,6 @@
               "hidden": {},
               "typicalLength": {
                 "value": 5
-              }
-            },
-            "descripcion": {
-              "named": {
-                "value": "Descripcion"
-              },
-              "typicalLength": {
-                "value": 150
-              },
-              "multiLine": {
-                "numberOfLines": 6
               }
             },
             "creadoPor": {
@@ -66,15 +59,39 @@
             }
           }
         },
-        "Sectores": {
+        "Destino": {
           "members": {
-            "destinoSector": {}
+            "destinoSector": {
+              "named": {
+                "value": "Sector"
+              }
+            }
+          }
+        },
+        "Observaciones": {
+          "members": {
+            "descripcion": {
+              "named": {
+                "value": "Descripcion"
+              },
+              "typicalLength": {
+                "value": 150
+              },
+              "multiLine": {
+                "numberOfLines": 6
+              }
+            },
+            "adjuntar": {
+              "named": {
+                "value": "Adjuntar"
+              }
+            }
           }
         }
       }
     },
     {
-      "span": 0,
+      "span": 4,
       "memberGroups": {}
     },
     {
@@ -82,7 +99,7 @@
       "memberGroups": {}
     },
     {
-      "span": 8,
+      "span": 0,
       "collections": {}
     }
   ],

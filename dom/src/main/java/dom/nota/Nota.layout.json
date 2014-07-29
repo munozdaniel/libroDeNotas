@@ -5,43 +5,77 @@
       "memberGroups": {
         "General": {
           "members": {
+            "time": {
+              "hidden": {},
+              "named": {
+                "value": "system_time"
+              },
+              "typicalLength": {
+                "value": 12
+              }
+            },
             "nro_nota": {
+              "disabled": {},
+              "named": {
+                "value": "Nº"
+              },
               "typicalLength": {
                 "value": 5
               }
             },
             "fecha": {
+              "disabled": {},
+              "named": {
+                "value": "Fecha"
+              },
               "typicalLength": {
                 "value": 12
               }
             },
-            "sector": {},
+            "sector": {
+              "named": {
+                "value": "Origen"
+              }
+            },
             "destino": {
+              "named": {
+                "value": "Destino"
+              },
               "typicalLength": {
                 "value": 25
               }
             },
             "tipo": {
+              "hidden": {},
+              "disabled": {},
+              "describedAs": {
+                "value": "Tipo de Documento"
+              },
               "typicalLength": {
                 "value": 9
               }
             },
             "habilitado": {
+              "hidden": {},
               "typicalLength": {
                 "value": 5
               }
             },
             "creadoPor": {
               "hidden": {
-                "where": "ALL_TABLES"
               },
+              "disabled": {},
               "typicalLength": {
                 "value": 25
               }
-            },
-            "dueBy": {
-              "typicalLength": {
-                "value": 12
+            }
+          }
+        },
+        "Destino": {
+          "members": {
+            "destinoSector": {
+              "named": {
+                "value": "Sector"
               }
             }
           }
@@ -49,8 +83,19 @@
         "Observaciones": {
           "members": {
             "descripcion": {
+              "named": {
+                "value": "Descripcion"
+              },
               "typicalLength": {
                 "value": 25
+              },
+              "multiLine": {
+                "numberOfLines": 6
+              }
+            },
+            "adjuntar": {
+              "named": {
+                "value": "Adjuntar"
               }
             }
           }
@@ -74,6 +119,11 @@
     "downloadLayout": {
       "named": {
         "value": "Download Layout"
+      }
+    },
+    "downloadAsDoc": {
+      "named": {
+        "value": "Descargar Documento"
       }
     }
   }
