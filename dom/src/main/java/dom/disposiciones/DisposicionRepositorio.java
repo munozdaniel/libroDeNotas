@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.value.Blob;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
@@ -32,22 +33,23 @@ public class DisposicionRepositorio {
 	}
 
 	public String iconName() {
-		return "Tecnico";
+		return "disposicion";
 	}
 
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
 	public Disposicion addDisposicion(
 			final @Named("Sector") Sector sector,
-			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Descripción:") String descripcion) {
+			final @Named("Descripción:") String descripcion,
+			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		return this.nuevaDisposicion(sector, descripcion,
-				this.currentUserName());
+				this.currentUserName(), adjunto);
 
 	}
 
 	@Programmatic
 	private Disposicion nuevaDisposicion(final Sector sector,
-			String descripcion, String creadoPor) {
+			final String descripcion, final String creadoPor, final Blob adjunto) {
 		final Disposicion unaDisposicion = this.container
 				.newTransientInstance(Disposicion.class);
 		int nro = recuperarNroDisposicion();
@@ -59,6 +61,7 @@ public class DisposicionRepositorio {
 				.toString()));
 		unaDisposicion.setFecha(LocalDate.now());
 		unaDisposicion.setTipo(4);
+		unaDisposicion.setAdjuntar(adjunto);
 		unaDisposicion.setDescripcion(descripcion.toUpperCase().trim());
 		unaDisposicion.setHabilitado(true);
 		unaDisposicion.setCreadoPor(creadoPor);
@@ -119,7 +122,7 @@ public class DisposicionRepositorio {
 				.allMatches(new QueryDefault<Disposicion>(Disposicion.class,
 						"listar"));
 		if (listaMemo.isEmpty()) {
-			this.container.warnUser("No hay tecnicos cargados en el sistema");
+			this.container.warnUser("No hay Disposiciones cargados en el sistema");
 		}
 		return listaMemo;
 

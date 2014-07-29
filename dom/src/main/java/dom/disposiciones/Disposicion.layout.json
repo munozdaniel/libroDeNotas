@@ -1,7 +1,7 @@
 {
   "columns": [
     {
-      "span": 4,
+      "span": 8,
       "memberGroups": {
         "General": {
           "members": {
@@ -19,7 +19,11 @@
                 "value": 12
               }
             },
-            "sector": {},
+            "sector": {
+              "named": {
+                "value": "Origen"
+              }
+            },
             "tipo": {
               "hidden": {},
               "disabled": {},
@@ -34,17 +38,6 @@
               "hidden": {},
               "typicalLength": {
                 "value": 5
-              }
-            },
-            "descripcion": {
-              "named": {
-                "value": "Descripcion"
-              },
-              "typicalLength": {
-                "value": 150
-              },
-              "multiLine": {
-                "numberOfLines": 6
               }
             },
             "creadoPor": {
@@ -64,6 +57,35 @@
               }
             }
           }
+        },
+        "Destino": {
+          "members": {
+            "destinoSector": {
+              "named": {
+                "value": "Sector"
+              }
+            }
+          }
+        },
+        "Observaciones": {
+          "members": {
+            "descripcion": {
+              "named": {
+                "value": "Descripcion"
+              },
+              "typicalLength": {
+                "value": 150
+              },
+              "multiLine": {
+                "numberOfLines": 6
+              }
+            },
+            "adjuntar": {
+              "named": {
+                "value": "Adjuntar"
+              }
+            }
+          }
         }
       }
     },
@@ -76,7 +98,7 @@
       "memberGroups": {}
     },
     {
-      "span": 8,
+      "span": 4,
       "collections": {}
     }
   ],
@@ -84,6 +106,11 @@
     "downloadLayout": {
       "named": {
         "value": "Download Layout"
+      }
+    },
+    "downloadAsDoc": {
+      "named": {
+        "value": "Descargar Documento"
       }
     }
   }

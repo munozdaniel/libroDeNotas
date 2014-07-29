@@ -1,5 +1,6 @@
 package dom.expediente;
 
+
 import java.util.Formatter;
 import java.util.List;
 
@@ -11,9 +12,11 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.value.Blob;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
+import dom.expediente.Expediente.Letras;
 import dom.sector.Sector;
 import dom.sector.SectorRepositorio;
 
@@ -33,23 +36,24 @@ public class ExpedienteRepositorio {
 	}
 
 	public String iconName() {
-		return "Tecnico";
+		return "expediente";
 	}
 
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
 	public Expediente addExpediente(
 			final @Named("Inicia: ") Sector sector,
-			final @Named("Codigo: ") @MaxLength(1) String expte_cod_letra,
-			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Motivo:") String descripcion) {
+			final @Named("Codigo: ") @MaxLength(1) Letras expte_cod_letra,
+			final  @Named("Motivo:") String descripcion,
+			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		return this.nuevoExpediente(expte_cod_letra, sector, descripcion,
-				this.currentUserName());
+				this.currentUserName(),adjunto);
 
 	}
 
-	private Expediente nuevoExpediente(final String expte_cod_letra,
+	private Expediente nuevoExpediente(final Letras expte_cod_letra,
 			final Sector sector, final String descripcion,
-			final String creadoPor) {
+			final String creadoPor, final Blob adjunto) {
 		final Expediente unExpediente = this.container
 				.newTransientInstance(Expediente.class);
 		int nro = recuperarNroResolucion();
@@ -68,6 +72,7 @@ public class ExpedienteRepositorio {
 		unExpediente.setExpte_cod_empresa("IMPS");
 		unExpediente.setTime(LocalDateTime.now().withMillisOfSecond(3));
 		// unExpediente.setSector(sector);
+		unExpediente.setAdjuntar(adjunto);
 		sector.addToDocumento(unExpediente);
 		container.persistIfNotAlready(unExpediente);
 		container.flush();
@@ -107,7 +112,7 @@ public class ExpedienteRepositorio {
 				.allMatches(new QueryDefault<Expediente>(Expediente.class,
 						"listarHabilitados"));
 		if (listaExpedientes.isEmpty()) {
-			this.container.warnUser("No hay tecnicos cargados en el sistema");
+			this.container.warnUser("No hay Expedientes cargados en el sistema");
 		}
 		return listaExpedientes;
 

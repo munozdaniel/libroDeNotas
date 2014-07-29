@@ -14,6 +14,7 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.util.ObjectContracts;
@@ -71,6 +72,7 @@ public class Sector implements Comparable<Sector> {
 	@RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*")
 	@DescribedAs("Nombre del Sector:")
 	@MemberOrder(sequence = "10")
+	@Named("Nombre")
 	public String getNombre_sector() {
 		return nombre_sector;
 	}
@@ -95,7 +97,7 @@ public class Sector implements Comparable<Sector> {
 	private Boolean resolucion;
 
 	@Hidden
-	@javax.jdo.annotations.Column(allowsNull = "false")
+	@javax.jdo.annotations.Column(allowsNull = "True")
 	@MemberOrder(sequence = "20")
 	public Boolean getResolucion() {
 		return resolucion;
@@ -108,7 +110,7 @@ public class Sector implements Comparable<Sector> {
 	private Boolean disposicion;
 
 	@Hidden
-	@javax.jdo.annotations.Column(allowsNull = "false")
+	@javax.jdo.annotations.Column(allowsNull = "True")
 	@MemberOrder(sequence = "40")
 	public Boolean getDisposicion() {
 		return disposicion;
@@ -121,7 +123,7 @@ public class Sector implements Comparable<Sector> {
 	private Boolean expediente;
 
 	@Hidden
-	@javax.jdo.annotations.Column(allowsNull = "false")
+	@javax.jdo.annotations.Column(allowsNull = "True")
 	@MemberOrder(sequence = "50")
 	public Boolean getExpediente() {
 		return expediente;

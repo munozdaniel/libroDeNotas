@@ -67,7 +67,7 @@ public class Nota extends Documento {
 	@Disabled
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@MemberOrder(name="Datos Generales" ,sequence = "10")
-	@Named("Nº")
+	@Named("Nro")
 	public int getNro_nota() {
 		return nro_nota;
 	}
@@ -88,7 +88,6 @@ public class Nota extends Documento {
 	public void setDestino(String destino) {
 		this.destino = destino;
 	}
-	
 	
 	// //////////////////////////////////////
 	// Implementando los metodos de comparable

@@ -1,5 +1,6 @@
 package reporting;
 
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -24,53 +25,52 @@ import com.danhaywood.isis.domainservice.docx.LoadTemplateException;
 import com.danhaywood.isis.domainservice.docx.MergeException;
 import com.google.common.io.Resources;
 
-import dom.nota.Nota;
+import dom.resoluciones.Resoluciones;
 
-public class NotaReportingService {
+
+public class ResolucionReportingService {
 
 	private final static String MIME_TYPE_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
 	private byte[] templates;
 
-	public NotaReportingService() throws IOException {
+	public ResolucionReportingService() throws IOException {
 		final URL templateUrl = Resources.getResource(
-				NotaReportingService.class, "Nota.docx");
+				NotaReportingService.class, "Resolucion.docx");
 		templates = Resources.toByteArray(templateUrl);
 	}
 
 	@NotContributed(As.ASSOCIATION)
+	// ie contributed as action
 	@NotInServiceMenu
 	@Named("Documento Simple")
-	public Blob downloadAsDoc(Nota unaNota) throws LoadInputException,
+	public Blob downloadAsDoc(Resoluciones unaResolucion) throws LoadInputException,
 			LoadTemplateException, MergeException {
 
-		final String html = asInputHtml(unaNota);
+		final String html = asInputHtml(unaResolucion);
 		final byte[] byteArray = mergeToDocx(html);
 
-		final String outputFileName = "Nota-"
-				+ bookmarkService.bookmarkFor(unaNota).getIdentifier()
+		final String outputFileName = "Resolucion-"
+				+ bookmarkService.bookmarkFor(unaResolucion).getIdentifier()
 				+ ".docx";
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
-
 	@NotContributed(As.ASSOCIATION)
 	@NotInServiceMenu
 	@Named("Documento con Planilla")
-	public Blob downloadAsDocPlanilla(Nota unaNota) throws LoadInputException,
+	public Blob downloadAsDocPlanilla(Resoluciones unaResoluciones) throws LoadInputException,
 			LoadTemplateException, MergeException, IOException {
 		final URL templateUrl = Resources.getResource(
-				NotaReportingService.class, "NotaTabla.docx");
+				NotaReportingService.class, "ResolucionesTabla.docx");
 		templates = Resources.toByteArray(templateUrl);
-		final String html = asInputHtml(unaNota);
+		final String html = asInputHtml( unaResoluciones);
 		final byte[] byteArray = mergeToDocx(html);
 
-		final String outputFileName = "Nota-"
-				+ bookmarkService.bookmarkFor(unaNota).getIdentifier()
-				+ ".docx";
+		final String outputFileName = "Resoluciones-"
+				+ bookmarkService.bookmarkFor(unaResoluciones).getIdentifier() + ".docx";
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
-
-	private static String asInputHtml(Nota unaNota) {
+	private static String asInputHtml(Resoluciones unaResolucion) {
 		final Element htmlEl = new Element("html");
 		Document doc = new Document();
 		doc.setRootElement(htmlEl);
@@ -78,14 +78,13 @@ public class NotaReportingService {
 		final Element bodyEl = new Element("body");
 		htmlEl.addContent(bodyEl);
 
-		bodyEl.addContent(newP("nro_nota", "plain", unaNota.getNro_nota() + ""));
-		bodyEl.addContent(newP("fecha", "date", fechaACadena(unaNota)));
-		bodyEl.addContent(newP("nombre_sector", "plain", unaNota.getSector()
+		bodyEl.addContent(newP("nro_nota", "plain", unaResolucion.getNro_resolucion() + ""));
+		bodyEl.addContent(newP("fecha", "date", fechaACadena(unaResolucion)));
+		bodyEl.addContent(newP("nombre_sector", "plain", unaResolucion.getSector()
 				.getNombre_sector()));
-		bodyEl.addContent(newP("responsable", "plain", unaNota.getSector()
+		bodyEl.addContent(newP("responsable", "plain", unaResolucion.getSector()
 				.getResponsable()));
-		bodyEl.addContent(newP("destino", "plain", unaNota.getDestino()));
-		bodyEl.addContent(newP("descripcion", "plain", unaNota.getDescripcion()));
+		bodyEl.addContent(newP("descripcion", "plain", unaResolucion.getDescripcion()));
 		// final Element ulDependencies = new Element("ul");
 		// ulDependencies.setAttribute("id", "Dependencies");
 
@@ -103,8 +102,8 @@ public class NotaReportingService {
 		return html;
 	}
 
-	private static String fechaACadena(Nota unaNota) {
-		LocalDate dueBy = unaNota.getFecha();
+	private static String fechaACadena(Resoluciones unaResolucion) {
+		LocalDate dueBy = unaResolucion.getFecha();
 		return dueBy != null ? dueBy.toString("dd/MM/yyyy") : "";
 	}
 
