@@ -16,7 +16,6 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
-import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.util.ObjectContracts;
 
 import dom.documento.Documento;
@@ -24,7 +23,7 @@ import dom.documento.Documento;
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
-@javax.jdo.annotations.Uniques({ @javax.jdo.annotations.Unique(name = "nombre_Sector_must_be_unique", members = { "nombre_sector" }) })
+@javax.jdo.annotations.Uniques({ @javax.jdo.annotations.Unique(name = "nombre_Sector_must_be_unique", members = { "id" }) })
 @javax.jdo.annotations.Queries({
 		@javax.jdo.annotations.Query(name = "autoCompletePorNombreSector", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.sector.Sector "
@@ -69,7 +68,7 @@ public class Sector implements Comparable<Sector> {
 	private String nombre_sector;
 
 	@javax.jdo.annotations.Column(allowsNull = "false")
-	@RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*")
+	// @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*")
 	@DescribedAs("Nombre del Sector:")
 	@MemberOrder(sequence = "10")
 	@Named("Nombre")
@@ -84,7 +83,7 @@ public class Sector implements Comparable<Sector> {
 	private String responsable;
 
 	@javax.jdo.annotations.Column(allowsNull = "false")
-	@RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*")
+	// @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*")
 	@MemberOrder(sequence = "11")
 	public String getResponsable() {
 		return responsable;
