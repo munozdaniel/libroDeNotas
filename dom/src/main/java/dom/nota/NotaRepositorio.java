@@ -9,7 +9,6 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Paged;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.value.Blob;
 import org.joda.time.LocalDate;
@@ -48,8 +47,8 @@ public class NotaRepositorio {
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
 	public Nota addNota(
-			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("De:") Sector sector,
-			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Para:") String destino,
+			final  @Named("De:") Sector sector,
+			final  @Named("Para:") String destino,
 			final @Named("Descripción:") String descripcion
 			,final @Optional @Named("Ajuntar:") Blob adjunto) {
 		// return nuevaNota(sector, destino, descripcion);
@@ -141,7 +140,7 @@ public class NotaRepositorio {
 	// //////////////////////////////////////
 	@MemberOrder(sequence = "30")
 	public List<Nota> filtrar(
-			final @Optional @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("De:") Sector sector,
+			final @Named("De:") Sector sector,
 			final @Optional @Named("Fecha") LocalDate fecha) {
 		if (fecha == null && sector == null) {
 			this.container.warnUser("Sin Filtro");

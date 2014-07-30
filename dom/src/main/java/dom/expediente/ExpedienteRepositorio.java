@@ -10,7 +10,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.value.Blob;
 import org.joda.time.LocalDate;
@@ -131,7 +130,7 @@ public class ExpedienteRepositorio {
 
 	@MemberOrder(sequence = "30")
 	public List<Expediente> filtrar(
-			final @Optional @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("De:") Sector sector,
+			final @Optional @Named("De:") Sector sector,
 			final @Optional @Named("Fecha") LocalDate fecha) {
 		if (fecha == null && sector == null) {
 			this.container.warnUser("Sin Filtro");
