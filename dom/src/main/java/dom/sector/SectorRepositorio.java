@@ -8,7 +8,6 @@ import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.query.QueryDefault;
 
 @Named("SECTOR")
@@ -35,9 +34,8 @@ public class SectorRepositorio {
 	// //////////////////////////////////////
 	@Named("Agregar")
 	@MemberOrder(sequence = "10")
-	public Sector agregar(
-			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Nombre") String nombre_sector,
-			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Responsable") String responsable,
+	public Sector agregar(final @Named("Nombre") String nombre_sector,
+			final @Named("Responsable") String responsable,
 			final @Optional @Named("Disposicion") Boolean disposicion,
 			final @Optional @Named("Expediente") Boolean expediente,
 			final @Optional @Named("Resolucion") Boolean resolucion) {
@@ -89,7 +87,7 @@ public class SectorRepositorio {
 
 	@MemberOrder(sequence = "21")
 	public List<Sector> buscar(
-			final @RegEx(validation = "[a-zA-Záéíóú]{2,15}(\\s[a-zA-Záéíóú]{2,15})*") @Named("Nombre") @MinLength(2) String nombreSector) {
+			final @Named("Nombre") @MinLength(2) String nombreSector) {
 		final List<Sector> listarSectores = this.container
 				.allMatches(new QueryDefault<Sector>(Sector.class,
 						"buscarPorNombre", "nombre_sector", nombreSector
