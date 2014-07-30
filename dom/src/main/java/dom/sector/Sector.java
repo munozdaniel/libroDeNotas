@@ -16,6 +16,7 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.util.ObjectContracts;
 
 import dom.documento.Documento;
@@ -188,7 +189,7 @@ public class Sector implements Comparable<Sector> {
 	}
 
 	// }}
-
+	@Programmatic
 	public Sector addToDocumento(final Documento unDocumento) {
 		// check for no-op
 		if (unDocumento == null || getDocumentos().contains(unDocumento)) {
@@ -203,7 +204,7 @@ public class Sector implements Comparable<Sector> {
 		// additional business logic
 		// onAddToDocumento(unDocumento);
 	}
-
+	@Programmatic
 	public void removeFromDocumento(final Documento unDocumento) {
 		// check for no-op
 		if (unDocumento == null || !getDocumentos().contains(unDocumento)) {
@@ -215,7 +216,7 @@ public class Sector implements Comparable<Sector> {
 		// additional business logic
 		onRemoveFromDocumento(unDocumento);
 	}
-
+	
 	private void onRemoveFromDocumento(Documento unDocumento) {
 		// TODO Auto-generated method stub
 		unDocumento.setHabilitado(false);
