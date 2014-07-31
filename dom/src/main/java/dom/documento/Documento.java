@@ -43,7 +43,7 @@ public abstract class Documento implements Comparable<Documento> {
 
 	@Disabled
 	@javax.jdo.annotations.Column(allowsNull = "false")
-	@MemberOrder(name="Datos Generales" ,sequence = "20")
+//	@MemberOrder(name="Datos Generales" ,sequence = "20")
 	@Named("Fecha")
 	public LocalDate getFecha() {
 		return fecha;
@@ -161,7 +161,7 @@ public abstract class Documento implements Comparable<Documento> {
 
 	private Sector sector;
 
-	@MemberOrder(name="Datos Generales" ,sequence = "30")
+//	@MemberOrder(name="Datos Generales" ,sequence = "30")
 	@Column(allowsNull = "False")
 	@Named("Origen")
 	public Sector getSector() {
