@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
@@ -42,20 +43,22 @@ public class MemoReportingService {
 	// ie contributed as action
 	@NotInServiceMenu
 	@Named("Documento Simple")
+	@MemberOrder(name = "Observaciones", sequence = "80")
 	public Blob downloadAsDoc(Memo unMemo) throws LoadInputException,
 			LoadTemplateException, MergeException {
 
 		final String html = asInputHtml(unMemo);
 		final byte[] byteArray = mergeToDocx(html);
 
-		final String outputFileName = "Memo-"
-				+ bookmarkService.bookmarkFor(unMemo).getIdentifier() + ".docx";
+		final String outputFileName = "IMPS_Memo_"
+				+ unMemo.getNro_memo() + ".docx";
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
 
 	@NotContributed(As.ASSOCIATION)
 	@NotInServiceMenu
 	@Named("Documento con Planilla")
+	@MemberOrder(name = "Observaciones", sequence = "80")
 	public Blob downloadAsDocPlanilla(Memo unMemo) throws LoadInputException,
 			LoadTemplateException, MergeException, IOException {
 		final URL templateUrl = Resources.getResource(
@@ -64,8 +67,8 @@ public class MemoReportingService {
 		final String html = asInputHtml(unMemo);
 		final byte[] byteArray = mergeToDocx(html);
 
-		final String outputFileName = "Memo-"
-				+ bookmarkService.bookmarkFor(unMemo).getIdentifier() + ".docx";
+		final String outputFileName = "IMPS_Memo_"
+				+ unMemo.getNro_memo() + ".docx";
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
 
@@ -132,6 +135,7 @@ public class MemoReportingService {
 	@javax.inject.Inject
 	private DocxService docxService;
 
+	@SuppressWarnings("unused")
 	@javax.inject.Inject
 	private BookmarkService bookmarkService;
 	//

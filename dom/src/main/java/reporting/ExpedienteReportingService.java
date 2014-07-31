@@ -1,6 +1,5 @@
 package reporting;
 
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,7 +26,6 @@ import com.google.common.io.Resources;
 
 import dom.expediente.Expediente;
 
-
 public class ExpedienteReportingService {
 
 	private final static String MIME_TYPE_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
@@ -44,33 +42,34 @@ public class ExpedienteReportingService {
 	// ie contributed as action
 	@NotInServiceMenu
 	@Named("Documento Simple")
-	public Blob downloadAsDoc(Expediente unExpediente) throws LoadInputException,
-			LoadTemplateException, MergeException {
+	public Blob downloadAsDoc(Expediente unExpediente)
+			throws LoadInputException, LoadTemplateException, MergeException {
 
 		final String html = asInputHtml(unExpediente);
 		final byte[] byteArray = mergeToDocx(html);
 
-		final String outputFileName = "Expediente-"
-				+ bookmarkService.bookmarkFor(unExpediente).getIdentifier()
-				+ ".docx";
+		final String outputFileName = "IMPS_Expediente_"
+				+ unExpediente.getNro_expediente() + ".docx";
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
+
 	@NotContributed(As.ASSOCIATION)
 	@NotInServiceMenu
 	@Named("Documento con Planilla")
-	public Blob downloadAsDocPlanilla(Expediente unExpediente) throws LoadInputException,
-			LoadTemplateException, MergeException, IOException {
+	public Blob downloadAsDocPlanilla(Expediente unExpediente)
+			throws LoadInputException, LoadTemplateException, MergeException,
+			IOException {
 		final URL templateUrl = Resources.getResource(
 				NotaReportingService.class, "ExpedienteTabla.docx");
 		templates = Resources.toByteArray(templateUrl);
 		final String html = asInputHtml(unExpediente);
 		final byte[] byteArray = mergeToDocx(html);
 
-		final String outputFileName = "Expediente-"
-				+ bookmarkService.bookmarkFor(unExpediente).getIdentifier()
-				+ ".docx";
+		final String outputFileName = "IMPS_Expediente_"
+				+ unExpediente.getNro_expediente() + ".docx";
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
+
 	private static String asInputHtml(Expediente unExpediente) {
 		final Element htmlEl = new Element("html");
 		Document doc = new Document();
@@ -79,16 +78,21 @@ public class ExpedienteReportingService {
 		final Element bodyEl = new Element("body");
 		htmlEl.addContent(bodyEl);
 
-		bodyEl.addContent(newP("nro_nota", "plain", unExpediente.getNro_expediente() + ""));
+		bodyEl.addContent(newP("nro_nota", "plain",
+				unExpediente.getNro_expediente() + ""));
 		bodyEl.addContent(newP("fecha", "date", fechaACadena(unExpediente)));
-		bodyEl.addContent(newP("nombre_sector", "plain", unExpediente.getSector()
-				.getNombre_sector()));
+		bodyEl.addContent(newP("nombre_sector", "plain", unExpediente
+				.getSector().getNombre_sector()));
 		bodyEl.addContent(newP("responsable", "plain", unExpediente.getSector()
 				.getResponsable()));
-		bodyEl.addContent(newP("descripcion", "plain", unExpediente.getDescripcion()));
-		bodyEl.addContent(newP("expte_cod_anio", "plain", unExpediente.getExpte_cod_anio()+""));
-		bodyEl.addContent(newP("expte_cod_empresa", "plain", unExpediente.getExpte_cod_empresa()));
-		bodyEl.addContent(newP("expte_cod_letra", "plain", unExpediente.getExpte_cod_letra().name()));
+		bodyEl.addContent(newP("descripcion", "plain",
+				unExpediente.getDescripcion()));
+		bodyEl.addContent(newP("expte_cod_anio", "plain",
+				unExpediente.getExpte_cod_anio() + ""));
+		bodyEl.addContent(newP("expte_cod_empresa", "plain",
+				unExpediente.getExpte_cod_empresa()));
+		bodyEl.addContent(newP("expte_cod_letra", "plain", unExpediente
+				.getExpte_cod_letra().name()));
 
 		// final Element ulDependencies = new Element("ul");
 		// ulDependencies.setAttribute("id", "Dependencies");
@@ -136,6 +140,7 @@ public class ExpedienteReportingService {
 	@javax.inject.Inject
 	private DocxService docxService;
 
+	@SuppressWarnings("unused")
 	@javax.inject.Inject
 	private BookmarkService bookmarkService;
 	//

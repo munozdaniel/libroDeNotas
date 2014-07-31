@@ -47,8 +47,7 @@ public class NotaReportingService {
 		final String html = asInputHtml(unaNota);
 		final byte[] byteArray = mergeToDocx(html);
 
-		final String outputFileName = "Nota-"
-				+ bookmarkService.bookmarkFor(unaNota).getIdentifier()
+		final String outputFileName = "IMPS_Nota_" + unaNota.getNro_nota()
 				+ ".docx";
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
@@ -64,8 +63,7 @@ public class NotaReportingService {
 		final String html = asInputHtml(unaNota);
 		final byte[] byteArray = mergeToDocx(html);
 
-		final String outputFileName = "Nota-"
-				+ bookmarkService.bookmarkFor(unaNota).getIdentifier()
+		final String outputFileName = "IMPS_Nota_" + unaNota.getNro_nota()
 				+ ".docx";
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
@@ -132,6 +130,7 @@ public class NotaReportingService {
 	@javax.inject.Inject
 	private DocxService docxService;
 
+	@SuppressWarnings("unused")
 	@javax.inject.Inject
 	private BookmarkService bookmarkService;
 	//

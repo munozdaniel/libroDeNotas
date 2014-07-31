@@ -1,6 +1,5 @@
 package reporting;
 
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,7 +26,6 @@ import com.google.common.io.Resources;
 
 import dom.resoluciones.Resoluciones;
 
-
 public class ResolucionReportingService {
 
 	private final static String MIME_TYPE_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
@@ -44,32 +42,34 @@ public class ResolucionReportingService {
 	// ie contributed as action
 	@NotInServiceMenu
 	@Named("Documento Simple")
-	public Blob downloadAsDoc(Resoluciones unaResolucion) throws LoadInputException,
-			LoadTemplateException, MergeException {
+	public Blob downloadAsDoc(Resoluciones unaResolucion)
+			throws LoadInputException, LoadTemplateException, MergeException {
 
 		final String html = asInputHtml(unaResolucion);
 		final byte[] byteArray = mergeToDocx(html);
 
-		final String outputFileName = "Resolucion-"
-				+ bookmarkService.bookmarkFor(unaResolucion).getIdentifier()
-				+ ".docx";
+		final String outputFileName = "IMPS_Resolucion_"
+				+ unaResolucion.getNro_resolucion() + ".docx";
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
+
 	@NotContributed(As.ASSOCIATION)
 	@NotInServiceMenu
 	@Named("Documento con Planilla")
-	public Blob downloadAsDocPlanilla(Resoluciones unaResoluciones) throws LoadInputException,
-			LoadTemplateException, MergeException, IOException {
+	public Blob downloadAsDocPlanilla(Resoluciones unaResoluciones)
+			throws LoadInputException, LoadTemplateException, MergeException,
+			IOException {
 		final URL templateUrl = Resources.getResource(
 				NotaReportingService.class, "ResolucionesTabla.docx");
 		templates = Resources.toByteArray(templateUrl);
-		final String html = asInputHtml( unaResoluciones);
+		final String html = asInputHtml(unaResoluciones);
 		final byte[] byteArray = mergeToDocx(html);
 
-		final String outputFileName = "Resoluciones-"
-				+ bookmarkService.bookmarkFor(unaResoluciones).getIdentifier() + ".docx";
+		final String outputFileName = "IMPS_Resolucion_"
+				+ unaResoluciones.getNro_resolucion() + ".docx";
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
+
 	private static String asInputHtml(Resoluciones unaResolucion) {
 		final Element htmlEl = new Element("html");
 		Document doc = new Document();
@@ -78,13 +78,15 @@ public class ResolucionReportingService {
 		final Element bodyEl = new Element("body");
 		htmlEl.addContent(bodyEl);
 
-		bodyEl.addContent(newP("nro_nota", "plain", unaResolucion.getNro_resolucion() + ""));
+		bodyEl.addContent(newP("nro_nota", "plain",
+				unaResolucion.getNro_resolucion() + ""));
 		bodyEl.addContent(newP("fecha", "date", fechaACadena(unaResolucion)));
-		bodyEl.addContent(newP("nombre_sector", "plain", unaResolucion.getSector()
-				.getNombre_sector()));
-		bodyEl.addContent(newP("responsable", "plain", unaResolucion.getSector()
-				.getResponsable()));
-		bodyEl.addContent(newP("descripcion", "plain", unaResolucion.getDescripcion()));
+		bodyEl.addContent(newP("nombre_sector", "plain", unaResolucion
+				.getSector().getNombre_sector()));
+		bodyEl.addContent(newP("responsable", "plain", unaResolucion
+				.getSector().getResponsable()));
+		bodyEl.addContent(newP("descripcion", "plain",
+				unaResolucion.getDescripcion()));
 		// final Element ulDependencies = new Element("ul");
 		// ulDependencies.setAttribute("id", "Dependencies");
 
@@ -131,6 +133,7 @@ public class ResolucionReportingService {
 	@javax.inject.Inject
 	private DocxService docxService;
 
+	@SuppressWarnings("unused")
 	@javax.inject.Inject
 	private BookmarkService bookmarkService;
 	//

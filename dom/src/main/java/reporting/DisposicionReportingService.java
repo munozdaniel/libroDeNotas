@@ -47,26 +47,24 @@ public class DisposicionReportingService {
 
 		final String html = asInputHtml(unaDisposicion);
 		final byte[] byteArray = mergeToDocx(html);
-
-		final String outputFileName = "Disposicion-"
-				+ bookmarkService.bookmarkFor(unaDisposicion).getIdentifier()
-				+ ".docx";
+		final String outputFileName = "IMPS_Disposicion_"
+				+ unaDisposicion.getNro_Disposicion() + ".docx";
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
 
 	@NotContributed(As.ASSOCIATION)
 	@NotInServiceMenu
 	@Named("Documento con Planilla")
-	public Blob downloadAsDocPlanilla(Disposicion unaDisposicion) throws LoadInputException,
-			LoadTemplateException, MergeException, IOException {
+	public Blob downloadAsDocPlanilla(Disposicion unaDisposicion)
+			throws LoadInputException, LoadTemplateException, MergeException,
+			IOException {
 		final URL templateUrl = Resources.getResource(
 				NotaReportingService.class, "DisposicionTabla.docx");
 		templates = Resources.toByteArray(templateUrl);
-		final String html = asInputHtml( unaDisposicion);
+		final String html = asInputHtml(unaDisposicion);
 		final byte[] byteArray = mergeToDocx(html);
-
-		final String outputFileName = "Disposicion-"
-				+ bookmarkService.bookmarkFor(unaDisposicion).getIdentifier() + ".docx";
+		final String outputFileName = "IMPS_Disposicion_"
+				+ unaDisposicion.getNro_Disposicion() + ".docx";
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
 
@@ -133,6 +131,7 @@ public class DisposicionReportingService {
 	@javax.inject.Inject
 	private DocxService docxService;
 
+	@SuppressWarnings("unused")
 	@javax.inject.Inject
 	private BookmarkService bookmarkService;
 	//
