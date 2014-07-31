@@ -110,7 +110,7 @@
     },
     "filtrar": {
       "named": {
-        "value": "Filtrar"
+        "value": "Buscar Documentos"
       }
     },
     "removeFromDocumento": {
@@ -118,7 +118,7 @@
         "value": "Remove From Documento"
       },
       "cssClass": {
-        "value": "x-caution"
+        "value": "x-prueba"
       }
     },
     "addToDocumento": {
