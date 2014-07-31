@@ -6,6 +6,9 @@
         "General": {
           "members": {
             "nro_Disposicion": {
+              "named": {
+                "value": "Nro"
+              },
               "typicalLength": {
                 "value": 9
               }
@@ -58,15 +61,6 @@
             }
           }
         },
-        "Destino": {
-          "members": {
-            "destinoSector": {
-              "named": {
-                "value": "Sector"
-              }
-            }
-          }
-        },
         "Observaciones": {
           "members": {
             "descripcion": {
@@ -111,6 +105,11 @@
     "downloadAsDoc": {
       "named": {
         "value": "Descargar Documento"
+      }
+    },
+    "downloadAsDocPlanilla": {
+      "named": {
+        "value": "Documento con Planilla"
       }
     }
   }

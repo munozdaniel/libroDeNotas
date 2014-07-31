@@ -6,6 +6,9 @@
         "General": {
           "members": {
             "nro_expediente": {
+              "named": {
+                "value": "Nro"
+              },
               "typicalLength": {
                 "value": 9
               }
@@ -30,12 +33,6 @@
                 "value": "Origen"
               }
             },
-            "expte_cod_numero": {
-              "hidden": {},
-              "typicalLength": {
-                "value": 9
-              }
-            },
             "tipo": {
               "hidden": {},
               "disabled": {},
@@ -47,6 +44,9 @@
               }
             },
             "expte_cod_letra": {
+              "named": {
+                "value": "Codigo"
+              },
               "typicalLength": {
                 "value": 25
               }
@@ -77,15 +77,6 @@
               },
               "typicalLength": {
                 "value": 12
-              }
-            }
-          }
-        },
-        "Destino": {
-          "members": {
-            "destinoSector": {
-              "named": {
-                "value": "Sector"
               }
             }
           }
@@ -134,6 +125,11 @@
     "downloadAsDoc": {
       "named": {
         "value": "Descargar Documento"
+      }
+    },
+    "downloadAsDocPlanilla": {
+      "named": {
+        "value": "Documento con Planilla"
       }
     }
   }
