@@ -7,6 +7,9 @@
           "members": {
             "nro_memo": {
               "disabled": {},
+              "named": {
+                "value": "Nro"
+              },
               "typicalLength": {
                 "value": 9
               }
@@ -56,11 +59,7 @@
               "typicalLength": {
                 "value": 12
               }
-            }
-          }
-        },
-        "Destino": {
-          "members": {
+            },
             "destinoSector": {
               "named": {
                 "value": "Sector"
@@ -107,6 +106,16 @@
     "downloadLayout": {
       "named": {
         "value": "Download Layout"
+      }
+    },
+    "downloadAsDoc": {
+      "named": {
+        "value": "Documento Simple"
+      }
+    },
+    "downloadAsDocPlanilla": {
+      "named": {
+        "value": "Documento con Planilla"
       }
     }
   }

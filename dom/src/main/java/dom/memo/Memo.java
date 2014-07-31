@@ -85,7 +85,7 @@ public class Memo extends Documento {
 	// }
 
 	private Sector destinoSector;
-	@Named("Sector")
+	@Named("Sector Destino")
 	@MemberOrder(name = "Destino", sequence = "20")
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	public Sector getDestinoSector() {

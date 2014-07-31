@@ -35,12 +35,12 @@ public class MemoRepositorio {
 		return "memo";
 	}
 
+	// @CssClass("x-prueba")
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
-	public Memo addMemo(
-			final  @Named("De:") Sector sector,
+	public Memo addMemo(final @Named("De:") Sector sector,
 			final @Named("Sector:") Sector destinoSector,
-			final  @Named("Descripción:") String descripcion,
+			final @Named("Descripción:") String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		return this.nuevoMemo(sector, destinoSector, descripcion,
 				this.currentUserName(), adjunto);
@@ -150,8 +150,7 @@ public class MemoRepositorio {
 	// //////////////////////////////////////
 
 	@MemberOrder(sequence = "30")
-	public List<Memo> filtrar(
-			final @Optional @Named("De:") Sector sector,
+	public List<Memo> filtrar(final @Optional @Named("De:") Sector sector,
 			final @Optional @Named("Fecha") LocalDate fecha) {
 		if (fecha == null && sector == null) {
 			this.container.warnUser("Sin Filtro");
