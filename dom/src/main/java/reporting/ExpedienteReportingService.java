@@ -37,7 +37,7 @@ public class ExpedienteReportingService {
 				NotaReportingService.class, "Expediente.docx");
 		templates = Resources.toByteArray(templateUrl);
 	}
-
+	
 	@NotContributed(As.ASSOCIATION)
 	// ie contributed as action
 	@NotInServiceMenu
@@ -92,7 +92,7 @@ public class ExpedienteReportingService {
 		bodyEl.addContent(newP("expte_cod_empresa", "plain",
 				unExpediente.getExpte_cod_empresa()));
 		bodyEl.addContent(newP("expte_cod_letra", "plain", unExpediente
-				.getExpte_cod_letra().name()));
+				.getExpte_cod_letra()));
 
 		// final Element ulDependencies = new Element("ul");
 		// ulDependencies.setAttribute("id", "Dependencies");
