@@ -1,6 +1,5 @@
 package dom.expediente;
 
-
 import java.util.Formatter;
 import java.util.List;
 
@@ -10,6 +9,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.value.Blob;
 import org.joda.time.LocalDate;
@@ -42,15 +42,15 @@ public class ExpedienteRepositorio {
 	@MemberOrder(sequence = "10")
 	public Expediente addExpediente(
 			final @Named("Inicia: ") Sector sector,
-			final @Named("Codigo: ") @MaxLength(1) Letras expte_cod_letra,
-			final  @Named("Motivo:") String descripcion,
+			final @RegEx(validation = "^[a-zA-Z]") @MaxLength(1) @Named("Letra Inicial: ")  String expte_cod_letra,
+			final @Named("Motivo:") String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		return this.nuevoExpediente(expte_cod_letra, sector, descripcion,
-				this.currentUserName(),adjunto);
+				this.currentUserName(), adjunto);
 
 	}
 
-	private Expediente nuevoExpediente(final Letras expte_cod_letra,
+	private Expediente nuevoExpediente(final String expte_cod_letra,
 			final Sector sector, final String descripcion,
 			final String creadoPor, final Blob adjunto) {
 		final Expediente unExpediente = this.container
@@ -69,6 +69,9 @@ public class ExpedienteRepositorio {
 		unExpediente.setCreadoPor(creadoPor);
 		unExpediente.setExpte_cod_anio(LocalDate.now().getYear());
 		unExpediente.setExpte_cod_empresa("IMPS");
+		unExpediente.setExpte_cod_numero((LocalDate.now().getYear() + "")
+				.charAt(3));
+		// unExpediente.setcodigoExpediente(codigoACadena);
 		unExpediente.setTime(LocalDateTime.now().withMillisOfSecond(3));
 		// unExpediente.setSector(sector);
 		unExpediente.setAdjuntar(adjunto);
@@ -111,7 +114,8 @@ public class ExpedienteRepositorio {
 				.allMatches(new QueryDefault<Expediente>(Expediente.class,
 						"listarHabilitados"));
 		if (listaExpedientes.isEmpty()) {
-			this.container.warnUser("No hay Expedientes cargados en el sistema");
+			this.container
+					.warnUser("No hay Expedientes cargados en el sistema");
 		}
 		return listaExpedientes;
 

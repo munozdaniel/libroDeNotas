@@ -13,24 +13,44 @@
                 "value": 9
               }
             },
-            "expte_cod_empresa": {
-              "hidden": {},
-              "typicalLength": {
-                "value": 25
-              }
-            },
             "fecha": {
               "disabled": {},
               "named": {
                 "value": "Fecha"
               },
               "typicalLength": {
-                "value": 12
+                "value": 9
               }
             },
             "sector": {
               "named": {
                 "value": "Origen"
+              }
+            },
+            "expte_cod_empresa": {
+
+              "typicalLength": {
+                "value": 12
+              }
+            },
+            "expte_cod_numero": {
+
+              "typicalLength": {
+                "value": 8
+              }
+            },
+            "expte_cod_letra": {
+              "named": {
+                "value": "Codigo"
+              },
+              "typicalLength": {
+                "value": 8
+              }
+            },
+            "expte_cod_anio": {
+
+              "typicalLength": {
+                "value": 10
               }
             },
             "tipo": {
@@ -39,20 +59,6 @@
               "describedAs": {
                 "value": "Tipo de Documento"
               },
-              "typicalLength": {
-                "value": 9
-              }
-            },
-            "expte_cod_letra": {
-              "named": {
-                "value": "Codigo"
-              },
-              "typicalLength": {
-                "value": 25
-              }
-            },
-            "expte_cod_anio": {
-              "hidden": {},
               "typicalLength": {
                 "value": 9
               }

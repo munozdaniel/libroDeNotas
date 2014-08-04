@@ -2,6 +2,7 @@ package dom.expediente;
 
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
+import javax.validation.constraints.Size;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Audited;
@@ -95,32 +96,34 @@ public class Expediente extends Documento {
 		this.expte_cod_empresa = expte_cod_empresa;
 	}
 
-	// private int expte_cod_numero;
-	//
-	// @Hidden
-	// @MemberOrder(sequence = "30")
-	// @javax.jdo.annotations.Column(allowsNull = "false")
-	// public int getExpte_cod_numero() {
-	// return expte_cod_numero;
-	// }
-	//
-	// public void setExpte_cod_numero(int expte_cod_numero) {
-	// this.expte_cod_numero = expte_cod_numero;
-	// }
+	 private int expte_cod_numero;
+	
+	 @Hidden
+	 @MemberOrder(sequence = "30")
+	 @javax.jdo.annotations.Column(allowsNull = "false")
+	 public int getExpte_cod_numero() {
+	 return expte_cod_numero;
+	 }
+	
+	 public void setExpte_cod_numero(int expte_cod_numero) {
+	 this.expte_cod_numero = expte_cod_numero;
+	 }
 	public enum Letras {
-		A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z
-		}
-	private Letras expte_cod_letra;
+		A , B , C , D , E , F , G , H , I , J , K , L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z
+	}
+
+	private String expte_cod_letra;
 
 	@MemberOrder(sequence = "40")
 	@javax.jdo.annotations.Column(allowsNull = "false")
-	@MaxLength(1)
+	@MaxLength(100)
+	@Size(max = 100)
 	@Named("Codigo")
-	public Letras getExpte_cod_letra() {
+	public String getExpte_cod_letra() {
 		return expte_cod_letra;
 	}
 
-	public void setExpte_cod_letra(Letras expte_cod_letra) {
+	public void setExpte_cod_letra(String expte_cod_letra) {
 		this.expte_cod_letra = expte_cod_letra;
 	}
 
@@ -137,17 +140,20 @@ public class Expediente extends Documento {
 		this.expte_cod_anio = expte_cod_anio;
 	}
 
-	// public void loading() {
-	// this.expedienteRepositorio.listar();
+	// {{ codigoExpediente (property)
+	// private String codigoACadena;
+	//
+	// @Named("Codigo")
+	// @MemberOrder(sequence = "1")
+	// public String getcodigoExpediente() {
+	// return codigoACadena;
 	// }
 	//
-	// public void loaded() {
-	// this.expedienteRepositorio.listar();
+	// public void setcodigoExpediente(final String codigoACadena) {
+	// this.codigoACadena = codigoACadena;
 	// }
 
-	// //////////////////////////////////////
-	// Injected Services
-	// //////////////////////////////////////
+	// }}
 
 	@SuppressWarnings("unused")
 	@javax.inject.Inject
