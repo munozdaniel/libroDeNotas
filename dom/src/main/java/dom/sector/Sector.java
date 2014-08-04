@@ -17,6 +17,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.util.ObjectContracts;
 
 import dom.documento.Documento;
@@ -96,7 +97,7 @@ public class Sector implements Comparable<Sector> {
 
 	private Boolean resolucion;
 
-	@Hidden
+	@Hidden(where = Where.ALL_TABLES)
 	@javax.jdo.annotations.Column(allowsNull = "True")
 	@MemberOrder(sequence = "20")
 	public Boolean getResolucion() {
@@ -109,7 +110,7 @@ public class Sector implements Comparable<Sector> {
 
 	private Boolean disposicion;
 
-	@Hidden
+	@Hidden(where = Where.ALL_TABLES)
 	@javax.jdo.annotations.Column(allowsNull = "True")
 	@MemberOrder(sequence = "40")
 	public Boolean getDisposicion() {
@@ -122,7 +123,7 @@ public class Sector implements Comparable<Sector> {
 
 	private Boolean expediente;
 
-	@Hidden
+	@Hidden(where = Where.ALL_TABLES)
 	@javax.jdo.annotations.Column(allowsNull = "True")
 	@MemberOrder(sequence = "50")
 	public Boolean getExpediente() {
@@ -204,6 +205,7 @@ public class Sector implements Comparable<Sector> {
 		// additional business logic
 		// onAddToDocumento(unDocumento);
 	}
+
 	@Programmatic
 	public void removeFromDocumento(final Documento unDocumento) {
 		// check for no-op
@@ -216,7 +218,7 @@ public class Sector implements Comparable<Sector> {
 		// additional business logic
 		onRemoveFromDocumento(unDocumento);
 	}
-	
+
 	private void onRemoveFromDocumento(Documento unDocumento) {
 		// TODO Auto-generated method stub
 		unDocumento.setHabilitado(false);
