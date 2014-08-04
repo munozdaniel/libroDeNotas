@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
-
-import dom.expediente.Expediente;
 
 @Named("ZOOLOGICO")
 public class ZoologicoRepo {
@@ -27,18 +27,38 @@ public class ZoologicoRepo {
 	}
 	public Zoologico nuevo()
 	{
+		
+		IAnimal ianimal = this.container.newTransientInstance(Perro.class);
+		this.container.persistIfNotAlready(ianimal);
+		this.container.flush();
+
 		Zoologico unZoo = this.container.newTransientInstance(Zoologico.class);
-		unZoo.setIAnimal(new Perro());
+		unZoo.modificarIAnimal(ianimal);
+
 		this.container.persistIfNotAlready(unZoo);
+
 		this.container.flush();
 		return unZoo;
 	}
-	public Zoologico cambiar(Zoologico zoo)
+	
+	public Zoologico cambiar(@Optional Zoologico zoo)
 	{
-		zoo.setIAnimal(new Delfin());
+		IAnimal delfin = new Delfin();
+		zoo.modificarIAnimal(new Perro());
 		return zoo;
 	}
-	
+	@Programmatic
+	public Zoologico borrar(@Optional Zoologico zoo)
+	{
+		this.container.remove(zoo.getIAnimal());
+		zoo.setIAnimal(null);
+		this.container.flush();
+		return zoo;
+	}
+	public List<Zoologico> choice0Cambiar()
+	{
+		return this.listar();
+	}
 	public List<Zoologico> listar()
 	{
 		final List<Zoologico> lista = this.container
