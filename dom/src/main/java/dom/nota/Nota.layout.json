@@ -17,7 +17,7 @@
             "nro_nota": {
               "disabled": {},
               "named": {
-                "value": "Nº"
+                "value": "Nro"
               },
               "typicalLength": {
                 "value": 5
