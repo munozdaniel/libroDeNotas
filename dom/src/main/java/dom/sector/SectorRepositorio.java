@@ -94,7 +94,7 @@ public class SectorRepositorio {
 								.toUpperCase().trim()));
 		if (listarSectores.isEmpty())
 			this.container
-					.warnUser("No se encontraron sectores cargados en el sistema.");
+					.warnUser("No se encontraron sectores.");
 		return listarSectores;
 	}
 

@@ -3,6 +3,7 @@ package dom.sector;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.enterprise.inject.Default;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.Persistent;
@@ -17,6 +18,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Value;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.util.ObjectContracts;
 
@@ -109,7 +111,6 @@ public class Sector implements Comparable<Sector> {
 	}
 
 	private Boolean disposicion;
-
 	@Hidden(where = Where.ALL_TABLES)
 	@javax.jdo.annotations.Column(allowsNull = "True")
 	@MemberOrder(sequence = "40")
