@@ -86,8 +86,7 @@ public class MemoReportingService {
 				.getNombre_sector()));
 		bodyEl.addContent(newP("responsable", "plain", unMemo.getSector()
 				.getResponsable()));
-		bodyEl.addContent(newP("destino", "plain", unMemo.getDestinoSector()
-				.getNombre_sector()));
+		bodyEl.addContent(newP("destino", "plain", unMemo.getOtroDestino()));
 		bodyEl.addContent(newP("descripcion", "plain", unMemo.getDescripcion()));
 		// final Element ulDependencies = new Element("ul");
 		// ulDependencies.setAttribute("id", "Dependencies");
