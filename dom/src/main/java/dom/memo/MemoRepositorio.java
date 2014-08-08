@@ -39,14 +39,14 @@ public class MemoRepositorio {
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
 	public Memo addMemo(final @Named("De:") Sector sector,
-			final @Named("Sector:") Sector destinoSector,
+			 final  @Named("otro Sector:") String otroSector,
 			final @Named("Descripción:") String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
-		return this.nuevoMemo(sector, destinoSector, descripcion,
+		return this.nuevoMemo(sector, otroSector, descripcion,
 				this.currentUserName(), adjunto);
 
 	}
-
+	
 	// public ButtonGroup default0AddMemo() {
 	// ButtonGroup tipoMemo = new ButtonGroup();
 	// JRadioButton rbtn1 = new JRadioButton("Sector", true);
@@ -57,7 +57,7 @@ public class MemoRepositorio {
 	// }
 
 	@Programmatic
-	private Memo nuevoMemo(final Sector sector, final Sector destinoSector,
+	private Memo nuevoMemo(final Sector sector, final String otroSector,
 			final String descripcion, final String creadoPor, final Blob adjunto) {
 		final Memo unMemo = this.container.newTransientInstance(Memo.class);
 		int nro = recuperarNroMemo();
@@ -73,7 +73,7 @@ public class MemoRepositorio {
 		unMemo.setCreadoPor(creadoPor);
 		// unMemo.setSector(sector);
 		unMemo.setTime(LocalDateTime.now().withMillisOfSecond(3));
-		unMemo.setDestinoSector(destinoSector);
+		unMemo.setOtroDestino(otroSector);
 		sector.addToDocumento(unMemo);
 		container.persistIfNotAlready(unMemo);
 		container.flush();
@@ -111,6 +111,7 @@ public class MemoRepositorio {
 	// search) {
 	// return sectorRepositorio.autoComplete(search);
 	// }
+	
 	@Named("Sector")
 	public List<Sector> choices0AddMemo() {
 		return sectorRepositorio.listar(); // TODO: return list of choices for

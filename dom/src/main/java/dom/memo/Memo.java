@@ -12,7 +12,6 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
 
 import dom.documento.Documento;
-import dom.sector.Sector;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id_documento")
@@ -84,31 +83,34 @@ public class Memo extends Documento {
 	// return tipoMemo;
 	// }
 
-	private Sector destinoSector;
-	@Named("Sector Destino")
+//	private Sector destinoSector;
+//
+//	@Named("Sector Destino")
+//	@MemberOrder(name = "Destino", sequence = "20")
+//	@javax.jdo.annotations.Column(allowsNull = "true")
+//	public Sector getDestinoSector() {
+//		return destinoSector;
+//	}
+//
+//	public void setDestinoSector(Sector destino) {
+//		this.destinoSector = destino;
+//	}
+
+	private String otroDestino;
+
+	@javax.jdo.annotations.Column(allowsNull = "true")
 	@MemberOrder(name = "Destino", sequence = "20")
-	@javax.jdo.annotations.Column(allowsNull = "false")
-	public Sector getDestinoSector() {
-		return destinoSector;
+	@Disabled
+	public String getOtroDestino() {
+		return otroDestino;
 	}
 
-	public void setDestinoSector(Sector destino) {
-		this.destinoSector = destino;
+	public void setOtroDestino(String destino) {
+		this.otroDestino = destino;
 	}
 
-	// private String otroDestino;
-	//
-	// @javax.jdo.annotations.Column(allowsNull = "false")
-	// @MemberOrder(name = "Sectores", sequence = "20")
-	// @Disabled
-	// public String getOtroDestino() {
-	// return otroDestino;
-	// }
-	//
-	// public void setOtroDestino(String destino) {
-	// this.otroDestino = destino;
-	// }
-	//
+	
+
 	// public void setTipoMemo(ButtonGroup tipoMemo) {
 	// this.tipoMemo = tipoMemo;
 	// }
