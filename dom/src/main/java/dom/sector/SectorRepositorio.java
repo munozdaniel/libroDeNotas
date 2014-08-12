@@ -54,9 +54,18 @@ public class SectorRepositorio {
 		unSector.setHabilitado(true);
 		unSector.setCreadoPor(creadoPor);
 		unSector.setResponsable(responsable);
-		unSector.setResolucion(resolucion);
-		unSector.setDisposicion(disposicion);
-		unSector.setExpediente(expediente);
+		if(resolucion !=null)
+			unSector.setResolucion(resolucion);
+		else
+			unSector.setResolucion(false);
+		if(disposicion != null)
+			unSector.setDisposicion(disposicion);
+		else
+			unSector.setDisposicion(false);
+		if(expediente != null)
+			unSector.setExpediente(expediente);
+		else
+			unSector.setExpediente(false);
 		this.container.persistIfNotAlready(unSector);
 		this.container.flush();
 		return unSector;

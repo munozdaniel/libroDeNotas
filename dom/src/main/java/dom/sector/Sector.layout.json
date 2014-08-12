@@ -22,13 +22,13 @@
               }
             },
             "resolucion": {
-              "hidden": {},
+              
               "typicalLength": {
                 "value": 5
               }
             },
             "disposicion": {
-              "hidden": {},
+             
               "typicalLength": {
                 "value": 5
               }
@@ -41,7 +41,6 @@
               }
             },
             "expediente": {
-              "hidden": {},
               "typicalLength": {
                 "value": 5
               }
