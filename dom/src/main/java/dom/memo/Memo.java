@@ -1,17 +1,29 @@
 package dom.memo;
 
+import java.util.List;
+
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Audited;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.CssClass;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.When;
+import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.util.Reasons;
+import org.apache.isis.applib.value.Blob;
 
 import dom.documento.Documento;
+import dom.sector.Sector;
+import dom.sector.SectorRepositorio;
+import dom.todo.ToDoItem.Category;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id_documento")
@@ -83,24 +95,46 @@ public class Memo extends Documento {
 	// return tipoMemo;
 	// }
 
-//	private Sector destinoSector;
-//
-//	@Named("Sector Destino")
-//	@MemberOrder(name = "Destino", sequence = "20")
-//	@javax.jdo.annotations.Column(allowsNull = "true")
-//	public Sector getDestinoSector() {
-//		return destinoSector;
-//	}
-//
-//	public void setDestinoSector(Sector destino) {
-//		this.destinoSector = destino;
-//	}
+	private Sector destinoSector;
+
+	@Disabled
+	// @Hidden(where = Where.ALL_TABLES, when = When.UNTIL_PERSISTED)
+	@Named("Sector")
+	@MemberOrder(name="Destino",sequence = "20")
+	@javax.jdo.annotations.Column(allowsNull = "true")
+	public Sector getDestinoSector() {
+		return destinoSector;
+	}
+
+	public void setDestinoSector(Sector destino) {
+		this.destinoSector = destino;
+	}
+
+	public List<Sector> choicesDestinoSector() {
+		return sectorRepositorio.listar();
+	}
+
+	@CssClass("x-verde")
+	@Named("Actualizar")
+	public Memo updateDestinoSector(@Named("SECTOR") Sector sector) {
+		this.setDestinoSector(sector);
+		this.setOtroDestino("");
+		return this;
+	}
+	public List<Sector> choices0UpdateDestinoSector() {
+		List<Sector> lista= sectorRepositorio.listar(); 
+		lista.remove(1);//debe ser 0
+		return lista;
+	}
+
 
 	private String otroDestino;
 
-	@javax.jdo.annotations.Column(allowsNull = "true")
-	@MemberOrder(name = "Destino", sequence = "20")
+	@Named("Otro")
 	@Disabled
+	// @Hidden(where = Where.ALL_TABLES, when = When.UNTIL_PERSISTED)
+	@javax.jdo.annotations.Column(allowsNull = "true")
+	@MemberOrder(name="Destino",sequence = "20")
 	public String getOtroDestino() {
 		return otroDestino;
 	}
@@ -109,7 +143,22 @@ public class Memo extends Documento {
 		this.otroDestino = destino;
 	}
 
-	
+	@CssClass("x-verde")
+	@Named("Actualizar")
+	public Memo updateOtroDestino(@Named("OTRO") String otro) {
+		this.setDestinoSector(null);
+		this.setOtroDestino(otro);
+		return this;
+	}
+
+	// public String defaultOtroDestino() {
+	// if (!this.getSector().getNombre_sector().contentEquals("OTRO SECTOR")){
+	// return "-----------";
+	// }
+	// else
+	// return this.getOtroDestino();
+	//
+	// }
 
 	// public void setTipoMemo(ButtonGroup tipoMemo) {
 	// this.tipoMemo = tipoMemo;
@@ -160,4 +209,6 @@ public class Memo extends Documento {
 	// public int compareTo(Documento memo) {
 	// return ObjectContracts.compare(this, memo, "nro_memo");
 	// }
+	@javax.inject.Inject
+	private SectorRepositorio sectorRepositorio;
 }
