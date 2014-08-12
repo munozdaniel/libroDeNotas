@@ -1,7 +1,7 @@
 {
   "columns": [
     {
-      "span": 8,
+      "span": 5,
       "memberGroups": {
         "General": {
           "members": {
@@ -12,20 +12,6 @@
               },
               "typicalLength": {
                 "value": 9
-              }
-            },
-            "fecha": {
-              "disabled": {},
-              "named": {
-                "value": "Fecha"
-              },
-              "typicalLength": {
-                "value": 12
-              }
-            },
-            "sector": {
-              "named": {
-                "value": "Origen"
               }
             },
             "tipo": {
@@ -44,13 +30,6 @@
                 "value": 5
               }
             },
-            "creadoPor": {
-              "hidden": {},
-              "disabled": {},
-              "typicalLength": {
-                "value": 25
-              }
-            },
             "time": {
               "hidden": {},
               "named": {
@@ -60,13 +39,59 @@
                 "value": 12
               }
             },
-            "destinoSector": {
+            "creadoPor": {
+              "hidden": {},
+              "disabled": {},
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "fecha": {
+              "disabled": {},
               "named": {
-                "value": "Sector"
+                "value": "Fecha"
+              },
+              "typicalLength": {
+                "value": 12
+              }
+            },
+            "sector": {
+              "named": {
+                "value": "Origen"
               }
             }
           }
         },
+        "Destino": {
+          "members": {
+            "destinoSector": {
+              "actions": {
+                "updateDestinoSector": {}
+              },
+              "disabled": {},
+              "named": {
+                "value": "Sector"
+              }
+            },
+            "otroDestino": {
+              "actions": {
+                "updateOtroDestino": {}
+              },
+              "disabled": {},
+              "named": {
+                "value": "Otro"
+              },
+              "typicalLength": {
+                "value": 25
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "span": 7,
+      "memberGroups": {
         "Observaciones": {
           "members": {
             "descripcion": {
@@ -77,7 +102,7 @@
                 "value": 150
               },
               "multiLine": {
-                "numberOfLines": 6
+                "numberOfLines": 16
               }
             },
             "adjuntar": {
@@ -90,15 +115,11 @@
       }
     },
     {
-      "span": 4,
+      "span": 8,
       "memberGroups": {}
     },
     {
-      "span": 0,
-      "memberGroups": {}
-    },
-    {
-      "span": 0,
+      "span": 8,
       "collections": {}
     }
   ],
