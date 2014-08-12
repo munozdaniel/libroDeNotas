@@ -8,6 +8,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PublishedAction;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.value.Blob;
 import org.joda.time.LocalDate;
@@ -15,6 +16,9 @@ import org.joda.time.LocalDateTime;
 
 import dom.sector.Sector;
 import dom.sector.SectorRepositorio;
+import dom.todo.ToDoItem;
+import dom.todo.ToDoItem.Category;
+import dom.todo.ToDoItem.Subcategory;
 
 @Named("MEMO")
 public class MemoRepositorio {
@@ -39,26 +43,64 @@ public class MemoRepositorio {
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
 	public Memo addMemo(final @Named("De:") Sector sector,
-			 final  @Named("otro Sector:") String otroSector,
+			final @Named("Sector Destino:") Sector destinoSector,
+			@Optional @Named("otro Sector:") String otroSector,
 			final @Named("Descripción:") String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
-		return this.nuevoMemo(sector, otroSector, descripcion,
+		if (!destinoSector.getNombre_sector().contentEquals("OTRO SECTOR"))
+			otroSector = "";
+		return this.nuevoMemo(sector, destinoSector, otroSector, descripcion,
 				this.currentUserName(), adjunto);
 
 	}
-	
-	// public ButtonGroup default0AddMemo() {
-	// ButtonGroup tipoMemo = new ButtonGroup();
-	// JRadioButton rbtn1 = new JRadioButton("Sector", true);
-	// JRadioButton rbtn2 = new JRadioButton("Otro", false);
-	// tipoMemo.add(rbtn1);
-	// tipoMemo.add(rbtn2);
-	// return tipoMemo;
-	// }
 
+	@Named("Sector")
+	public List<Sector> choices1AddMemo() {
+		List<Sector> lista = sectorRepositorio.listar();
+		// Sector unSector = new Sector();
+		// unSector.setNombre_sector("OTRO SECTOR");
+		// unSector.setResponsable("INFORMATICA");
+		// unSector.setResolucion(true);
+		// unSector.setDisposicion(true);
+		// unSector.setExpediente(true);
+		// unSector.setCreadoPor("root");
+		// unSector.setHabilitado(true);
+		// lista.add(unSector);
+		return lista;
+	}
+
+	@Named("Para")
+	public List<Sector> choices0AddMemo() {
+		return sectorRepositorio.listar(); // TODO: return list of choices for
+											// property
+	}
+
+
+	public Sector default1AddMemo() {
+		return this.sectorRepositorio.listar().get(1);
+	}
+
+	public String validateAddMemo(final Sector sector, final Sector destino,
+			 String otro, final String descripcion, final Blob adj) {
+		 if(!destino.getNombre_sector().contentEquals("OTRO SECTOR") )
+			 otro = "";
+		 
+			 
+			 return  null;
+		 
+		
+	}
+	// @Named("Disable")
+	// public Sector disableAddMemo(final Sector sector) {
+	// if(sector.getNombre_sector().contentEquals("OTRO SECTOR")) {
+	// return null;
+	// }
+	// return sector;
+	// }
 	@Programmatic
-	private Memo nuevoMemo(final Sector sector, final String otroSector,
-			final String descripcion, final String creadoPor, final Blob adjunto) {
+	private Memo nuevoMemo(final Sector sector, final Sector destinoSector,
+			final String otroSector, final String descripcion,
+			final String creadoPor, final Blob adjunto) {
 		final Memo unMemo = this.container.newTransientInstance(Memo.class);
 		int nro = recuperarNroMemo();
 		nro += 1;
@@ -71,8 +113,10 @@ public class MemoRepositorio {
 		unMemo.setDescripcion(descripcion.toUpperCase().trim());
 		unMemo.setHabilitado(true);
 		unMemo.setCreadoPor(creadoPor);
-		// unMemo.setSector(sector);
+		unMemo.setSector(sector);
 		unMemo.setTime(LocalDateTime.now().withMillisOfSecond(3));
+		unMemo.setDestinoSector(destinoSector);
+		// if (otroSector != "")
 		unMemo.setOtroDestino(otroSector);
 		sector.addToDocumento(unMemo);
 		container.persistIfNotAlready(unMemo);
@@ -80,6 +124,14 @@ public class MemoRepositorio {
 		return unMemo;
 	}
 
+	// public void modify1AddMemo()
+	// {
+	//
+	// }
+	// public String modify2AddMemo()
+	// {
+	// if()
+	// }
 	// @Programmatic
 	// private int recuperarNroMemo() {
 	// final Memo memo = this.container.firstMatch(new QueryDefault<Memo>(
@@ -111,19 +163,8 @@ public class MemoRepositorio {
 	// search) {
 	// return sectorRepositorio.autoComplete(search);
 	// }
+
 	
-	@Named("Sector")
-	public List<Sector> choices0AddMemo() {
-		return sectorRepositorio.listar(); // TODO: return list of choices for
-											// property
-	}
-
-	@Named("Para")
-	public List<Sector> choices1AddMemo() {
-		return sectorRepositorio.listar(); // TODO: return list of choices for
-											// property
-	}
-
 	@Programmatic
 	public List<Memo> autoComplete(final String destino) {
 		return container.allMatches(new QueryDefault<Memo>(Memo.class,
@@ -214,8 +255,10 @@ public class MemoRepositorio {
 
 	@javax.inject.Inject
 	private DomainObjectContainer container;
+
 	@javax.inject.Inject
 	private SectorRepositorio sectorRepositorio;
+
 	private Formatter formato;
 
 }
