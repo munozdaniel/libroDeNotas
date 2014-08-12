@@ -140,7 +140,7 @@ public class NotaRepositorio {
 	// //////////////////////////////////////
 	@MemberOrder(sequence = "30")
 	public List<Nota> filtrar(
-			final @Named("De:") Sector sector,
+			final @Optional @Named("De:") Sector sector,
 			final @Optional @Named("Fecha") LocalDate fecha) {
 		if (fecha == null && sector == null) {
 			this.container.warnUser("Sin Filtro");
