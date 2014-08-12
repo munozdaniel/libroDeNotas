@@ -57,8 +57,13 @@ div.ToDoItem-notes span.scalarValue {
     display: none;
 }
 */
-
-
+.entityActions .cssMenuPanel .menuh li.x-verde a,
+li.x-caution a {
+    background-color: #04B404;
+}
+.entityCombined .entityActions .cssMenuPanel .menuh li.x-verde a:hover {
+    background-color:#01A9DB;
+}
 .entityActions .cssMenuPanel .menuh li.x-caution a,
 li.x-caution a {
     background-color: #C94316;
