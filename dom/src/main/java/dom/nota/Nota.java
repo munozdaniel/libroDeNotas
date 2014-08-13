@@ -42,12 +42,15 @@ import dom.documento.Documento;
 				+ "WHERE  (habilitado == true) && (fecha==:fecha)"),
 		@javax.jdo.annotations.Query(name = "filtrarPorSector", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota "
-				+ "WHERE  (habilitado == true) && (sector==:sector)") })
+				+ "WHERE  (habilitado == true) && (sector==:sector)"),
+
+		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota " + "WHERE  (ultimo == true)") })
 @ObjectType("NOTA")
 @Audited
 @AutoComplete(repository = NotaRepositorio.class, action = "autoComplete")
 @Bookmarkable
-@MemberGroupLayout(columnSpans={3,3,3,3})
+@MemberGroupLayout(columnSpans = { 3, 3, 3, 3 })
 public class Nota extends Documento {
 	// //////////////////////////////////////
 	// Identificacion en la UI.
@@ -55,7 +58,7 @@ public class Nota extends Documento {
 	// //////////////////////////////////////
 
 	public String title() {
-		return "NOTA Nº "+this.getNro_nota();
+		return "NOTA Nº " + this.getNro_nota();
 	}
 
 	public String iconName() {
@@ -66,7 +69,7 @@ public class Nota extends Documento {
 
 	@Disabled
 	@javax.jdo.annotations.Column(allowsNull = "false")
-	@MemberOrder(name="Datos Generales" ,sequence = "10")
+	@MemberOrder(name = "Datos Generales", sequence = "10")
 	@Named("Nro")
 	public int getNro_nota() {
 		return nro_nota;
@@ -80,7 +83,7 @@ public class Nota extends Documento {
 
 	@Named("Destino")
 	@javax.jdo.annotations.Column(allowsNull = "false")
-	@MemberOrder(name="Datos Generales" ,sequence = "40")
+	@MemberOrder(name = "Datos Generales", sequence = "40")
 	public String getDestino() {
 		return destino;
 	}
@@ -88,7 +91,7 @@ public class Nota extends Documento {
 	public void setDestino(String destino) {
 		this.destino = destino;
 	}
-	
+
 	// //////////////////////////////////////
 	// Implementando los metodos de comparable
 	// //////////////////////////////////////

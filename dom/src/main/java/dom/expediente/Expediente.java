@@ -8,11 +8,13 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Audited;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
+import org.apache.isis.applib.annotation.Where;
 
 import dom.documento.Documento;
 
@@ -47,7 +49,9 @@ import dom.documento.Documento;
 				+ "WHERE  (habilitado == true) && (fecha==:fecha)"),
 		@javax.jdo.annotations.Query(name = "filtrarPorSector", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota "
-				+ "WHERE  (habilitado == true) && (sector==:sector)") })
+				+ "WHERE  (habilitado == true) && (sector==:sector)"),
+		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Expediente " + "WHERE  (ultimo == true)") })
 @ObjectType("EXPEDIENTE")
 @Audited
 @AutoComplete(repository = ExpedienteRepositorio.class, action = "autoComplete")
@@ -85,7 +89,7 @@ public class Expediente extends Documento {
 
 	private String expte_cod_empresa;
 
-	@Hidden
+	@Hidden(where = Where.PARENTED_TABLES)
 	@MemberOrder(sequence = "20")
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	public String getExpte_cod_empresa() {
@@ -96,20 +100,21 @@ public class Expediente extends Documento {
 		this.expte_cod_empresa = expte_cod_empresa;
 	}
 
-	 private int expte_cod_numero;
-	
-	 @Hidden
-	 @MemberOrder(sequence = "30")
-	 @javax.jdo.annotations.Column(allowsNull = "false")
-	 public int getExpte_cod_numero() {
-	 return expte_cod_numero;
-	 }
-	
-	 public void setExpte_cod_numero(int expte_cod_numero) {
-	 this.expte_cod_numero = expte_cod_numero;
-	 }
+	private int expte_cod_numero;
+
+	@Hidden
+	@MemberOrder(sequence = "30")
+	@javax.jdo.annotations.Column(allowsNull = "false")
+	public int getExpte_cod_numero() {
+		return expte_cod_numero;
+	}
+
+	public void setExpte_cod_numero(int expte_cod_numero) {
+		this.expte_cod_numero = expte_cod_numero;
+	}
+
 	public enum Letras {
-		A , B , C , D , E , F , G , H , I , J , K , L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z
+		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z
 	}
 
 	private String expte_cod_letra;
@@ -119,6 +124,7 @@ public class Expediente extends Documento {
 	@MaxLength(100)
 	@Size(max = 100)
 	@Named("Codigo")
+	@Hidden(where = Where.PARENTED_TABLES)
 	public String getExpte_cod_letra() {
 		return expte_cod_letra;
 	}
@@ -129,9 +135,10 @@ public class Expediente extends Documento {
 
 	private int expte_cod_anio;
 
-	@Hidden
+	@Hidden(where = Where.PARENTED_TABLES)
 	@MemberOrder(sequence = "50")
 	@javax.jdo.annotations.Column(allowsNull = "false")
+	@Disabled
 	public int getExpte_cod_anio() {
 		return expte_cod_anio;
 	}

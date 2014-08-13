@@ -38,7 +38,10 @@ import dom.documento.Documento;
 				+ "WHERE  (habilitado == true) && (fecha==:fecha)"),
 		@javax.jdo.annotations.Query(name = "filtrarPorSector", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.disposiciones.Disposicion  "
-				+ "WHERE  (habilitado == true) && (sector==:sector)") })
+				+ "WHERE  (habilitado == true) && (sector==:sector)"),
+
+		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Disposicion " + "WHERE  (ultimo == true)") })
 @ObjectType("DISPOSICION")
 @Audited
 @AutoComplete(repository = DisposicionRepositorio.class, action = "autoComplete")

@@ -8,7 +8,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.PublishedAction;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.value.Blob;
 import org.joda.time.LocalDate;
@@ -16,9 +15,6 @@ import org.joda.time.LocalDateTime;
 
 import dom.sector.Sector;
 import dom.sector.SectorRepositorio;
-import dom.todo.ToDoItem;
-import dom.todo.ToDoItem.Category;
-import dom.todo.ToDoItem.Subcategory;
 
 @Named("MEMO")
 public class MemoRepositorio {
@@ -102,11 +98,18 @@ public class MemoRepositorio {
 			final String otroSector, final String descripcion,
 			final String creadoPor, final Blob adjunto) {
 		final Memo unMemo = this.container.newTransientInstance(Memo.class);
-		int nro = recuperarNroMemo();
-		nro += 1;
+		Memo memoAnterior = recuperarUltimo();
+		int nro = 0;
+		if (memoAnterior != null) {
+			nro = memoAnterior.getNro_memo() + 1;
+			memoAnterior.setUltimo(false);
+
+		}
 		formato = new Formatter();
 		formato.format("%04d", nro);
 		unMemo.setNro_memo(Integer.parseInt(000 + formato.toString()));
+		unMemo.setUltimo(true);
+
 		unMemo.setFecha(LocalDate.now());
 		unMemo.setAdjuntar(adjunto);
 		unMemo.setTipo(2);
@@ -123,24 +126,16 @@ public class MemoRepositorio {
 		container.flush();
 		return unMemo;
 	}
-
-	// public void modify1AddMemo()
-	// {
-	//
-	// }
-	// public String modify2AddMemo()
-	// {
-	// if()
-	// }
-	// @Programmatic
-	// private int recuperarNroMemo() {
-	// final Memo memo = this.container.firstMatch(new QueryDefault<Memo>(
-	// Memo.class, "buscarUltimoMemoTrue"));
-	// if (memo == null)
-	// return 0;
-	// else
-	// return memo.getNro_memo();
-	// }
+	@Programmatic
+	private Memo recuperarUltimo() {
+		final Memo doc = this.container.firstMatch(new QueryDefault<Memo>(
+				Memo.class, "recuperarUltimo"));
+		if (doc == null)
+			return null;
+		else
+			return doc;
+	}
+	
 	@Programmatic
 	private int recuperarNroMemo() {
 		final List<Memo> memos = this.container

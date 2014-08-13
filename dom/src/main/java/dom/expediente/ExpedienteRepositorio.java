@@ -15,7 +15,6 @@ import org.apache.isis.applib.value.Blob;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
-import dom.expediente.Expediente.Letras;
 import dom.sector.Sector;
 import dom.sector.SectorRepositorio;
 
@@ -55,12 +54,19 @@ public class ExpedienteRepositorio {
 			final String creadoPor, final Blob adjunto) {
 		final Expediente unExpediente = this.container
 				.newTransientInstance(Expediente.class);
-		int nro = recuperarNroResolucion();
-		nro += 1;
+		Expediente expedienteAnterior = recuperarUltimo();
+		int nro = 0;
+		if (expedienteAnterior != null) {
+			nro = expedienteAnterior.getNro_expediente() + 1;
+			expedienteAnterior.setUltimo(false);
+
+		}
 		formato = new Formatter();
 		formato.format("%04d", nro);
 		unExpediente.setNro_expediente(Integer.parseInt(000 + formato
 				.toString()));
+		unExpediente.setUltimo(true);
+		
 		unExpediente.setExpte_cod_letra(expte_cod_letra);
 		unExpediente.setFecha(LocalDate.now());
 		unExpediente.setTipo(5);
@@ -80,17 +86,15 @@ public class ExpedienteRepositorio {
 		container.flush();
 		return unExpediente;
 	}
-
-	// @Programmatic
-	// private int recuperarNroResolucion() {
-	// final Expediente expediente = this.container
-	// .firstMatch(new QueryDefault<Expediente>(Expediente.class,
-	// "buscarUltimoExpedienteTrue"));
-	// if (expediente == null)
-	// return 0;
-	// else
-	// return expediente.getNro_expediente();
-	// }
+	@Programmatic
+	private Expediente recuperarUltimo() {
+		final Expediente doc = this.container.firstMatch(new QueryDefault<Expediente>(
+				Expediente.class, "recuperarUltimo"));
+		if (doc == null)
+			return null;
+		else
+			return doc;
+	}
 	@Programmatic
 	private int recuperarNroResolucion() {
 		final List<Expediente> expedientes = this.container

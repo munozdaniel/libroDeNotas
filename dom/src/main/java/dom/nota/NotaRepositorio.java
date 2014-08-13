@@ -46,24 +46,30 @@ public class NotaRepositorio {
 	 */
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
-	public Nota addNota(
-			final  @Named("De:") Sector sector,
-			final  @Named("Para:") String destino,
-			final @Named("Descripción:") String descripcion
-			,final @Optional @Named("Ajuntar:") Blob adjunto) {
+	public Nota addNota(final @Named("De:") Sector sector,
+			final @Named("Para:") String destino,
+			final @Named("Descripción:") String descripcion,
+			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		// return nuevaNota(sector, destino, descripcion);
-		return nuevaNota(sector, destino, descripcion, this.currentUserName(),adjunto);
+		return nuevaNota(sector, destino, descripcion, this.currentUserName(),
+				adjunto);
 	}
 
 	@Programmatic
 	private Nota nuevaNota(final Sector sector, final String destino,
-			final String descripcion, final String creadoPor,final Blob adjunto) {
+			final String descripcion, final String creadoPor, final Blob adjunto) {
 		final Nota unaNota = this.container.newTransientInstance(Nota.class);
-		int nro = recuperarNroNota();
-		nro += 1;
+		Nota notaAnterior = recuperarUltimo();
+		int nro = 0;
+		if (notaAnterior != null) {
+			nro = notaAnterior.getNro_nota() + 1;
+			notaAnterior.setUltimo(false);
+
+		}
 		formato = new Formatter();
 		formato.format("%04d", nro);
 		unaNota.setNro_nota(Integer.parseInt(formato.toString()));
+
 		unaNota.setFecha(LocalDate.now());
 		unaNota.setTipo(1);
 		unaNota.setDescripcion(descripcion.toUpperCase().trim());
@@ -71,6 +77,7 @@ public class NotaRepositorio {
 		unaNota.setCreadoPor(creadoPor);
 		unaNota.setDestino(destino);
 		unaNota.setTime(LocalDateTime.now().withMillisOfSecond(3));
+		unaNota.setUltimo(true);
 		// container.warnUser("Time:: : " + unaNota.getTime().toString());
 		// unaNota.setSector(sector);
 		unaNota.setAdjuntar(adjunto);
@@ -78,6 +85,16 @@ public class NotaRepositorio {
 		container.persistIfNotAlready(unaNota);
 		container.flush();
 		return unaNota;
+	}
+
+	@Programmatic
+	private Nota recuperarUltimo() {
+		final Nota nota = this.container.firstMatch(new QueryDefault<Nota>(
+				Nota.class, "recuperarUltimo"));
+		if (nota == null)
+			return null;
+		else
+			return nota;
 	}
 
 	@Programmatic
@@ -139,8 +156,7 @@ public class NotaRepositorio {
 	// Filtrar por Fecha o Sector
 	// //////////////////////////////////////
 	@MemberOrder(sequence = "30")
-	public List<Nota> filtrar(
-			final @Optional @Named("De:") Sector sector,
+	public List<Nota> filtrar(final @Optional @Named("De:") Sector sector,
 			final @Optional @Named("Fecha") LocalDate fecha) {
 		if (fecha == null && sector == null) {
 			this.container.warnUser("Sin Filtro");
@@ -206,4 +222,5 @@ public class NotaRepositorio {
 	@javax.inject.Inject
 	private SectorRepositorio sectorRepositorio;
 	private Formatter formato;
+
 }

@@ -53,7 +53,10 @@ import dom.todo.ToDoItem.Category;
 				+ "WHERE  (habilitado == true) && (fecha==:fecha)"),
 		@javax.jdo.annotations.Query(name = "filtrarPorSector", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota "
-				+ "WHERE  (habilitado == true) && (sector==:sector)") })
+				+ "WHERE  (habilitado == true) && (sector==:sector)"),
+
+		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Memo " + "WHERE  (ultimo == true)") })
 @ObjectType("MEMO")
 @Audited
 @AutoComplete(repository = MemoRepositorio.class, action = "autoComplete")
@@ -100,7 +103,7 @@ public class Memo extends Documento {
 	@Disabled
 	// @Hidden(where = Where.ALL_TABLES, when = When.UNTIL_PERSISTED)
 	@Named("Sector")
-	@MemberOrder(name="Destino",sequence = "20")
+	@MemberOrder(name = "Destino", sequence = "20")
 	@javax.jdo.annotations.Column(allowsNull = "true")
 	public Sector getDestinoSector() {
 		return destinoSector;
@@ -121,12 +124,12 @@ public class Memo extends Documento {
 		this.setOtroDestino("");
 		return this;
 	}
+
 	public List<Sector> choices0UpdateDestinoSector() {
-		List<Sector> lista= sectorRepositorio.listar(); 
-		lista.remove(1);//debe ser 0
+		List<Sector> lista = sectorRepositorio.listar();
+		lista.remove(1);// debe ser 0
 		return lista;
 	}
-
 
 	private String otroDestino;
 
@@ -134,7 +137,7 @@ public class Memo extends Documento {
 	@Disabled
 	// @Hidden(where = Where.ALL_TABLES, when = When.UNTIL_PERSISTED)
 	@javax.jdo.annotations.Column(allowsNull = "true")
-	@MemberOrder(name="Destino",sequence = "20")
+	@MemberOrder(name = "Destino", sequence = "20")
 	public String getOtroDestino() {
 		return otroDestino;
 	}

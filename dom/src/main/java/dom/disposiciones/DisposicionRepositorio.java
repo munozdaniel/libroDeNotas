@@ -51,13 +51,20 @@ public class DisposicionRepositorio {
 			final String descripcion, final String creadoPor, final Blob adjunto) {
 		final Disposicion unaDisposicion = this.container
 				.newTransientInstance(Disposicion.class);
-		int nro = recuperarNroDisposicion();
-		nro += 1;
+		Disposicion disposicionAnterior = recuperarUltimo();
+		int nro = 0;
+		if (disposicionAnterior != null) {
+			nro = disposicionAnterior.getNro_Disposicion() + 1;
+			disposicionAnterior.setUltimo(false);
+
+		}
 		@SuppressWarnings("resource")
 		Formatter formato = new Formatter();
 		formato.format("%04d", nro);
 		unaDisposicion.setNro_Disposicion(Integer.parseInt(000 + formato
 				.toString()));
+		unaDisposicion.setUltimo(true);
+		
 		unaDisposicion.setFecha(LocalDate.now());
 		unaDisposicion.setTipo(4);
 		unaDisposicion.setAdjuntar(adjunto);
@@ -72,7 +79,16 @@ public class DisposicionRepositorio {
 		container.flush();
 		return unaDisposicion;
 	}
-
+	@Programmatic
+	private Disposicion recuperarUltimo() {
+		final Disposicion doc = this.container.firstMatch(new QueryDefault<Disposicion>(
+				Disposicion.class, "recuperarUltimo"));
+		if (doc == null)
+			return null;
+		else
+			return doc;
+	}
+	
 	@Named("Sector")
 	public List<Sector> choices0AddDisposicion() {
 		return sectorRepositorio.listarDisposiciones(); // TODO: return list of
