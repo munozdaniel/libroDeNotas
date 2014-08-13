@@ -13,6 +13,7 @@ import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.util.ObjectContracts;
 import org.apache.isis.applib.value.Blob;
 import org.joda.time.LocalDate;
@@ -38,12 +39,11 @@ public abstract class Documento implements Comparable<Documento> {
 		this.time = time;
 	}
 
-
 	private LocalDate fecha;
 
 	@Disabled
 	@javax.jdo.annotations.Column(allowsNull = "false")
-//	@MemberOrder(name="Datos Generales" ,sequence = "20")
+	// @MemberOrder(name="Datos Generales" ,sequence = "20")
 	@Named("Fecha")
 	public LocalDate getFecha() {
 		return fecha;
@@ -75,7 +75,7 @@ public abstract class Documento implements Comparable<Documento> {
 
 	@Named("Descripcion")
 	@javax.jdo.annotations.Column(allowsNull = "false")
-	@MemberOrder(name="Observaciones" ,sequence = "50")
+	@MemberOrder(name = "Observaciones", sequence = "50")
 	@MultiLine
 	@MaxLength(200)
 	public String getDescripcion() {
@@ -124,24 +124,24 @@ public abstract class Documento implements Comparable<Documento> {
 	// public void setObservacion(String observacion) {
 	// this.observacion = observacion;
 	// }
-	 // //////////////////////////////////////
-    // Attachment (property)
-    // //////////////////////////////////////
+	// //////////////////////////////////////
+	// Attachment (property)
+	// //////////////////////////////////////
 
-    private Blob adjuntar;
-	@MemberOrder(name="Observaciones" ,sequence = "50")
-    @javax.jdo.annotations.Persistent(defaultFetchGroup="false")
-    @javax.jdo.annotations.Column(allowsNull="true")
-    @Named("Adjuntar")
-    public Blob getAdjuntar() {
-        return adjuntar;
-    }
+	private Blob adjuntar;
 
-    public void setAdjuntar(final Blob adjunto) {
-        this.adjuntar = adjunto;
-    }
+	@MemberOrder(name = "Observaciones", sequence = "50")
+	@javax.jdo.annotations.Persistent(defaultFetchGroup = "false")
+	@javax.jdo.annotations.Column(allowsNull = "true")
+	@Named("Adjuntar")
+	public Blob getAdjuntar() {
+		return adjuntar;
+	}
 
-	
+	public void setAdjuntar(final Blob adjunto) {
+		this.adjuntar = adjunto;
+	}
+
 	// //////////////////////////////////////
 	// creadoPor
 	// //////////////////////////////////////
@@ -161,7 +161,7 @@ public abstract class Documento implements Comparable<Documento> {
 
 	private Sector sector;
 
-//	@MemberOrder(name="Datos Generales" ,sequence = "30")
+	// @MemberOrder(name="Datos Generales" ,sequence = "30")
 	@Column(allowsNull = "False")
 	@Named("Origen")
 	public Sector getSector() {
@@ -176,8 +176,24 @@ public abstract class Documento implements Comparable<Documento> {
 		if (this.getSector() != null)
 			this.setSector(null);
 	}
-	
+
 	// }}
+	// {{ Ultimo (property)
+	private Boolean ultimo;
+
+	@Hidden
+	@MemberOrder(sequence = "100")
+	@javax.jdo.annotations.Column(allowsNull = "true")
+	public Boolean getUltimo() {
+		return ultimo;
+	}
+
+	public void setUltimo(final Boolean ultimo) {
+		this.ultimo = ultimo;
+	}
+
+	// }}
+
 	@Override
 	public int compareTo(Documento documento) {
 		return ObjectContracts.compare(this, documento, "time");
