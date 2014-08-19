@@ -1,5 +1,7 @@
 package dom.expediente;
 
+import java.util.Calendar;
+
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 import javax.validation.constraints.Size;
@@ -89,6 +91,7 @@ public class Expediente extends Documento {
 
 	private String expte_cod_empresa;
 
+	@Named("Empresa")
 	@Hidden(where = Where.PARENTED_TABLES)
 	@MemberOrder(sequence = "20")
 	@javax.jdo.annotations.Column(allowsNull = "false")
@@ -105,6 +108,7 @@ public class Expediente extends Documento {
 	@Hidden
 	@MemberOrder(sequence = "30")
 	@javax.jdo.annotations.Column(allowsNull = "false")
+	@Named("Numero")
 	public int getExpte_cod_numero() {
 		return expte_cod_numero;
 	}
@@ -123,7 +127,7 @@ public class Expediente extends Documento {
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@MaxLength(100)
 	@Size(max = 100)
-	@Named("Codigo")
+	@Named("Inicial")
 	@Hidden(where = Where.PARENTED_TABLES)
 	public String getExpte_cod_letra() {
 		return expte_cod_letra;
@@ -139,6 +143,7 @@ public class Expediente extends Documento {
 	@MemberOrder(sequence = "50")
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Disabled
+	@Named("Año")
 	public int getExpte_cod_anio() {
 		return expte_cod_anio;
 	}
