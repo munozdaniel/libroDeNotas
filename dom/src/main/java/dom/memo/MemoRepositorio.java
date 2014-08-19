@@ -73,7 +73,7 @@ public class MemoRepositorio {
 
 
 	public Sector default1AddMemo() {
-		return this.sectorRepositorio.listar().get(1);
+		return this.sectorRepositorio.listar().get(0);
 	}
 
 	public String validateAddMemo(final Sector sector, final Sector destino,
