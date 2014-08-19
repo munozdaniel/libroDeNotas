@@ -129,10 +129,10 @@ public abstract class Documento implements Comparable<Documento> {
 	// //////////////////////////////////////
 
 	private Blob adjuntar;
-
+	
 	@MemberOrder(name = "Observaciones", sequence = "50")
 	@javax.jdo.annotations.Persistent(defaultFetchGroup = "false")
-	@javax.jdo.annotations.Column(allowsNull = "true")
+	@javax.jdo.annotations.Column(allowsNull = "true",name="adjunto")
 	@Named("Adjuntar")
 	public Blob getAdjuntar() {
 		return adjuntar;
@@ -193,6 +193,23 @@ public abstract class Documento implements Comparable<Documento> {
 	}
 
 	// }}
+	// {{ EsAnioNuevo (property)
+	// private Boolean esAnioNuevo;
+	//
+	// @MemberOrder(sequence = "1")
+	// @javax.jdo.annotations.Column(allowsNull = "true")
+	// @Hidden
+	// @Disabled
+	// public Boolean getEsAnioNuevo() {
+	// return esAnioNuevo;
+	// }
+	//
+	// public void setEsAnioNuevo(final Boolean esAnioNuevo) {
+	// this.esAnioNuevo = esAnioNuevo;
+	// }
+	// }}
+
+
 
 	@Override
 	public int compareTo(Documento documento) {
