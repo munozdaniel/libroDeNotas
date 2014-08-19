@@ -21,15 +21,10 @@ import dom.documento.Documento;
 @javax.jdo.annotations.Queries({
 		@javax.jdo.annotations.Query(name = "autoCompletarDestino", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota "
-				+ "WHERE destino.indexOf(:destino) >= 0"),
-		@javax.jdo.annotations.Query(name = "buscarUltimaNotaTrue", language = "JDOQL", value = "SELECT MAX(nro_nota) "
-				+ "FROM dom.nota.Nota "),
-		@javax.jdo.annotations.Query(name = "buscarUltimaNotaFalse", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Nota " + "WHERE habilitado == false"),
-		@javax.jdo.annotations.Query(name = "buscarPorNroNota", language = "JDOQL", value = "SELECT "
+				+ "WHERE destino.indexOf(:destino) >= 0 && (habilitado==true)"),
+		@javax.jdo.annotations.Query(name = "autoComplete", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota "
-				+ "WHERE  "
-				+ "nro_nota.indexOf(:nro_nota) >= 0"),
+				+ "WHERE destino.indexOf(:destino) >= 0"),
 		@javax.jdo.annotations.Query(name = "listarHabilitados", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota " + "WHERE  habilitado == true"),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
@@ -43,9 +38,21 @@ import dom.documento.Documento;
 		@javax.jdo.annotations.Query(name = "filtrarPorSector", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota "
 				+ "WHERE  (habilitado == true) && (sector==:sector)"),
+		@javax.jdo.annotations.Query(name = "filtrarPorFechaSectorRoot", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota "
+				+ "WHERE && (fecha==:fecha && sector==:sector)"),
+		@javax.jdo.annotations.Query(name = "filtrarPorFechaRoot", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota "
+				+ "WHERE  && (fecha==:fecha)"),
+		@javax.jdo.annotations.Query(name = "filtrarPorSectorRoot", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota "
+				+ "WHERE   (sector==:sector) "),
 
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Nota " + "WHERE  (ultimo == true)") })
+				+ "FROM dom.nota.Nota " + "WHERE  (ultimo == true)"),
+
+		@javax.jdo.annotations.Query(name = "esNuevoAnio", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota " + "WHERE fecha == :fecha") })
 @ObjectType("NOTA")
 @Audited
 @AutoComplete(repository = NotaRepositorio.class, action = "autoComplete")
@@ -65,17 +72,19 @@ public class Nota extends Documento {
 		return "nota";
 	}
 
-	private int nro_nota;
+
+	private Long nro_nota;
 
 	@Disabled
-	@javax.jdo.annotations.Column(allowsNull = "false")
+	@javax.jdo.annotations.Column(allowsNull = "true")
+	// @Persistent(valueStrategy = IdGeneratorStrategy.INCREMENT)
 	@MemberOrder(name = "Datos Generales", sequence = "10")
 	@Named("Nro")
-	public int getNro_nota() {
+	public Long getNro_nota() {
 		return nro_nota;
 	}
 
-	public void setNro_nota(int nro_nota) {
+	public void setNro_nota(final Long nro_nota) {
 		this.nro_nota = nro_nota;
 	}
 
