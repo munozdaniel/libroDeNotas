@@ -10,20 +10,13 @@ import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.CssClass;
 import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.When;
-import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.util.Reasons;
-import org.apache.isis.applib.value.Blob;
 
 import dom.documento.Documento;
 import dom.sector.Sector;
 import dom.sector.SectorRepositorio;
-import dom.todo.ToDoItem.Category;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id_documento")
@@ -127,7 +120,7 @@ public class Memo extends Documento {
 
 	public List<Sector> choices0UpdateDestinoSector() {
 		List<Sector> lista = sectorRepositorio.listar();
-		lista.remove(1);// debe ser 0
+		lista.remove(0);// debe ser 0
 		return lista;
 	}
 
@@ -149,7 +142,8 @@ public class Memo extends Documento {
 	@CssClass("x-verde")
 	@Named("Actualizar")
 	public Memo updateOtroDestino(@Named("OTRO") String otro) {
-		this.setDestinoSector(null);
+		List<Sector> lista = sectorRepositorio.listar();
+		this.setDestinoSector(lista.get(0));
 		this.setOtroDestino(otro);
 		return this;
 	}
