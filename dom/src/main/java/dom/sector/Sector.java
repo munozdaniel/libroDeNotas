@@ -1,7 +1,8 @@
 package dom.sector;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Join;
@@ -17,14 +18,17 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SortedBy;
 import org.apache.isis.applib.util.ObjectContracts;
+
+import com.google.common.collect.Ordering;
 
 import dom.documento.Documento;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
-@javax.jdo.annotations.Uniques({ @javax.jdo.annotations.Unique(name = "nombre_Sector_must_be_unique", members = { "id" }) })
+//@javax.jdo.annotations.Uniques({ @javax.jdo.annotations.Unique(name = "nombre_Sector_must_be_unique", members = { "nombre_sector" }) })
 @javax.jdo.annotations.Queries({
 		@javax.jdo.annotations.Query(name = "autoCompletePorNombreSector", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.sector.Sector "
@@ -175,22 +179,39 @@ public class Sector implements Comparable<Sector> {
 	public int compareTo(final Sector sector) {
 
 		return ObjectContracts.compare(this, sector, "nombre_sector");
+//		return 1;
 	}
 
 	// //////////////////////////////////////
 	// Relacion Sector/Documento
 	// //////////////////////////////////////
+	   // overrides the natural ordering
+    public static class DependenciesComparator implements Comparator<Documento> {
+        @Override
+        public int compare(Documento p, Documento q) {
+            Ordering<Documento> byDescription = new Ordering<Documento>() {
+                public int compare(final Documento p, final Documento q) {
+                    return Ordering.natural().nullsFirst().compare(p.getDescripcion(), q.getDescripcion());
+                }
+            };
+            return byDescription
+                    .compound(Ordering.<Documento>natural())
+                    .compare(p, q);
+        }
+    }
 	// {{ Documentos (Collection)
 	@Join
+//	@Persistent(mappedBy = "sector", dependentElement = "False")
 	@Persistent(mappedBy = "sector", dependentElement = "False")
-	private SortedSet<Documento> documentos = new TreeSet<Documento>();
+	private List<Documento> documentos = new ArrayList<Documento>();
 
 	@MemberOrder(sequence = "1")
-	public SortedSet<Documento> getDocumentos() {
+    @SortedBy(DependenciesComparator.class)
+	public List<Documento> getDocumentos() {
 		return documentos;
 	}
 
-	public void setDocumentos(final SortedSet<Documento> documentos) {
+	public void setDocumentos(final List<Documento> documentos) {
 		this.documentos = documentos;
 	}
 

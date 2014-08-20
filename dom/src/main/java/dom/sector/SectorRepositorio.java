@@ -72,7 +72,8 @@ public class SectorRepositorio {
 	}
 
 	/**
-	 * listar Devuelve todos los sectores.
+	 * listar Devuelve todos los sectores. Hay que chequear aquellos sectores
+	 * que corresponden solo a Resolucion o Disposicion, etc. 
 	 * 
 	 * @return
 	 */
@@ -86,7 +87,7 @@ public class SectorRepositorio {
 					.warnUser("No se encontraron sectores cargados en el sistema.");
 		return listarSectores;
 	}
-
+	
 	/**
 	 * Buscar
 	 * 
