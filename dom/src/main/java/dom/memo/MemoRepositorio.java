@@ -144,10 +144,13 @@ public class MemoRepositorio {
 	// //////////////////////////////////////
 
 	@MemberOrder(sequence = "20")
+	@Named("Lista de Memo")
 	public List<Memo> listar() {
+		String criterio = "listarHabilitados";
+		if (this.container.getUser().isCurrentUser("root"))
+			criterio = "listar";
 		final List<Memo> listaMemo = this.container
-				.allMatches(new QueryDefault<Memo>(Memo.class,
-						"listarHabilitados"));
+				.allMatches(new QueryDefault<Memo>(Memo.class, criterio));
 		if (listaMemo.isEmpty()) {
 			this.container.warnUser("No hay Memos cargados en el sistema");
 		}
