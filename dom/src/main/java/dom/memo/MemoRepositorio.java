@@ -35,7 +35,6 @@ public class MemoRepositorio {
 		return "memo";
 	}
 
-	// @CssClass("x-prueba")
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
 	public Memo addMemo(final @Named("De:") Sector sector,
@@ -53,46 +52,27 @@ public class MemoRepositorio {
 	@Named("Sector")
 	public List<Sector> choices1AddMemo() {
 		List<Sector> lista = sectorRepositorio.listar();
-		// Sector unSector = new Sector();
-		// unSector.setNombre_sector("OTRO SECTOR");
-		// unSector.setResponsable("INFORMATICA");
-		// unSector.setResolucion(true);
-		// unSector.setDisposicion(true);
-		// unSector.setExpediente(true);
-		// unSector.setCreadoPor("root");
-		// unSector.setHabilitado(true);
-		// lista.add(unSector);
 		return lista;
 	}
 
 	@Named("Para")
 	public List<Sector> choices0AddMemo() {
-		return sectorRepositorio.listar(); // TODO: return list of choices for
-											// property
+		return sectorRepositorio.listar();
 	}
-
 
 	public Sector default1AddMemo() {
 		return this.sectorRepositorio.listar().get(0);
 	}
 
 	public String validateAddMemo(final Sector sector, final Sector destino,
-			 String otro, final String descripcion, final Blob adj) {
-		 if(!destino.getNombre_sector().contentEquals("OTRO SECTOR") )
-			 otro = "";
-		 
-			 
-			 return  null;
-		 
-		
+			String otro, final String descripcion, final Blob adj) {
+		if (!destino.getNombre_sector().contentEquals("OTRO SECTOR"))
+			otro = "";
+
+		return null;
+
 	}
-	// @Named("Disable")
-	// public Sector disableAddMemo(final Sector sector) {
-	// if(sector.getNombre_sector().contentEquals("OTRO SECTOR")) {
-	// return null;
-	// }
-	// return sector;
-	// }
+
 	@Programmatic
 	private Memo nuevoMemo(final Sector sector, final Sector destinoSector,
 			final String otroSector, final String descripcion,
@@ -126,6 +106,7 @@ public class MemoRepositorio {
 		container.flush();
 		return unMemo;
 	}
+
 	@Programmatic
 	private Memo recuperarUltimo() {
 		final Memo doc = this.container.firstMatch(new QueryDefault<Memo>(
@@ -135,7 +116,7 @@ public class MemoRepositorio {
 		else
 			return doc;
 	}
-	
+
 	@Programmatic
 	private int recuperarNroMemo() {
 		final List<Memo> memos = this.container
@@ -152,14 +133,6 @@ public class MemoRepositorio {
 	// Buscar Tecnico
 	// //////////////////////////////////////
 
-	// @Named("Sector")
-	// @DescribedAs("Buscar el Sector en mayuscula")
-	// public List<Sector> autoComplete0AddMemo(final @MinLength(2) String
-	// search) {
-	// return sectorRepositorio.autoComplete(search);
-	// }
-
-	
 	@Programmatic
 	public List<Memo> autoComplete(final String destino) {
 		return container.allMatches(new QueryDefault<Memo>(Memo.class,
@@ -232,8 +205,7 @@ public class MemoRepositorio {
 
 	@Named("Sector")
 	public List<Sector> choices0Filtrar() {
-		return sectorRepositorio.listar(); // TODO: return list of choices for
-											// property
+		return sectorRepositorio.listar();
 	}
 
 	// //////////////////////////////////////
