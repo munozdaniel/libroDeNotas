@@ -41,7 +41,7 @@ public class ExpedienteRepositorio {
 	@MemberOrder(sequence = "10")
 	public Expediente addExpediente(
 			final @Named("Inicia: ") Sector sector,
-			final @RegEx(validation = "^[a-zA-Z]") @MaxLength(1) @Named("Letra Inicial: ")  String expte_cod_letra,
+			final @RegEx(validation = "^[a-zA-Z]") @MaxLength(1) @Named("Letra Inicial: ") String expte_cod_letra,
 			final @Named("Motivo:") String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		return this.nuevoExpediente(expte_cod_letra, sector, descripcion,
@@ -66,7 +66,7 @@ public class ExpedienteRepositorio {
 		unExpediente.setNro_expediente(Integer.parseInt(000 + formato
 				.toString()));
 		unExpediente.setUltimo(true);
-		
+
 		unExpediente.setExpte_cod_letra(expte_cod_letra);
 		unExpediente.setFecha(LocalDate.now());
 		unExpediente.setTipo(5);
@@ -86,15 +86,18 @@ public class ExpedienteRepositorio {
 		container.flush();
 		return unExpediente;
 	}
+
 	@Programmatic
 	private Expediente recuperarUltimo() {
-		final Expediente doc = this.container.firstMatch(new QueryDefault<Expediente>(
-				Expediente.class, "recuperarUltimo"));
+		final Expediente doc = this.container
+				.firstMatch(new QueryDefault<Expediente>(Expediente.class,
+						"recuperarUltimo"));
 		if (doc == null)
 			return null;
 		else
 			return doc;
 	}
+
 	@Programmatic
 	private int recuperarNroResolucion() {
 		final List<Expediente> expedientes = this.container
@@ -113,10 +116,14 @@ public class ExpedienteRepositorio {
 	}
 
 	@MemberOrder(sequence = "20")
+	@Named("Lista de Expedientes")
 	public List<Expediente> listar() {
+		String criterio = "listarHabilitados";
+		if (this.container.getUser().isCurrentUser("root"))
+			criterio = "listar";
 		final List<Expediente> listaExpedientes = this.container
 				.allMatches(new QueryDefault<Expediente>(Expediente.class,
-						"listarHabilitados"));
+						criterio));
 		if (listaExpedientes.isEmpty()) {
 			this.container
 					.warnUser("No hay Expedientes cargados en el sistema");
