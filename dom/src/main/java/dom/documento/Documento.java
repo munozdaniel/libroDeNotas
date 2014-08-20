@@ -170,7 +170,7 @@ public abstract class Documento implements Comparable<Documento> {
 	public void setUltimo(final Boolean ultimo) {
 		this.ultimo = ultimo;
 	}
-
+	
 	// //////////////////////////////////////
 	// CompareTo
 	// //////////////////////////////////////

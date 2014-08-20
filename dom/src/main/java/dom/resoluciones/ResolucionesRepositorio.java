@@ -59,7 +59,6 @@ public class ResolucionesRepositorio {
 		unaResolucion.setDescripcion(descripcion.toUpperCase().trim());
 		unaResolucion.setHabilitado(true);
 		unaResolucion.setCreadoPor(creadoPor);
-		// unaResolucion.setSector(sector);
 		unaResolucion.setAdjuntar(adjunto);
 		unaResolucion.setTime(LocalDateTime.now().withMillisOfSecond(3));
 		sector.addToDocumento(unaResolucion);
@@ -85,10 +84,14 @@ public class ResolucionesRepositorio {
 	// //////////////////////////////////////
 
 	@MemberOrder(sequence = "20")
+	@Named("Lista de Resoluciones")
 	public List<Resoluciones> listar() {
+		String criterio = "listarHabilitados";
+		if (this.container.getUser().isCurrentUser("root"))
+			criterio = "listar";
 		final List<Resoluciones> listaMemo = this.container
 				.allMatches(new QueryDefault<Resoluciones>(Resoluciones.class,
-						"listarHabilitados"));
+						criterio));
 		if (listaMemo.isEmpty()) {
 			this.container
 					.warnUser("No hay Resoluciones cargados en el sistema");
