@@ -37,8 +37,7 @@ public class DisposicionRepositorio {
 
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
-	public Disposicion addDisposicion(
-			final @Named("Sector") Sector sector,
+	public Disposicion addDisposicion(final @Named("Sector") Sector sector,
 			final @Named("Descripción:") String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		return this.nuevaDisposicion(sector, descripcion,
@@ -64,7 +63,7 @@ public class DisposicionRepositorio {
 		unaDisposicion.setNro_Disposicion(Integer.parseInt(000 + formato
 				.toString()));
 		unaDisposicion.setUltimo(true);
-		
+
 		unaDisposicion.setFecha(LocalDate.now());
 		unaDisposicion.setTipo(4);
 		unaDisposicion.setAdjuntar(adjunto);
@@ -79,16 +78,18 @@ public class DisposicionRepositorio {
 		container.flush();
 		return unaDisposicion;
 	}
+
 	@Programmatic
 	private Disposicion recuperarUltimo() {
-		final Disposicion doc = this.container.firstMatch(new QueryDefault<Disposicion>(
-				Disposicion.class, "recuperarUltimo"));
+		final Disposicion doc = this.container
+				.firstMatch(new QueryDefault<Disposicion>(Disposicion.class,
+						"recuperarUltimo"));
 		if (doc == null)
 			return null;
 		else
 			return doc;
 	}
-	
+
 	@Named("Sector")
 	public List<Sector> choices0AddDisposicion() {
 		return sectorRepositorio.listarDisposiciones(); // TODO: return list of
@@ -130,14 +131,18 @@ public class DisposicionRepositorio {
 	// //////////////////////////////////////
 	// Listar Memos
 	// //////////////////////////////////////
-
+	@Named("Lista de Disposiciones")
 	@MemberOrder(sequence = "20")
 	public List<Disposicion> listar() {
+		String criterio = "listarHabilitados";
+		if (this.container.getUser().isCurrentUser("root"))
+			criterio = "listar";
 		final List<Disposicion> listaMemo = this.container
 				.allMatches(new QueryDefault<Disposicion>(Disposicion.class,
-						"listar"));
+						criterio));
 		if (listaMemo.isEmpty()) {
-			this.container.warnUser("No hay Disposiciones cargados en el sistema");
+			this.container
+					.warnUser("No hay Disposiciones cargados en el sistema");
 		}
 		return listaMemo;
 
@@ -149,7 +154,7 @@ public class DisposicionRepositorio {
 
 	@MemberOrder(sequence = "30")
 	public List<Disposicion> filtrar(
-			final @Optional  @Named("De:") Sector sector,
+			final @Optional @Named("De:") Sector sector,
 			final @Optional @Named("Fecha") LocalDate fecha) {
 		if (fecha == null && sector == null) {
 			this.container.warnUser("Sin Filtro");
