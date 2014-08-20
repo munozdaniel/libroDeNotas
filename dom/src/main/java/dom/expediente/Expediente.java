@@ -1,6 +1,5 @@
 package dom.expediente;
 
-import java.util.Calendar;
 import java.util.List;
 
 import javax.jdo.annotations.IdentityType;
@@ -11,6 +10,7 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Audited;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MaxLength;
@@ -72,7 +72,10 @@ public class Expediente extends Documento {
 	}
 
 	public String iconName() {
-		return "expediente";
+		if (this.getHabilitado())
+			return "expediente";
+		else
+			return "delete";
 	}
 
 	// //////////////////////////////////////
@@ -155,35 +158,34 @@ public class Expediente extends Documento {
 		this.expte_cod_anio = expte_cod_anio;
 	}
 
-	// {{ codigoExpediente (property)
-	// private String codigoACadena;
-	//
-	// @Named("Codigo")
-	// @MemberOrder(sequence = "1")
-	// public String getcodigoExpediente() {
-	// return codigoACadena;
-	// }
-	//
-	// public void setcodigoExpediente(final String codigoACadena) {
-	// this.codigoACadena = codigoACadena;
-	// }
-
-	// }}
 	@Override
 	public List<Sector> choicesSector() {
 		return this.sectorRepositorio.listarExpediente();
 	}
 
+	@Named("Eliminar")
+	@DescribedAs("Necesario privilegios de Administrador.")
+	public List<Expediente> eliminar() {
+		this.setHabilitado(false);
+		return expedienteRepositorio.listar();
+	}
+
+	public boolean hideEliminar() {
+		// TODO: return true if action is hidden, false if
+		// visible
+		if (this.container.getUser().isCurrentUser("root"))
+			return false;
+		else
+			return true;
+	}
+
+
+
 	@javax.inject.Inject
 	private SectorRepositorio sectorRepositorio;
-	@SuppressWarnings("unused")
 	@javax.inject.Inject
 	private DomainObjectContainer container;
-	@SuppressWarnings("unused")
 	@javax.inject.Inject
 	private ExpedienteRepositorio expedienteRepositorio;
-	// @Override
-	// public int compareTo(Documento expediente) {
-	// return ObjectContracts.compare(this, expediente, "nro_expediente");
-	// }
+
 }
