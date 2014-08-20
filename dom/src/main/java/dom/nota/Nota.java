@@ -1,5 +1,7 @@
 package dom.nota;
 
+import java.util.List;
+
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -13,6 +15,8 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
 
 import dom.documento.Documento;
+import dom.sector.Sector;
+import dom.sector.SectorRepositorio;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id_documento")
@@ -42,12 +46,9 @@ import dom.documento.Documento;
 				+ "FROM dom.nota.Nota "
 				+ "WHERE && (fecha==:fecha && sector==:sector)"),
 		@javax.jdo.annotations.Query(name = "filtrarPorFechaRoot", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Nota "
-				+ "WHERE  && (fecha==:fecha)"),
+				+ "FROM dom.nota.Nota " + "WHERE  && (fecha==:fecha)"),
 		@javax.jdo.annotations.Query(name = "filtrarPorSectorRoot", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Nota "
-				+ "WHERE   (sector==:sector) "),
-
+				+ "FROM dom.nota.Nota " + "WHERE   (sector==:sector) "),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota " + "WHERE  (ultimo == true)"),
 
@@ -71,7 +72,6 @@ public class Nota extends Documento {
 	public String iconName() {
 		return "nota";
 	}
-
 
 	private Long nro_nota;
 
@@ -100,7 +100,6 @@ public class Nota extends Documento {
 	public void setDestino(String destino) {
 		this.destino = destino;
 	}
-
 	// //////////////////////////////////////
 	// Implementando los metodos de comparable
 	// //////////////////////////////////////

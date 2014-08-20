@@ -88,10 +88,10 @@ public class NotaRepositorio {
 
 	@Programmatic
 	private Boolean iniciarNuevoAnio() {
-		String fecha = LocalDate.now().getYear() + "-01-01";
+		String fecha = LocalDate.now().getYear() + "-01-01"; 
 		final List<Nota> lista = this.container
 				.allMatches(new QueryDefault<Nota>(Nota.class, "esNuevoAnio",
-						"fecha", LocalDate.now()));
+						"fecha", LocalDate.now())); // AGREGAR fecha
 		if (lista.isEmpty())
 			return true;
 		else
