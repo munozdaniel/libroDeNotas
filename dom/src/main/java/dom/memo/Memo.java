@@ -5,10 +5,12 @@ import java.util.List;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Audited;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.CssClass;
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
@@ -66,7 +68,10 @@ public class Memo extends Documento {
 	}
 
 	public String iconName() {
-		return "memo";
+		if (this.getHabilitado())
+			return "memo";
+		else
+			return "delete";
 	}
 
 	private int nro_memo;
@@ -148,64 +153,27 @@ public class Memo extends Documento {
 		return this;
 	}
 
-	// public String defaultOtroDestino() {
-	// if (!this.getSector().getNombre_sector().contentEquals("OTRO SECTOR")){
-	// return "-----------";
-	// }
-	// else
-	// return this.getOtroDestino();
-	//
-	// }
+	@Named("Eliminar")
+	@DescribedAs("Necesario privilegios de Administrador.")
+	public List<Memo> eliminar() {
+		this.setHabilitado(false);
+		return memoRepositorio.listar();
+	}
 
-	// public void setTipoMemo(ButtonGroup tipoMemo) {
-	// this.tipoMemo = tipoMemo;
-	// }
-	//
-	// public void default0TipoMemo() {
-	// JRadioButton rbtn1=new JRadioButton("Sector",true);
-	// JRadioButton rbtn2=new JRadioButton("Otro",false);
-	// this.tipoMemo.add(rbtn1);
-	// this.tipoMemo.add(rbtn2);
-	// }
+	public boolean hideEliminar() {
+		// TODO: return true if action is hidden, false if
+		// visible
+		if (this.container.getUser().isCurrentUser("root"))
+			return false;
+		else
+			return true;
+	}
 
-	// public static enum Categoria {
-	// Sector, Otro;
-	// }
 
-	// private Categoria tipoSector;
-	//
-	// @javax.jdo.annotations.Column(allowsNull = "false")
-	// public Categoria getTipoSector() {
-	// return tipoSector;
-	// }
-	//
-	// public void setTipoSector(Categoria tipoSector) {
-	// this.tipoSector = tipoSector;
-	// }
-
-	// public static class CategoriaSector {
-	// private static final String NEW = "Sector";
-	// private static final String INCOMPLETE = "Otro";
-	// private static final String SUBMITTED = "Ninguno";
-	//
-	// public static final List<String> ALL =
-	// Collections.unmodifiableList(Arrays.asList(NEW, INCOMPLETE, SUBMITTED));
-	// public static class ChoicesSpecification implements Specification {
-	// @Override
-	// public String satisfies(Object obj) {
-	// for (String str : ALL) {
-	// if (str.equals(obj)) {
-	// return null;
-	// }
-	// }
-	// return "Must be one of " + ALL;
-	// }
-	// }
-	// }
-	// @Override
-	// public int compareTo(Documento memo) {
-	// return ObjectContracts.compare(this, memo, "nro_memo");
-	// }
+	@javax.inject.Inject
+	private MemoRepositorio memoRepositorio;
+	@javax.inject.Inject
+	private DomainObjectContainer container;
 	@javax.inject.Inject
 	private SectorRepositorio sectorRepositorio;
 }
