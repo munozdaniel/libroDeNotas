@@ -131,6 +131,7 @@ public class NotaRepositorio {
 	 */
 	@Paged(12)
 	@MemberOrder(sequence = "20")
+	@Named("Lista de Notas")
 	public List<Nota> listar() {
 		String criterio = "listarHabilitados";
 		if (this.container.getUser().isCurrentUser("root"))
