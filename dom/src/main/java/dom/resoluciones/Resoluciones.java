@@ -5,9 +5,11 @@ import java.util.List;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Audited;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
@@ -60,13 +62,16 @@ public class Resoluciones extends Documento {
 	}
 
 	public String iconName() {
-		return "resolucion";
+		if (this.getHabilitado())
+			return "resolucion";
+		else
+			return "delete";
 	}
 
 	private int nro_resolucion;
 
 	@Named("Nro")
-	@MemberOrder(sequence = "10")
+	@MemberOrder(sequence = "0")
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	public int getNro_resolucion() {
 		return nro_resolucion;
@@ -75,16 +80,34 @@ public class Resoluciones extends Documento {
 	public void setNro_resolucion(int nro_resolucion) {
 		this.nro_resolucion = nro_resolucion;
 	}
+
 	@Override
-	public List<Sector> choicesSector()
-	{
+	public List<Sector> choicesSector() {
 		return this.sectorRepositorio.listarResoluciones();
 	}
+
+	@Named("Eliminar")
+	@DescribedAs("Necesario privilegios de Administrador.")
+	public List<Resoluciones> eliminar() {
+		this.setHabilitado(false);
+		return resolucionRepositorio.listar();
+	}
+
+	public boolean hideEliminar() {
+		// TODO: return true if action is hidden, false if
+		// visible
+		if (this.container.getUser().isCurrentUser("root"))
+			return false;
+		else
+			return true;
+	}
+
+
+
+	@javax.inject.Inject
+	private ResolucionesRepositorio resolucionRepositorio;
 	@javax.inject.Inject
 	private SectorRepositorio sectorRepositorio;
-	// @Override
-	// public int compareTo(Documento resolucion) {
-	// return ObjectContracts.compare(this, resolucion, "nro_resolucion");
-	// }
-
+	@javax.inject.Inject
+	private DomainObjectContainer container;
 }
