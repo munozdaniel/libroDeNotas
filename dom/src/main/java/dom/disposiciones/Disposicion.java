@@ -5,9 +5,11 @@ import java.util.List;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Audited;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
@@ -61,7 +63,10 @@ public class Disposicion extends Documento {
 	}
 
 	public String iconName() {
-		return "disposicion";
+		if (this.getHabilitado())
+			return "disposicion";
+		else
+			return "delete";
 	}
 
 	// //////////////////////////////////////
@@ -80,13 +85,34 @@ public class Disposicion extends Documento {
 	public void setNro_Disposicion(int nro_Disposicion) {
 		this.nro_Disposicion = nro_Disposicion;
 	}
-	
+
 	@Override
-	public List<Sector> choicesSector()
-	{
+	public List<Sector> choicesSector() {
 		return this.sectorRepositorio.listarDisposiciones();
 	}
+
+	@Named("Eliminar")
+	@DescribedAs("Necesario privilegios de Administrador.")
+	public List<Disposicion> eliminar() {
+		this.setHabilitado(false);
+		return disposicionRepositorio.listar();
+	}
+
+	public boolean hideEliminar() {
+		// TODO: return true if action is hidden, false if
+		// visible
+		if (this.container.getUser().isCurrentUser("root"))
+			return false;
+		else
+			return true;
+	}
+
+	
+
+	@javax.inject.Inject
+	private DisposicionRepositorio disposicionRepositorio;
 	@javax.inject.Inject
 	private SectorRepositorio sectorRepositorio;
-
+	@javax.inject.Inject
+	private DomainObjectContainer container;
 }
