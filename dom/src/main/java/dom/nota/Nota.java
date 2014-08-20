@@ -5,9 +5,11 @@ import java.util.List;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Audited;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.MemberGroupLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -15,8 +17,6 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
 
 import dom.documento.Documento;
-import dom.sector.Sector;
-import dom.sector.SectorRepositorio;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id_documento")
@@ -70,7 +70,10 @@ public class Nota extends Documento {
 	}
 
 	public String iconName() {
-		return "nota";
+		if (this.getHabilitado())
+			return "nota";
+		else
+			return "delete";
 	}
 
 	private Long nro_nota;
@@ -100,6 +103,29 @@ public class Nota extends Documento {
 	public void setDestino(String destino) {
 		this.destino = destino;
 	}
+
+	@Named("Eliminar")
+	@DescribedAs("Necesario privilegios de Administrador.")
+	public List<Nota> eliminar() {
+		this.setHabilitado(false);
+		return notaRepositorio.listar();
+	}
+
+	public boolean hideEliminar() {
+		// TODO: return true if action is hidden, false if
+		// visible
+		if (this.container.getUser().isCurrentUser("root"))
+			return false;
+		else
+			return true;
+	}
+
+	
+
+	@javax.inject.Inject
+	private NotaRepositorio notaRepositorio;
+	@javax.inject.Inject
+	private DomainObjectContainer container;
 	// //////////////////////////////////////
 	// Implementando los metodos de comparable
 	// //////////////////////////////////////
