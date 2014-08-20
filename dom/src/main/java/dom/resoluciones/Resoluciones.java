@@ -1,5 +1,7 @@
 package dom.resoluciones;
 
+import java.util.List;
+
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -11,6 +13,8 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
 
 import dom.documento.Documento;
+import dom.sector.Sector;
+import dom.sector.SectorRepositorio;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id_documento")
@@ -71,7 +75,13 @@ public class Resoluciones extends Documento {
 	public void setNro_resolucion(int nro_resolucion) {
 		this.nro_resolucion = nro_resolucion;
 	}
-
+	@Override
+	public List<Sector> choicesSector()
+	{
+		return this.sectorRepositorio.listarResoluciones();
+	}
+	@javax.inject.Inject
+	private SectorRepositorio sectorRepositorio;
 	// @Override
 	// public int compareTo(Documento resolucion) {
 	// return ObjectContracts.compare(this, resolucion, "nro_resolucion");
