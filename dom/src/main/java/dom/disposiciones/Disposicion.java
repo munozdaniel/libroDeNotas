@@ -1,5 +1,7 @@
 package dom.disposiciones;
 
+import java.util.List;
+
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -11,6 +13,8 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
 
 import dom.documento.Documento;
+import dom.sector.Sector;
+import dom.sector.SectorRepositorio;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id_documento")
@@ -76,5 +80,13 @@ public class Disposicion extends Documento {
 	public void setNro_Disposicion(int nro_Disposicion) {
 		this.nro_Disposicion = nro_Disposicion;
 	}
+	
+	@Override
+	public List<Sector> choicesSector()
+	{
+		return this.sectorRepositorio.listarDisposiciones();
+	}
+	@javax.inject.Inject
+	private SectorRepositorio sectorRepositorio;
 
 }
