@@ -170,7 +170,7 @@ public abstract class Documento implements Comparable<Documento> {
 	public void setUltimo(final Boolean ultimo) {
 		this.ultimo = ultimo;
 	}
-	
+
 	// //////////////////////////////////////
 	// CompareTo
 	// //////////////////////////////////////
@@ -187,5 +187,21 @@ public abstract class Documento implements Comparable<Documento> {
 	@SuppressWarnings("unused")
 	@javax.inject.Inject
 	private DomainObjectContainer container;
+
+	// {{ UltimoDelAnio (property)
+	private boolean ultimoDelAnio;
+
+	@javax.jdo.annotations.Column(allowsNull = "false")
+	@MemberOrder(sequence = "1")
+	@Hidden
+	public boolean getUltimoDelAnio() {
+		return ultimoDelAnio;
+	}
+
+	public void setUltimoDelAnio(final boolean ultimoDelAnio) {
+		this.ultimoDelAnio = ultimoDelAnio;
+	}
+	// }}
+
 
 }
