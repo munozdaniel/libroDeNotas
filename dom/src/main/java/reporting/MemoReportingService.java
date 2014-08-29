@@ -42,7 +42,7 @@ public class MemoReportingService {
 	@NotContributed(As.ASSOCIATION)
 	// ie contributed as action
 	@NotInServiceMenu
-	@Named("Documento Simple")
+	@Named("Descargar Documento")
 	@MemberOrder(name = "Observaciones", sequence = "80")
 	public Blob downloadAsDoc(Memo unMemo) throws LoadInputException,
 			LoadTemplateException, MergeException {
@@ -55,22 +55,22 @@ public class MemoReportingService {
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
 
-	@NotContributed(As.ASSOCIATION)
-	@NotInServiceMenu
-	@Named("Documento con Planilla")
-	@MemberOrder(name = "Observaciones", sequence = "80")
-	public Blob downloadAsDocPlanilla(Memo unMemo) throws LoadInputException,
-			LoadTemplateException, MergeException, IOException {
-		final URL templateUrl = Resources.getResource(
-				NotaReportingService.class, "MemoTabla.docx");
-		templates = Resources.toByteArray(templateUrl);
-		final String html = asInputHtml(unMemo);
-		final byte[] byteArray = mergeToDocx(html);
-
-		final String outputFileName = "IMPS_Memo_"
-				+ unMemo.getNro_memo() + ".docx";
-		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
-	}
+	// @NotContributed(As.ASSOCIATION)
+	// @NotInServiceMenu
+	// @Named("Documento con Planilla")
+	// @MemberOrder(name = "Observaciones", sequence = "80")
+	// public Blob downloadAsDocPlanilla(Memo unMemo) throws LoadInputException,
+	// LoadTemplateException, MergeException, IOException {
+	// final URL templateUrl = Resources.getResource(
+	// NotaReportingService.class, "MemoTabla.docx");
+	// templates = Resources.toByteArray(templateUrl);
+	// final String html = asInputHtml(unMemo);
+	// final byte[] byteArray = mergeToDocx(html);
+	//
+	// final String outputFileName = "IMPS_Memo_"
+	// + unMemo.getNro_memo() + ".docx";
+	// return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
+	// }
 
 	private static String asInputHtml(Memo unMemo) {
 		final Element htmlEl = new Element("html");

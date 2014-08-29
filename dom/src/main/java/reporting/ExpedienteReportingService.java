@@ -41,7 +41,7 @@ public class ExpedienteReportingService {
 	@NotContributed(As.ASSOCIATION)
 	// ie contributed as action
 	@NotInServiceMenu
-	@Named("Documento Simple")
+	@Named("Descargar Documento")
 	public Blob downloadAsDoc(Expediente unExpediente)
 			throws LoadInputException, LoadTemplateException, MergeException {
 
@@ -52,23 +52,23 @@ public class ExpedienteReportingService {
 				+ unExpediente.getNro_expediente() + ".docx";
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
-
-	@NotContributed(As.ASSOCIATION)
-	@NotInServiceMenu
-	@Named("Documento con Planilla")
-	public Blob downloadAsDocPlanilla(Expediente unExpediente)
-			throws LoadInputException, LoadTemplateException, MergeException,
-			IOException {
-		final URL templateUrl = Resources.getResource(
-				NotaReportingService.class, "ExpedienteTabla.docx");
-		templates = Resources.toByteArray(templateUrl);
-		final String html = asInputHtml(unExpediente);
-		final byte[] byteArray = mergeToDocx(html);
-
-		final String outputFileName = "IMPS_Expediente_"
-				+ unExpediente.getNro_expediente() + ".docx";
-		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
-	}
+//
+//	@NotContributed(As.ASSOCIATION)
+//	@NotInServiceMenu
+//	@Named("Documento con Planilla")
+//	public Blob downloadAsDocPlanilla(Expediente unExpediente)
+//			throws LoadInputException, LoadTemplateException, MergeException,
+//			IOException {
+//		final URL templateUrl = Resources.getResource(
+//				NotaReportingService.class, "ExpedienteTabla.docx");
+//		templates = Resources.toByteArray(templateUrl);
+//		final String html = asInputHtml(unExpediente);
+//		final byte[] byteArray = mergeToDocx(html);
+//
+//		final String outputFileName = "IMPS_Expediente_"
+//				+ unExpediente.getNro_expediente() + ".docx";
+//		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
+//	}
 
 	private static String asInputHtml(Expediente unExpediente) {
 		final Element htmlEl = new Element("html");

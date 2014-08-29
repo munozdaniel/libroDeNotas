@@ -41,7 +41,7 @@ public class ResolucionReportingService {
 	@NotContributed(As.ASSOCIATION)
 	// ie contributed as action
 	@NotInServiceMenu
-	@Named("Documento Simple")
+	@Named("Descargar Documento")
 	public Blob downloadAsDoc(Resoluciones unaResolucion)
 			throws LoadInputException, LoadTemplateException, MergeException {
 
@@ -53,22 +53,22 @@ public class ResolucionReportingService {
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
 
-	@NotContributed(As.ASSOCIATION)
-	@NotInServiceMenu
-	@Named("Documento con Planilla")
-	public Blob downloadAsDocPlanilla(Resoluciones unaResoluciones)
-			throws LoadInputException, LoadTemplateException, MergeException,
-			IOException {
-		final URL templateUrl = Resources.getResource(
-				NotaReportingService.class, "ResolucionesTabla.docx");
-		templates = Resources.toByteArray(templateUrl);
-		final String html = asInputHtml(unaResoluciones);
-		final byte[] byteArray = mergeToDocx(html);
-
-		final String outputFileName = "IMPS_Resolucion_"
-				+ unaResoluciones.getNro_resolucion() + ".docx";
-		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
-	}
+	// @NotContributed(As.ASSOCIATION)
+	// @NotInServiceMenu
+	// @Named("Documento con Planilla")
+	// public Blob downloadAsDocPlanilla(Resoluciones unaResoluciones)
+	// throws LoadInputException, LoadTemplateException, MergeException,
+	// IOException {
+	// final URL templateUrl = Resources.getResource(
+	// NotaReportingService.class, "ResolucionesTabla.docx");
+	// templates = Resources.toByteArray(templateUrl);
+	// final String html = asInputHtml(unaResoluciones);
+	// final byte[] byteArray = mergeToDocx(html);
+	//
+	// final String outputFileName = "IMPS_Resolucion_"
+	// + unaResoluciones.getNro_resolucion() + ".docx";
+	// return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
+	// }
 
 	private static String asInputHtml(Resoluciones unaResolucion) {
 		final Element htmlEl = new Element("html");

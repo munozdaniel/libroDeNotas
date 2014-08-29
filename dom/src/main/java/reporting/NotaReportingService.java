@@ -40,7 +40,7 @@ public class NotaReportingService {
 
 	@NotContributed(As.ASSOCIATION)
 	@NotInServiceMenu
-	@Named("Documento Simple")
+	@Named("Descargar Documento")
 	public Blob downloadAsDoc(Nota unaNota) throws LoadInputException,
 			LoadTemplateException, MergeException {
 
@@ -52,21 +52,22 @@ public class NotaReportingService {
 		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
 	}
 
-	@NotContributed(As.ASSOCIATION)
-	@NotInServiceMenu
-	@Named("Documento con Planilla")
-	public Blob downloadAsDocPlanilla(Nota unaNota) throws LoadInputException,
-			LoadTemplateException, MergeException, IOException {
-		final URL templateUrl = Resources.getResource(
-				NotaReportingService.class, "NotaTabla.docx");
-		templates = Resources.toByteArray(templateUrl);
-		final String html = asInputHtml(unaNota);
-		final byte[] byteArray = mergeToDocx(html);
-
-		final String outputFileName = "IMPS_Nota_" + unaNota.getNro_nota()
-				+ ".docx";
-		return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
-	}
+	// @NotContributed(As.ASSOCIATION)
+	// @NotInServiceMenu
+	// @Named("Documento con Planilla")
+	// public Blob downloadAsDocPlanilla(Nota unaNota) throws
+	// LoadInputException,
+	// LoadTemplateException, MergeException, IOException {
+	// final URL templateUrl = Resources.getResource(
+	// NotaReportingService.class, "NotaTabla.docx");
+	// templates = Resources.toByteArray(templateUrl);
+	// final String html = asInputHtml(unaNota);
+	// final byte[] byteArray = mergeToDocx(html);
+	//
+	// final String outputFileName = "IMPS_Nota_" + unaNota.getNro_nota()
+	// + ".docx";
+	// return new Blob(outputFileName, MIME_TYPE_DOCX, byteArray);
+	// }
 
 	private static String asInputHtml(Nota unaNota) {
 		final Element htmlEl = new Element("html");
