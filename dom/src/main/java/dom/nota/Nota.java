@@ -19,9 +19,9 @@ import org.apache.isis.applib.annotation.ObjectType;
 import dom.documento.Documento;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
-@javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id_documento")
+@javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id_nota")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
-@javax.jdo.annotations.Uniques({ @javax.jdo.annotations.Unique(name = "nro_nota_must_be_unique", members = { "id_documento" }) })
+@javax.jdo.annotations.Uniques({ @javax.jdo.annotations.Unique(name = "nro_nota_must_be_unique", members = { "id_nota" }) })
 @javax.jdo.annotations.Queries({
 		@javax.jdo.annotations.Query(name = "autoCompletarDestino", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota "
@@ -108,6 +108,8 @@ public class Nota extends Documento {
 	@DescribedAs("Necesario privilegios de Administrador.")
 	public List<Nota> eliminar() {
 		this.setHabilitado(false);
+		if (this.getUltimo())
+			this.setNro_nota(this.getNro_nota() - 1);
 		return notaRepositorio.listar();
 	}
 
@@ -120,26 +122,27 @@ public class Nota extends Documento {
 			return true;
 	}
 
-	@Named("Restaurar")
-	@DescribedAs("Necesario privilegios de Administrador.")
-	public Nota restaurar() {
-		this.setHabilitado(true);
-		return this;
-	}
-
-	public boolean hideRestaurar() {
-		// TODO: return true if action is hidden, false if
-		// visible
-		if (this.container.getUser().isCurrentUser("root"))
-			return false;
-		else
-			return true;
-	}
+	// @Named("Restaurar")
+	// @DescribedAs("Necesario privilegios de Administrador.")
+	// public Nota restaurar() {
+	// this.setHabilitado(true);
+	// return this;
+	// }
+	//
+	// public boolean hideRestaurar() {
+	// // TODO: return true if action is hidden, false if
+	// // visible
+	// if (this.container.getUser().isCurrentUser("root"))
+	// return false;
+	// else
+	// return true;
+	// }
 
 	@javax.inject.Inject
 	private NotaRepositorio notaRepositorio;
 	@javax.inject.Inject
 	private DomainObjectContainer container;
+
 	// //////////////////////////////////////
 	// Implementando los metodos de comparable
 	// //////////////////////////////////////
@@ -149,5 +152,8 @@ public class Nota extends Documento {
 	// return ObjectContracts.compare(this, nota, "nro_nota");
 	// }
 	//
-
+	public Nota esAnioNuevo() {
+		this.setUltimoDelAnio(true);
+		return this;
+	}
 }

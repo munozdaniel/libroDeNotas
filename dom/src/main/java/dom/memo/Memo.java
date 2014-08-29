@@ -55,7 +55,6 @@ import dom.sector.SectorRepositorio;
 @ObjectType("MEMO")
 @Audited
 @AutoComplete(repository = MemoRepositorio.class, action = "autoComplete")
-//
 @Bookmarkable
 public class Memo extends Documento {
 
@@ -169,21 +168,21 @@ public class Memo extends Documento {
 			return true;
 	}
 
-	@Named("Restaurar")
-	@DescribedAs("Necesario privilegios de Administrador.")
-	public Memo restaurar() {
-		this.setHabilitado(true);
-		return this;
-	}
-
-	public boolean hideRestaurar() {
-		// TODO: return true if action is hidden, false if
-		// visible
-		if (this.container.getUser().isCurrentUser("root"))
-			return false;
-		else
-			return true;
-	}
+	// @Named("Restaurar")
+	// @DescribedAs("Necesario privilegios de Administrador.")
+	// public Memo restaurar() {
+	// this.setHabilitado(true);
+	// return this;
+	// }
+	//
+	// public boolean hideRestaurar() {
+	// // TODO: return true if action is hidden, false if
+	// // visible
+	// if (this.container.getUser().isCurrentUser("root"))
+	// return false;
+	// else
+	// return true;
+	// }
 
 	@javax.inject.Inject
 	private MemoRepositorio memoRepositorio;

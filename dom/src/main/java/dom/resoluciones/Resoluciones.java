@@ -49,7 +49,6 @@ import dom.sector.SectorRepositorio;
 @ObjectType("RESOLUCIONES")
 @Audited
 @AutoComplete(repository = ResolucionesRepositorio.class, action = "autoComplete")
-//
 @Bookmarkable
 public class Resoluciones extends Documento {
 
@@ -102,21 +101,21 @@ public class Resoluciones extends Documento {
 			return true;
 	}
 
-	@Named("Restaurar")
-	@DescribedAs("Necesario privilegios de Administrador.")
-	public Resoluciones restaurar() {
-		this.setHabilitado(true);
-		return this;
-	}
-
-	public boolean hideRestaurar() {
-		// TODO: return true if action is hidden, false if
-		// visible
-		if (this.container.getUser().isCurrentUser("root"))
-			return false;
-		else
-			return true;
-	}
+	// @Named("Restaurar")
+	// @DescribedAs("Necesario privilegios de Administrador.")
+	// public Resoluciones restaurar() {
+	// this.setHabilitado(true);
+	// return this;
+	// }
+	//
+	// public boolean hideRestaurar() {
+	// // TODO: return true if action is hidden, false if
+	// // visible
+	// if (this.container.getUser().isCurrentUser("root"))
+	// return false;
+	// else
+	// return true;
+	// }
 
 	@javax.inject.Inject
 	private ResolucionesRepositorio resolucionRepositorio;
