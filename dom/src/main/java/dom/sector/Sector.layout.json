@@ -22,13 +22,11 @@
               }
             },
             "resolucion": {
-              
               "typicalLength": {
                 "value": 5
               }
             },
             "disposicion": {
-             
               "typicalLength": {
                 "value": 5
               }
@@ -65,40 +63,7 @@
     },
     {
       "span": 8,
-      "collections": {
-        "documentos": {
-          "actions": {
-            "addNota": {
-              "named": {
-                "value": "Nota"
-              }
-            },
-            "addMemo": {
-              "named": {
-                "value": "Memo"
-              }
-            },
-            "addResoluciones": {
-              "named": {
-                "value": "Resolucion"
-              }
-            },
-            "addDisposicion": {
-              "named": {
-                "value": "Disposicion"
-              }
-            },
-            "addExpediente": {
-              "named": {
-                "value": "Expediente"
-              }
-            }
-          },
-          "paged": {
-            "value": 12
-          }
-        }
-      }
+      "collections": {}
     }
   ],
   "actions": {
@@ -112,17 +77,29 @@
         "value": "Buscar Documentos"
       }
     },
-    "removeFromDocumento": {
+    "addNota": {
       "named": {
-        "value": "Remove From Documento"
-      },
-      "cssClass": {
-        "value": "x-prueba"
+        "value": "Nota"
       }
     },
-    "addToDocumento": {
+    "addMemo": {
       "named": {
-        "value": "Add To Documento"
+        "value": "Memo"
+      }
+    },
+    "addResoluciones": {
+      "named": {
+        "value": "Resolucion"
+      }
+    },
+    "addDisposicion": {
+      "named": {
+        "value": "Disposicion"
+      }
+    },
+    "addExpediente": {
+      "named": {
+        "value": "Expediente"
       }
     }
   }
