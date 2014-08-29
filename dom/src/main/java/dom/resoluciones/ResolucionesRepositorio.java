@@ -61,7 +61,8 @@ public class ResolucionesRepositorio {
 		unaResolucion.setCreadoPor(creadoPor);
 		unaResolucion.setAdjuntar(adjunto);
 		unaResolucion.setTime(LocalDateTime.now().withMillisOfSecond(3));
-		sector.addToDocumento(unaResolucion);
+		unaResolucion.setSector(sector);
+
 		container.persistIfNotAlready(unaResolucion);
 		container.flush();
 		return unaResolucion;
