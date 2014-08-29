@@ -152,8 +152,5 @@ public class Nota extends Documento {
 	// return ObjectContracts.compare(this, nota, "nro_nota");
 	// }
 	//
-	public Nota esAnioNuevo() {
-		this.setUltimoDelAnio(true);
-		return this;
-	}
+
 }
