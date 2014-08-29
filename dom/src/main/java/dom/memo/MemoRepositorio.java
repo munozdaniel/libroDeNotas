@@ -1,6 +1,5 @@
 package dom.memo;
 
-import java.util.Formatter;
 import java.util.List;
 
 import org.apache.isis.applib.DomainObjectContainer;
@@ -49,6 +48,53 @@ public class MemoRepositorio {
 
 	}
 
+	@Programmatic
+	private Memo nuevoMemo(final Sector sector, final Sector destinoSector,
+			final String otroSector, final String descripcion,
+			final String creadoPor, final Blob adjunto) {
+		final Memo unMemo = this.container.newTransientInstance(Memo.class);
+		Memo anterior = recuperarUltimo();
+		int nro = 1;
+		if (anterior != null) {
+			if (!anterior.getUltimoDelAnio())
+				nro = anterior.getNro_memo() + 1;
+			else
+				anterior.setUltimoDelAnio(false);
+
+			anterior.setUltimo(false);
+		}
+
+		unMemo.setNro_memo(nro);
+		unMemo.setUltimo(true);
+
+		unMemo.setFecha(LocalDate.now());
+		unMemo.setAdjuntar(adjunto);
+		unMemo.setTipo(2);
+		unMemo.setDescripcion(descripcion.toUpperCase().trim());
+		unMemo.setHabilitado(true);
+		unMemo.setCreadoPor(creadoPor);
+		unMemo.setSector(sector);
+		unMemo.setTime(LocalDateTime.now().withMillisOfSecond(3));
+		unMemo.setDestinoSector(destinoSector);
+
+		unMemo.setOtroDestino(otroSector);
+		unMemo.setSector(sector);
+
+		container.persistIfNotAlready(unMemo);
+		container.flush();
+		return unMemo;
+	}
+
+	@Programmatic
+	private Memo recuperarUltimo() {
+		final Memo doc = this.container.firstMatch(new QueryDefault<Memo>(
+				Memo.class, "recuperarUltimo"));
+		if (doc == null)
+			return null;
+		else
+			return doc;
+	}
+
 	@Named("Sector")
 	public List<Sector> choices1AddMemo() {
 		List<Sector> lista = sectorRepositorio.listar();
@@ -71,50 +117,6 @@ public class MemoRepositorio {
 
 		return null;
 
-	}
-
-	@Programmatic
-	private Memo nuevoMemo(final Sector sector, final Sector destinoSector,
-			final String otroSector, final String descripcion,
-			final String creadoPor, final Blob adjunto) {
-		final Memo unMemo = this.container.newTransientInstance(Memo.class);
-		Memo memoAnterior = recuperarUltimo();
-		int nro = 0;
-		if (memoAnterior != null) {
-			nro = memoAnterior.getNro_memo() + 1;
-			memoAnterior.setUltimo(false);
-
-		}
-		formato = new Formatter();
-		formato.format("%04d", nro);
-		unMemo.setNro_memo(Integer.parseInt(000 + formato.toString()));
-		unMemo.setUltimo(true);
-
-		unMemo.setFecha(LocalDate.now());
-		unMemo.setAdjuntar(adjunto);
-		unMemo.setTipo(2);
-		unMemo.setDescripcion(descripcion.toUpperCase().trim());
-		unMemo.setHabilitado(true);
-		unMemo.setCreadoPor(creadoPor);
-		unMemo.setSector(sector);
-		unMemo.setTime(LocalDateTime.now().withMillisOfSecond(3));
-		unMemo.setDestinoSector(destinoSector);
-		// if (otroSector != "")
-		unMemo.setOtroDestino(otroSector);
-		sector.addToDocumento(unMemo);
-		container.persistIfNotAlready(unMemo);
-		container.flush();
-		return unMemo;
-	}
-
-	@Programmatic
-	private Memo recuperarUltimo() {
-		final Memo doc = this.container.firstMatch(new QueryDefault<Memo>(
-				Memo.class, "recuperarUltimo"));
-		if (doc == null)
-			return null;
-		else
-			return doc;
 	}
 
 	@Programmatic
@@ -228,7 +230,5 @@ public class MemoRepositorio {
 
 	@javax.inject.Inject
 	private SectorRepositorio sectorRepositorio;
-
-	private Formatter formato;
 
 }

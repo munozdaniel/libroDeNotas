@@ -1,6 +1,5 @@
 package dom.expediente;
 
-import java.util.Formatter;
 import java.util.List;
 
 import org.apache.isis.applib.DomainObjectContainer;
@@ -54,17 +53,17 @@ public class ExpedienteRepositorio {
 			final String creadoPor, final Blob adjunto) {
 		final Expediente unExpediente = this.container
 				.newTransientInstance(Expediente.class);
-		Expediente expedienteAnterior = recuperarUltimo();
-		int nro = 0;
-		if (expedienteAnterior != null) {
-			nro = expedienteAnterior.getNro_expediente() + 1;
-			expedienteAnterior.setUltimo(false);
+		Expediente anterior = recuperarUltimo();
+		int nro = 1;
+		if (anterior != null) {
+			if (!anterior.getUltimoDelAnio())
+				nro = anterior.getNro_expediente()+ 1;
+			else
+				anterior.setUltimoDelAnio(false);
 
+			anterior.setUltimo(false);
 		}
-		formato = new Formatter();
-		formato.format("%04d", nro);
-		unExpediente.setNro_expediente(Integer.parseInt(000 + formato
-				.toString()));
+		unExpediente.setNro_expediente(nro);
 		unExpediente.setUltimo(true);
 
 		unExpediente.setExpte_cod_letra(expte_cod_letra);
@@ -77,11 +76,11 @@ public class ExpedienteRepositorio {
 		unExpediente.setExpte_cod_empresa("IMPS");
 		unExpediente.setExpte_cod_numero((LocalDate.now().getYear() + "")
 				.charAt(3));
-		// unExpediente.setcodigoExpediente(codigoACadena);
+		
 		unExpediente.setTime(LocalDateTime.now().withMillisOfSecond(3));
-		// unExpediente.setSector(sector);
 		unExpediente.setAdjuntar(adjunto);
-		sector.addToDocumento(unExpediente);
+		unExpediente.setSector(sector);
+		
 		container.persistIfNotAlready(unExpediente);
 		container.flush();
 		return unExpediente;
@@ -211,5 +210,4 @@ public class ExpedienteRepositorio {
 	private DomainObjectContainer container;
 	@javax.inject.Inject
 	private SectorRepositorio sectorRepositorio;
-	private Formatter formato;
 }

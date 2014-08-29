@@ -60,14 +60,17 @@ public class NotaRepositorio {
 	private Nota nuevaNota(final Sector sector, final String destino,
 			final String descripcion, final String creadoPor, final Blob adjunto) {
 		final Nota unaNota = this.container.newTransientInstance(Nota.class);
-		Long nro = new Long(0);
+		Long nro = new Long(1);
 		Nota notaAnterior = recuperarUltimo();
 		if (notaAnterior != null) {
-			if (!this.iniciarNuevoAnio()) {
+			if (!notaAnterior.getUltimoDelAnio())
 				nro = notaAnterior.getNro_nota() + 1;
-			}
+			else
+				notaAnterior.setUltimoDelAnio(false);
+			
 			notaAnterior.setUltimo(false);
 		}
+		
 		formato = new Formatter();
 		formato.format("%04d", nro);
 		unaNota.setNro_nota(Long.parseLong(formato.toString()));
@@ -79,24 +82,25 @@ public class NotaRepositorio {
 		unaNota.setTime(LocalDateTime.now().withMillisOfSecond(3));
 		unaNota.setUltimo(true);
 		unaNota.setAdjuntar(adjunto);
-		sector.addToDocumento(unaNota);
+		unaNota.setSector(sector);
+		// sector.addToDocumento(unaNota);
 		unaNota.setHabilitado(true);
 		container.persistIfNotAlready(unaNota);
 		container.flush();
 		return unaNota;
 	}
-
-	@Programmatic
-	private Boolean iniciarNuevoAnio() {
-		String fecha = LocalDate.now().getYear() + "-01-01"; 
-		final List<Nota> lista = this.container
-				.allMatches(new QueryDefault<Nota>(Nota.class, "esNuevoAnio",
-						"fecha", LocalDate.now())); // AGREGAR fecha
-		if (lista.isEmpty())
-			return true;
-		else
-			return false;
-	}
+//
+//	@Programmatic
+//	private Boolean iniciarNuevoAnio() {
+//		String fecha = LocalDate.now().getYear() + "-01-01";
+//		final List<Nota> lista = this.container
+//				.allMatches(new QueryDefault<Nota>(Nota.class, "esNuevoAnio",
+//						"fecha", LocalDate.now())); // AGREGAR fecha
+//		if (lista.isEmpty())
+//			return true;
+//		else
+//			return false;
+//	}
 
 	@Programmatic
 	private Nota recuperarUltimo() {
