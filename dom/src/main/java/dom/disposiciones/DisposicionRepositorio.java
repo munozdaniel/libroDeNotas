@@ -1,6 +1,5 @@
 package dom.disposiciones;
 
-import java.util.Formatter;
 import java.util.List;
 
 import org.apache.isis.applib.DomainObjectContainer;
@@ -50,18 +49,18 @@ public class DisposicionRepositorio {
 			final String descripcion, final String creadoPor, final Blob adjunto) {
 		final Disposicion unaDisposicion = this.container
 				.newTransientInstance(Disposicion.class);
-		Disposicion disposicionAnterior = recuperarUltimo();
-		int nro = 0;
-		if (disposicionAnterior != null) {
-			nro = disposicionAnterior.getNro_Disposicion() + 1;
-			disposicionAnterior.setUltimo(false);
+		Disposicion anterior = recuperarUltimo();
+		int nro = 1;
+		if (anterior != null) {
+			if (!anterior.getUltimoDelAnio())
+				nro = anterior.getNro_Disposicion() + 1;
+			else
+				anterior.setUltimoDelAnio(false);
 
+			anterior.setUltimo(false);
 		}
-		@SuppressWarnings("resource")
-		Formatter formato = new Formatter();
-		formato.format("%04d", nro);
-		unaDisposicion.setNro_Disposicion(Integer.parseInt(000 + formato
-				.toString()));
+
+		unaDisposicion.setNro_Disposicion(nro);
 		unaDisposicion.setUltimo(true);
 
 		unaDisposicion.setFecha(LocalDate.now());
@@ -70,10 +69,10 @@ public class DisposicionRepositorio {
 		unaDisposicion.setDescripcion(descripcion.toUpperCase().trim());
 		unaDisposicion.setHabilitado(true);
 		unaDisposicion.setCreadoPor(creadoPor);
-		// unaDisposicion.setSector(sector);// hay que devolver el sector del
-		// usuario que tiene acceso.
+
 		unaDisposicion.setTime(LocalDateTime.now().withMillisOfSecond(3));
-		sector.addToDocumento(unaDisposicion);
+		unaDisposicion.setSector(sector);
+
 		container.persistIfNotAlready(unaDisposicion);
 		container.flush();
 		return unaDisposicion;
