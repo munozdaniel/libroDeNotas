@@ -107,21 +107,21 @@ public class Disposicion extends Documento {
 			return true;
 	}
 
-	@Named("Restaurar")
-	@DescribedAs("Necesario privilegios de Administrador.")
-	public Disposicion restaurar() {
-		this.setHabilitado(true);
-		return this;
-	}
-
-	public boolean hideRestaurar() {
-		// TODO: return true if action is hidden, false if
-		// visible
-		if (this.container.getUser().isCurrentUser("root"))
-			return false;
-		else
-			return true;
-	}
+	// @Named("Restaurar")
+	// @DescribedAs("Necesario privilegios de Administrador.")
+	// public Disposicion restaurar() {
+	// this.setHabilitado(true);
+	// return this;
+	// }
+	//
+	// public boolean hideRestaurar() {
+	// // TODO: return true if action is hidden, false if
+	// // visible
+	// if (this.container.getUser().isCurrentUser("root"))
+	// return false;
+	// else
+	// return true;
+	// }
 
 	@javax.inject.Inject
 	private DisposicionRepositorio disposicionRepositorio;
