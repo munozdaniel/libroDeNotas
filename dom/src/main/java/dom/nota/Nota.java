@@ -3,6 +3,8 @@ package dom.nota;
 import java.util.List;
 
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Queries;
+import javax.jdo.annotations.Uniques;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.DomainObjectContainer;
@@ -18,11 +20,14 @@ import org.apache.isis.applib.annotation.ObjectType;
 
 import dom.documento.Documento;
 
+//@PersistenceCapable(identityType=IdentityType.DATASTORE)
+//@Version(strategy=VersionStrategy.VERSION_NUMBER)
+//@DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id_documento")
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
-@javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id_nota")
+@javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id_documento")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
-@javax.jdo.annotations.Uniques({ @javax.jdo.annotations.Unique(name = "nro_nota_must_be_unique", members = { "id_nota" }) })
-@javax.jdo.annotations.Queries({
+@Uniques({ @javax.jdo.annotations.Unique(name = "nro_nota_must_be_unique", members = { "id_documento" }) })
+@Queries({
 		@javax.jdo.annotations.Query(name = "autoCompletarDestino", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota "
 				+ "WHERE destino.indexOf(:destino) >= 0 && (habilitado==true)"),
@@ -49,8 +54,8 @@ import dom.documento.Documento;
 				+ "FROM dom.nota.Nota " + "WHERE  && (fecha==:fecha)"),
 		@javax.jdo.annotations.Query(name = "filtrarPorSectorRoot", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota " + "WHERE   (sector==:sector) "),
-		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Nota " + "WHERE  (ultimo == true)"),
+		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = " SELECT  "
+				+ "FROM dom.nota.Nota FOR UPDATE " + "WHERE  (ultimo == true)  "),
 
 		@javax.jdo.annotations.Query(name = "esNuevoAnio", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota " + "WHERE fecha == :fecha") })
@@ -76,18 +81,18 @@ public class Nota extends Documento {
 			return "delete";
 	}
 
-	private Long nro_nota;
+	private int nro_nota;
 
 	@Disabled
 	@javax.jdo.annotations.Column(allowsNull = "true")
 	// @Persistent(valueStrategy = IdGeneratorStrategy.INCREMENT)
 	@MemberOrder(name = "Datos Generales", sequence = "10")
 	@Named("Nro")
-	public Long getNro_nota() {
+	public int getNro_nota() {
 		return nro_nota;
 	}
 
-	public void setNro_nota(final Long nro_nota) {
+	public void setNro_nota(final int nro_nota) {
 		this.nro_nota = nro_nota;
 	}
 

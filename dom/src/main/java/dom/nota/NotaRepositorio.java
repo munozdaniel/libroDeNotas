@@ -1,9 +1,12 @@
 package dom.nota;
 
-import java.util.Formatter;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -17,8 +20,10 @@ import org.joda.time.LocalDateTime;
 import dom.sector.Sector;
 import dom.sector.SectorRepositorio;
 
+@DomainService(menuOrder = "1")
 @Named("Notas")
 public class NotaRepositorio {
+	public final Lock monitor = new ReentrantLock();
 
 	public NotaRepositorio() {
 
@@ -51,65 +56,84 @@ public class NotaRepositorio {
 			final @Named("Descripción:") String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
 
-		return nuevaNota(sector, destino, descripcion, this.currentUserName(),
-				adjunto);
+		Nota nota = nuevaNota(sector, destino, descripcion,
+				this.currentUserName(), adjunto);
+		if (nota != null)
+			return nota;
+
+		this.container.informUser("SISTEMA OCUPADO, INTENTELO NUEVAMENTE.");
+		return null;
 
 	}
 
 	@Programmatic
 	private Nota nuevaNota(final Sector sector, final String destino,
 			final String descripcion, final String creadoPor, final Blob adjunto) {
-		final Nota unaNota = this.container.newTransientInstance(Nota.class);
-		Long nro = new Long(1);
-		Nota notaAnterior = recuperarUltimo();
-		if (notaAnterior != null) {
-			if (!notaAnterior.getUltimoDelAnio())
-				nro = notaAnterior.getNro_nota() + 1;
-			else
-				notaAnterior.setUltimoDelAnio(false);
-			
-			notaAnterior.setUltimo(false);
-		}
-		
-		formato = new Formatter();
-		formato.format("%04d", nro);
-		unaNota.setNro_nota(Long.parseLong(formato.toString()));
-		unaNota.setDescripcion(descripcion.toUpperCase().trim());
-		unaNota.setFecha(LocalDate.now());
-		unaNota.setTipo(1);
-		unaNota.setCreadoPor(creadoPor);
-		unaNota.setDestino(destino);
-		unaNota.setTime(LocalDateTime.now().withMillisOfSecond(3));
-		unaNota.setUltimo(true);
-		unaNota.setAdjuntar(adjunto);
-		unaNota.setSector(sector);
-		// sector.addToDocumento(unaNota);
-		unaNota.setHabilitado(true);
-		container.persistIfNotAlready(unaNota);
-		container.flush();
-		return unaNota;
-	}
-//
-//	@Programmatic
-//	private Boolean iniciarNuevoAnio() {
-//		String fecha = LocalDate.now().getYear() + "-01-01";
-//		final List<Nota> lista = this.container
-//				.allMatches(new QueryDefault<Nota>(Nota.class, "esNuevoAnio",
-//						"fecha", LocalDate.now())); // AGREGAR fecha
-//		if (lista.isEmpty())
-//			return true;
-//		else
-//			return false;
-//	}
+		try {
+			if (monitor.tryLock(1, TimeUnit.SECONDS)) {
+				try {
+					final Nota unaNota = this.container
+							.newTransientInstance(Nota.class);
+					Integer nro = Integer.valueOf(1);
 
-	@Programmatic
-	private Nota recuperarUltimo() {
+					Nota notaAnterior = recuperarUltimo();
+					if (notaAnterior != null) {
+						// Si no es el ultimo del año, continua sumando el nro
+						// de
+						// nota.
+						if (!notaAnterior.getUltimoDelAnio())
+							nro = notaAnterior.getNro_nota() + 1;
+						else
+							notaAnterior.setUltimoDelAnio(false);
+						notaAnterior.setUltimo(false);
+						// container.flush();
+					}
+					// if (unaNota.getDescripcion().equalsIgnoreCase("ALGO")) {
+					// try {
+					// Thread.sleep(11000);
+					// } catch (InterruptedException e) {
+					//
+					// }
+					//
+					// }
+					// Si no habian nota, o si es el ultimo del año, el proximo
+					// nro
+					// comienza en 1.
+
+					unaNota.setDescripcion(descripcion.toUpperCase().trim());
+					unaNota.setUltimo(true);
+					unaNota.setNro_nota(nro);
+					unaNota.setFecha(LocalDate.now());
+					unaNota.setTipo(1);
+					unaNota.setCreadoPor(creadoPor);
+					unaNota.setDestino(destino);
+					unaNota.setTime(LocalDateTime.now().withMillisOfSecond(3));
+					unaNota.setAdjuntar(adjunto);
+					unaNota.setSector(sector);
+					unaNota.setHabilitado(true);
+
+					container.persistIfNotAlready(unaNota);
+					container.flush();
+
+					return unaNota;
+				} finally {
+					monitor.unlock();
+				}
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public Nota recuperarUltimo() {
+
 		final Nota nota = this.container.firstMatch(new QueryDefault<Nota>(
 				Nota.class, "recuperarUltimo"));
 		if (nota == null)
 			return null;
-		else
-			return nota;
+		return nota;
+
 	}
 
 	@Named("Sector")
@@ -214,10 +238,6 @@ public class NotaRepositorio {
 
 	}
 
-	// //////////////////////////////////////
-	// CurrentUserName
-	// //////////////////////////////////////
-
 	private String currentUserName() {
 		return container.getUser().getName();
 	}
@@ -225,12 +245,9 @@ public class NotaRepositorio {
 	// //////////////////////////////////////
 	// Injected Services
 	// //////////////////////////////////////
-	// @javax.inject.Inject
-	// private IsisJdoSupport isisJdoSupport;
 	@javax.inject.Inject
 	private DomainObjectContainer container;
 	@javax.inject.Inject
 	private SectorRepositorio sectorRepositorio;
-	private Formatter formato;
 
 }
