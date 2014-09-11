@@ -3,9 +3,10 @@ package dom.dashboard;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.HomePage;
-
+@DomainService
 @Hidden
 public class NotaDashboardService {
 	private static final String ID = "dashboard";
