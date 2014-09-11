@@ -1,8 +1,12 @@
 package dom.expediente;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
@@ -17,8 +21,10 @@ import org.joda.time.LocalDateTime;
 import dom.sector.Sector;
 import dom.sector.SectorRepositorio;
 
+@DomainService(menuOrder = "5")
 @Named("EXPEDIENTE")
 public class ExpedienteRepositorio {
+	public final Lock monitor = new ReentrantLock();
 
 	public ExpedienteRepositorio() {
 
@@ -43,47 +49,64 @@ public class ExpedienteRepositorio {
 			final @RegEx(validation = "^[a-zA-Z]") @MaxLength(1) @Named("Letra Inicial: ") String expte_cod_letra,
 			final @Named("Motivo:") String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
-		return this.nuevoExpediente(expte_cod_letra, sector, descripcion,
-				this.currentUserName(), adjunto);
-
+		Expediente expediente = this.nuevoExpediente(expte_cod_letra, sector,
+				descripcion, this.currentUserName(), adjunto);
+		if (expediente != null)
+			return expediente;
+		this.container.informUser("SISTEMA OCUPADO, INTENTELO NUEVAMENTE.");
+		return null;
 	}
 
 	private Expediente nuevoExpediente(final String expte_cod_letra,
 			final Sector sector, final String descripcion,
 			final String creadoPor, final Blob adjunto) {
-		final Expediente unExpediente = this.container
-				.newTransientInstance(Expediente.class);
-		Expediente anterior = recuperarUltimo();
-		int nro = 1;
-		if (anterior != null) {
-			if (!anterior.getUltimoDelAnio())
-				nro = anterior.getNro_expediente()+ 1;
-			else
-				anterior.setUltimoDelAnio(false);
+		try {
+			if (monitor.tryLock(1, TimeUnit.SECONDS)) {
+				try {
+					final Expediente unExpediente = this.container
+							.newTransientInstance(Expediente.class);
+					Expediente anterior = recuperarUltimo();
+					int nro = 1;
+					if (anterior != null) {
+						if (!anterior.getUltimoDelAnio())
+							nro = anterior.getNro_expediente() + 1;
+						else
+							anterior.setUltimoDelAnio(false);
 
-			anterior.setUltimo(false);
+						anterior.setUltimo(false);
+					}
+					unExpediente.setNro_expediente(nro);
+					unExpediente.setUltimo(true);
+
+					unExpediente.setExpte_cod_letra(expte_cod_letra);
+					unExpediente.setFecha(LocalDate.now());
+					unExpediente.setTipo(5);
+					unExpediente.setDescripcion(descripcion.toUpperCase()
+							.trim());
+					unExpediente.setHabilitado(true);
+					unExpediente.setCreadoPor(creadoPor);
+					unExpediente.setExpte_cod_anio(LocalDate.now().getYear());
+					unExpediente.setExpte_cod_empresa("IMPS");
+					unExpediente
+							.setExpte_cod_numero((LocalDate.now().getYear() + "")
+									.charAt(3));
+
+					unExpediente.setTime(LocalDateTime.now()
+							.withMillisOfSecond(3));
+					unExpediente.setAdjuntar(adjunto);
+					unExpediente.setSector(sector);
+
+					container.persistIfNotAlready(unExpediente);
+					container.flush();
+					return unExpediente;
+				} finally {
+					monitor.unlock();
+				}
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
-		unExpediente.setNro_expediente(nro);
-		unExpediente.setUltimo(true);
-
-		unExpediente.setExpte_cod_letra(expte_cod_letra);
-		unExpediente.setFecha(LocalDate.now());
-		unExpediente.setTipo(5);
-		unExpediente.setDescripcion(descripcion.toUpperCase().trim());
-		unExpediente.setHabilitado(true);
-		unExpediente.setCreadoPor(creadoPor);
-		unExpediente.setExpte_cod_anio(LocalDate.now().getYear());
-		unExpediente.setExpte_cod_empresa("IMPS");
-		unExpediente.setExpte_cod_numero((LocalDate.now().getYear() + "")
-				.charAt(3));
-		
-		unExpediente.setTime(LocalDateTime.now().withMillisOfSecond(3));
-		unExpediente.setAdjuntar(adjunto);
-		unExpediente.setSector(sector);
-		
-		container.persistIfNotAlready(unExpediente);
-		container.flush();
-		return unExpediente;
+		return null;
 	}
 
 	@Programmatic
@@ -93,8 +116,7 @@ public class ExpedienteRepositorio {
 						"recuperarUltimo"));
 		if (doc == null)
 			return null;
-		else
-			return doc;
+		return doc;
 	}
 
 	@Programmatic

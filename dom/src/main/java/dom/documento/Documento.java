@@ -163,11 +163,11 @@ public abstract class Documento implements Comparable<Documento> {
 	@Hidden
 	@MemberOrder(sequence = "100")
 	@javax.jdo.annotations.Column(allowsNull = "true")
-	public Boolean getUltimo() {
+	public boolean getUltimo() {
 		return ultimo;
 	}
 
-	public void setUltimo(final Boolean ultimo) {
+	public void setUltimo(final boolean ultimo) {
 		this.ultimo = ultimo;
 	}
 
