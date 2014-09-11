@@ -1,8 +1,12 @@
 package dom.disposiciones;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -15,8 +19,10 @@ import org.joda.time.LocalDateTime;
 import dom.sector.Sector;
 import dom.sector.SectorRepositorio;
 
+@DomainService(menuOrder = "4")
 @Named("DISPOSICION")
 public class DisposicionRepositorio {
+	public final Lock monitor = new ReentrantLock();
 
 	public DisposicionRepositorio() {
 
@@ -39,9 +45,12 @@ public class DisposicionRepositorio {
 	public Disposicion addDisposicion(final @Named("Sector") Sector sector,
 			final @Named("Descripción:") String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
-		return this.nuevaDisposicion(sector, descripcion,
+		Disposicion disposicion = this.nuevaDisposicion(sector, descripcion,
 				this.currentUserName(), adjunto);
-
+		if (disposicion != null)
+			return disposicion;
+		this.container.informUser("SISTEMA OCUPADO, INTENTELO NUEVAMENTE.");
+		return null;
 	}
 
 	@Programmatic
@@ -49,33 +58,46 @@ public class DisposicionRepositorio {
 			final String descripcion, final String creadoPor, final Blob adjunto) {
 		final Disposicion unaDisposicion = this.container
 				.newTransientInstance(Disposicion.class);
-		Disposicion anterior = recuperarUltimo();
-		int nro = 1;
-		if (anterior != null) {
-			if (!anterior.getUltimoDelAnio())
-				nro = anterior.getNro_Disposicion() + 1;
-			else
-				anterior.setUltimoDelAnio(false);
+		try {
+			if (monitor.tryLock(1, TimeUnit.SECONDS)) {
+				try {
+					Disposicion anterior = recuperarUltimo();
+					Integer nro = Integer.valueOf(1);
+					if (anterior != null) {
+						if (!anterior.getUltimoDelAnio())
+							nro = anterior.getNro_Disposicion() + 1;
+						else
+							anterior.setUltimoDelAnio(false);
 
-			anterior.setUltimo(false);
+						anterior.setUltimo(false);
+					}
+
+					unaDisposicion.setNro_Disposicion(nro);
+					unaDisposicion.setUltimo(true);
+
+					unaDisposicion.setFecha(LocalDate.now());
+					unaDisposicion.setTipo(4);
+					unaDisposicion.setAdjuntar(adjunto);
+					unaDisposicion.setDescripcion(descripcion.toUpperCase()
+							.trim());
+					unaDisposicion.setHabilitado(true);
+					unaDisposicion.setCreadoPor(creadoPor);
+
+					unaDisposicion.setTime(LocalDateTime.now()
+							.withMillisOfSecond(3));
+					unaDisposicion.setSector(sector);
+
+					container.persistIfNotAlready(unaDisposicion);
+					container.flush();
+					return unaDisposicion;
+				} finally {
+					monitor.unlock();
+				}
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
-
-		unaDisposicion.setNro_Disposicion(nro);
-		unaDisposicion.setUltimo(true);
-
-		unaDisposicion.setFecha(LocalDate.now());
-		unaDisposicion.setTipo(4);
-		unaDisposicion.setAdjuntar(adjunto);
-		unaDisposicion.setDescripcion(descripcion.toUpperCase().trim());
-		unaDisposicion.setHabilitado(true);
-		unaDisposicion.setCreadoPor(creadoPor);
-
-		unaDisposicion.setTime(LocalDateTime.now().withMillisOfSecond(3));
-		unaDisposicion.setSector(sector);
-
-		container.persistIfNotAlready(unaDisposicion);
-		container.flush();
-		return unaDisposicion;
+		return null;
 	}
 
 	@Programmatic
@@ -85,8 +107,7 @@ public class DisposicionRepositorio {
 						"recuperarUltimo"));
 		if (doc == null)
 			return null;
-		else
-			return doc;
+		return doc;
 	}
 
 	@Named("Sector")
