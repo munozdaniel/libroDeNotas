@@ -1,8 +1,12 @@
 package dom.memo;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -15,8 +19,10 @@ import org.joda.time.LocalDateTime;
 import dom.sector.Sector;
 import dom.sector.SectorRepositorio;
 
+@DomainService(menuOrder = "2")
 @Named("MEMO")
 public class MemoRepositorio {
+	public final Lock monitor = new ReentrantLock();
 
 	public MemoRepositorio() {
 
@@ -43,46 +49,61 @@ public class MemoRepositorio {
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		if (!destinoSector.getNombre_sector().contentEquals("OTRO SECTOR"))
 			otroSector = "";
-		return this.nuevoMemo(sector, destinoSector, otroSector, descripcion,
-				this.currentUserName(), adjunto);
-
+		Memo memo = this.nuevoMemo(sector, destinoSector, otroSector,
+				descripcion, this.currentUserName(), adjunto);
+		if (memo != null)
+			return memo;
+		this.container.informUser("SISTEMA OCUPADO, INTENTELO NUEVAMENTE.");
+		return null;
 	}
 
 	@Programmatic
 	private Memo nuevoMemo(final Sector sector, final Sector destinoSector,
 			final String otroSector, final String descripcion,
 			final String creadoPor, final Blob adjunto) {
-		final Memo unMemo = this.container.newTransientInstance(Memo.class);
-		Memo anterior = recuperarUltimo();
-		int nro = 1;
-		if (anterior != null) {
-			if (!anterior.getUltimoDelAnio())
-				nro = anterior.getNro_memo() + 1;
-			else
-				anterior.setUltimoDelAnio(false);
+		try {
+			if (monitor.tryLock(1, TimeUnit.SECONDS)) {
+				try {
+					final Memo unMemo = this.container
+							.newTransientInstance(Memo.class);
+					Memo anterior = recuperarUltimo();
+					Integer nro = Integer.valueOf(1);
+					if (anterior != null) {
+						if (!anterior.getUltimoDelAnio())
+							nro = anterior.getNro_memo() + 1;
+						else
+							anterior.setUltimoDelAnio(false);
 
-			anterior.setUltimo(false);
+						anterior.setUltimo(false);
+					}
+
+					unMemo.setNro_memo(nro);
+					unMemo.setUltimo(true);
+
+					unMemo.setFecha(LocalDate.now());
+					unMemo.setAdjuntar(adjunto);
+					unMemo.setTipo(2);
+					unMemo.setDescripcion(descripcion.toUpperCase().trim());
+					unMemo.setHabilitado(true);
+					unMemo.setCreadoPor(creadoPor);
+					unMemo.setSector(sector);
+					unMemo.setTime(LocalDateTime.now().withMillisOfSecond(3));
+					unMemo.setDestinoSector(destinoSector);
+
+					unMemo.setOtroDestino(otroSector);
+					unMemo.setSector(sector);
+
+					container.persistIfNotAlready(unMemo);
+					container.flush();
+					return unMemo;
+				} finally {
+					monitor.unlock();
+				}
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
-
-		unMemo.setNro_memo(nro);
-		unMemo.setUltimo(true);
-
-		unMemo.setFecha(LocalDate.now());
-		unMemo.setAdjuntar(adjunto);
-		unMemo.setTipo(2);
-		unMemo.setDescripcion(descripcion.toUpperCase().trim());
-		unMemo.setHabilitado(true);
-		unMemo.setCreadoPor(creadoPor);
-		unMemo.setSector(sector);
-		unMemo.setTime(LocalDateTime.now().withMillisOfSecond(3));
-		unMemo.setDestinoSector(destinoSector);
-
-		unMemo.setOtroDestino(otroSector);
-		unMemo.setSector(sector);
-
-		container.persistIfNotAlready(unMemo);
-		container.flush();
-		return unMemo;
+		return null;
 	}
 
 	@Programmatic
@@ -91,8 +112,7 @@ public class MemoRepositorio {
 				Memo.class, "recuperarUltimo"));
 		if (doc == null)
 			return null;
-		else
-			return doc;
+		return doc;
 	}
 
 	@Named("Sector")
