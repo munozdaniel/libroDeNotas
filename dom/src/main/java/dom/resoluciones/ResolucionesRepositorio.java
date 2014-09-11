@@ -3,6 +3,7 @@ package dom.resoluciones;
 import java.util.List;
 
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -14,7 +15,7 @@ import org.joda.time.LocalDateTime;
 
 import dom.sector.Sector;
 import dom.sector.SectorRepositorio;
-
+@DomainService(menuOrder="3")
 @Named("RESOLUCIONES")
 public class ResolucionesRepositorio {
 
