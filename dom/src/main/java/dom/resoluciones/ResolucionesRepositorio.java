@@ -16,7 +16,7 @@ import org.joda.time.LocalDateTime;
 
 import dom.sector.Sector;
 import dom.sector.SectorRepositorio;
-@DomainService(menuOrder="3", repositoryFor=Resoluciones.class)
+@DomainService(menuOrder="3")
 @Named("RESOLUCIONES")
 public class ResolucionesRepositorio {
 

@@ -20,7 +20,7 @@ import org.joda.time.LocalDateTime;
 import dom.sector.Sector;
 import dom.sector.SectorRepositorio;
 
-@DomainService(menuOrder = "4", repositoryFor= Disposicion.class)
+@DomainService(menuOrder = "4")
 @Named("DISPOSICION")
 public class DisposicionRepositorio {
 	public final Lock monitor = new ReentrantLock();
