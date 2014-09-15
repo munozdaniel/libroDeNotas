@@ -71,9 +71,9 @@ public class NotaServiceDocx {
 	@ActionSemantics(Of.SAFE)
 	@MemberOrder(sequence = "10")
 	@Named("Descargar")
-	@CssClass("x-highlight")
-	public Blob downloadDocumento(final Nota nota)
-			throws IOException, JDOMException, MergeException {
+	// @CssClass("x-highlight")
+	public Blob downloadDocumento(final Nota nota) throws IOException,
+			JDOMException, MergeException {
 
 		final org.w3c.dom.Document w3cDocument = asInputW3cDocument(nota);
 
@@ -81,8 +81,7 @@ public class NotaServiceDocx {
 		docxService.merge(w3cDocument, wordprocessingMLPackage, docxTarget,
 				DocxService.MatchingPolicy.LAX);
 
-		final String blobName = "Nota-" + nota.getNro_nota()
-				+ ".docx";
+		final String blobName = "Nota-" + nota.getNro_nota() + ".docx";
 		final String blobMimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 		final byte[] blobBytes = docxTarget.toByteArray();
 
@@ -128,9 +127,8 @@ public class NotaServiceDocx {
 		Element body = new Element("body");
 		html.addContent(body);
 
-		addPara(body, "nro_nota", "plain", nota.getNro_nota()+"");
-		addPara(body, "fecha", "date",
-				nota.getFecha().toString("dd-MMM-yyyy"));
+		addPara(body, "nro_nota", "plain", nota.getNro_nota() + "");
+		addPara(body, "fecha", "date", nota.getFecha().toString("dd-MMM-yyyy"));
 		addPara(body, "descripcion", "plain", nota.getDescripcion());
 		addPara(body, "sector", "plain", nota.getSector().getNombre_sector());
 		addPara(body, "destino", "plain", nota.getDestino());
@@ -154,7 +152,7 @@ public class NotaServiceDocx {
 	// endregion (
 
 	// region > helpers
-	
+
 	private static void addPara(Element body, String id, String clazz,
 			String text) {
 		Element p = new Element("p");
@@ -163,12 +161,14 @@ public class NotaServiceDocx {
 		p.setAttribute("class", clazz);
 		p.setText(text);
 	}
-//	private static final Function<String, String> TRIM = new Function<String, String>() {
-//		@Override
-//		public String apply(String input) {
-//			return input.trim();
-//		}
-//	};
+
+	// private static final Function<String, String> TRIM = new Function<String,
+	// String>() {
+	// @Override
+	// public String apply(String input) {
+	// return input.trim();
+	// }
+	// };
 
 	// private static Iterable<String> preferencesFor(Nota order) {
 	// final String preferences = order.getPreferences();
@@ -177,8 +177,6 @@ public class NotaServiceDocx {
 	// }
 	// return Iterables.transform(Splitter.on(",").split(preferences), TRIM);
 	// }
-
-	
 
 	// private static Element addList(Element body, String id) {
 	// Element ul = new Element("ul");
