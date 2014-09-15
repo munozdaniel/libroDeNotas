@@ -8,6 +8,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -45,7 +46,7 @@ public class MemoRepositorio {
 	public Memo addMemo(final @Named("De:") Sector sector,
 			final @Named("Sector Destino:") Sector destinoSector,
 			@Optional @Named("otro Sector:") String otroSector,
-			final @Named("Descripción:") String descripcion,
+			final @Named("Descripción:")  @MultiLine(numberOfLines = 2) String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		if (!destinoSector.getNombre_sector().contentEquals("OTRO SECTOR"))
 			otroSector = "";

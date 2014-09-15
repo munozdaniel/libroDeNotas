@@ -22,7 +22,7 @@ import org.joda.time.LocalDateTime;
 import dom.sector.Sector;
 import dom.sector.SectorRepositorio;
 
-@DomainService(menuOrder = "1")
+@DomainService(menuOrder = "1",repositoryFor=Nota.class)
 @Named("Notas")
 public class NotaRepositorio {
 	public final Lock monitor = new ReentrantLock();
@@ -128,7 +128,7 @@ public class NotaRepositorio {
 		}
 		return null;
 	}
-
+	
 	@Programmatic
 	@NotInServiceMenu
 	private Nota recuperarElUltimo() {

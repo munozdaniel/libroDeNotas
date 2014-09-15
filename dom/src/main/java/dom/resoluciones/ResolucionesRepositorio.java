@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -15,7 +16,7 @@ import org.joda.time.LocalDateTime;
 
 import dom.sector.Sector;
 import dom.sector.SectorRepositorio;
-@DomainService(menuOrder="3")
+@DomainService(menuOrder="3", repositoryFor=Resoluciones.class)
 @Named("RESOLUCIONES")
 public class ResolucionesRepositorio {
 
@@ -41,7 +42,7 @@ public class ResolucionesRepositorio {
 			final @Named("Nº Resolucion:") int nro_resolucion,
 			final @Named("Fecha:") LocalDate fecha,
 			final @Named("De: ") Sector sector,
-			final @Named("Descripción:") String descripcion,
+			final @Named("Descripción:") @MultiLine(numberOfLines = 2) String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		return this.nuevaResolucion(nro_resolucion, fecha, sector, descripcion,
 				this.currentUserName(), adjunto);

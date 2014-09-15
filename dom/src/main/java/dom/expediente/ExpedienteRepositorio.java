@@ -9,6 +9,7 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -21,7 +22,7 @@ import org.joda.time.LocalDateTime;
 import dom.sector.Sector;
 import dom.sector.SectorRepositorio;
 
-@DomainService(menuOrder = "5")
+@DomainService(menuOrder = "5", repositoryFor=Expediente.class)
 @Named("EXPEDIENTE")
 public class ExpedienteRepositorio {
 	public final Lock monitor = new ReentrantLock();
@@ -47,7 +48,7 @@ public class ExpedienteRepositorio {
 	public Expediente addExpediente(
 			final @Named("Inicia: ") Sector sector,
 			final @RegEx(validation = "^[a-zA-Z]") @MaxLength(1) @Named("Letra Inicial: ") String expte_cod_letra,
-			final @Named("Motivo:") String descripcion,
+			final @Named("Motivo:") @MultiLine(numberOfLines = 2) String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		Expediente expediente = this.nuevoExpediente(expte_cod_letra, sector,
 				descripcion, this.currentUserName(), adjunto);
