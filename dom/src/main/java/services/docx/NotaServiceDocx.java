@@ -46,7 +46,7 @@ import com.google.common.io.Resources;
 
 import dom.nota.Nota;
 
-@DomainService
+@DomainService(repositoryFor=Nota.class)
 public class NotaServiceDocx {
 
 	// region > init
