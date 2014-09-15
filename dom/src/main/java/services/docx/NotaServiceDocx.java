@@ -26,6 +26,7 @@ import javax.annotation.PostConstruct;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.CssClass;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
@@ -70,6 +71,7 @@ public class NotaServiceDocx {
 	@ActionSemantics(Of.SAFE)
 	@MemberOrder(sequence = "10")
 	@Named("Descargar")
+	@CssClass("x-highlight")
 	public Blob downloadDocumento(final Nota nota)
 			throws IOException, JDOMException, MergeException {
 
