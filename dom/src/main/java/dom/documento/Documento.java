@@ -46,6 +46,7 @@ public abstract class Documento implements Comparable<Documento> {
 	@Disabled
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Named("Fecha")
+	@MemberOrder(sequence="1")
 	public LocalDate getFecha() {
 		return fecha;
 	}
@@ -76,7 +77,7 @@ public abstract class Documento implements Comparable<Documento> {
 
 	@Named("Descripcion")
 	@javax.jdo.annotations.Column(allowsNull = "false")
-	@MemberOrder(name = "Observaciones", sequence = "50")
+	@MemberOrder(name = "Observaciones", sequence = "4")
 	@MultiLine
 	@MaxLength(200)
 	public String getDescripcion() {
@@ -102,7 +103,7 @@ public abstract class Documento implements Comparable<Documento> {
 
 	private Blob adjuntar;
 
-	@MemberOrder(name = "Observaciones", sequence = "50")
+	@MemberOrder(name = "Observaciones", sequence = "5")
 	@javax.jdo.annotations.Persistent(defaultFetchGroup = "false")
 	@javax.jdo.annotations.Column(allowsNull = "true", name = "adjunto")
 	@Named("Adjuntar")

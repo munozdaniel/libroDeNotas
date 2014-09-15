@@ -63,7 +63,6 @@ import dom.documento.Documento;
 @Audited
 @AutoComplete(repository = NotaRepositorio.class, action = "autoComplete")
 @Bookmarkable
-@MemberGroupLayout(columnSpans = { 3, 3, 3, 3 })
 public class Nota extends Documento {
 	// //////////////////////////////////////
 	// Identificacion en la UI.
@@ -86,7 +85,7 @@ public class Nota extends Documento {
 	@Disabled
 	@javax.jdo.annotations.Column(allowsNull = "true")
 	// @Persistent(valueStrategy = IdGeneratorStrategy.INCREMENT)
-	@MemberOrder(name = "Datos Generales", sequence = "10")
+	@MemberOrder( sequence = "0")
 	@Named("Nro")
 	public int getNro_nota() {
 		return nro_nota;
@@ -100,7 +99,7 @@ public class Nota extends Documento {
 
 	@Named("Destino")
 	@javax.jdo.annotations.Column(allowsNull = "false")
-	@MemberOrder(name = "Datos Generales", sequence = "40")
+	@MemberOrder( sequence = "3")
 	public String getDestino() {
 		return destino;
 	}
