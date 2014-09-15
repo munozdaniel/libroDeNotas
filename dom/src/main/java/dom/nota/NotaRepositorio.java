@@ -8,7 +8,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Paged;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -51,9 +53,10 @@ public class NotaRepositorio {
 	 */
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
-	public Nota addNota(final @Named("De:") Sector sector,
+	public Nota addNota(
+			final @Named("De:") Sector sector,
 			final @Named("Para:") String destino,
-			final @Named("Descripción:") String descripcion,
+			final @Named("Descripción:") @MultiLine(numberOfLines = 2) String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
 
 		Nota nota = nuevaNota(sector, destino, descripcion,
@@ -76,7 +79,7 @@ public class NotaRepositorio {
 							.newTransientInstance(Nota.class);
 					Integer nro = Integer.valueOf(1);
 
-					Nota notaAnterior = recuperarUltimo();
+					Nota notaAnterior = recuperarElUltimo();
 					if (notaAnterior != null) {
 						// Si no es el ultimo del año, continua sumando el nro
 						// de
@@ -126,7 +129,9 @@ public class NotaRepositorio {
 		return null;
 	}
 
-	public Nota recuperarUltimo() {
+	@Programmatic
+	@NotInServiceMenu
+	private Nota recuperarElUltimo() {
 
 		final Nota nota = this.container.firstMatch(new QueryDefault<Nota>(
 				Nota.class, "recuperarUltimo"));
