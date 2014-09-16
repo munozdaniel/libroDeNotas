@@ -46,7 +46,7 @@ import com.google.common.io.Resources;
 
 import dom.nota.Nota;
 
-@DomainService(repositoryFor=Nota.class)
+@DomainService(repositoryFor = Nota.class)
 public class NotaServiceDocx {
 
 	// region > init
@@ -71,7 +71,7 @@ public class NotaServiceDocx {
 	@ActionSemantics(Of.SAFE)
 	@MemberOrder(sequence = "10")
 	@Named("Descargar")
-	// @CssClass("x-highlight")
+	@CssClass("x-highlight")
 	public Blob downloadDocumento(final Nota nota) throws IOException,
 			JDOMException, MergeException {
 
@@ -130,7 +130,7 @@ public class NotaServiceDocx {
 		addPara(body, "nro_nota", "plain", nota.getNro_nota() + "");
 		addPara(body, "fecha", "date", nota.getFecha().toString("dd-MMM-yyyy"));
 		addPara(body, "descripcion", "plain", nota.getDescripcion());
-		addPara(body, "sector", "plain", nota.getSector().getNombre_sector());
+		addPara(body, "nombre", "plain", nota.getSector().getNombre_sector());
 		addPara(body, "destino", "plain", nota.getDestino());
 
 		// Element table = addTable(body, "Products");
