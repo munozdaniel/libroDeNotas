@@ -11,6 +11,7 @@ import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Paged;
@@ -52,6 +53,7 @@ public class NotaRepositorio {
 	 * @param descripcion
 	 * @return
 	 */
+	@NotContributed
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
 	public Nota addNota(
@@ -125,6 +127,9 @@ public class NotaRepositorio {
 				}
 			}
 		} catch (InterruptedException e) {
+			this.container
+					.informUser("Verifique que los datos se hayan almacenado");
+
 			e.printStackTrace();
 		}
 		return null;
@@ -144,8 +149,9 @@ public class NotaRepositorio {
 
 	@Named("Sector")
 	public List<Sector> choices0AddNota() {
-		return sectorRepositorio.listar(); // TODO: return list of choices for
-											// property
+		List<Sector> lista = sectorRepositorio.listar();
+		lista.remove(0);// Elimino el primer elemento: OTRO SECTOR
+		return lista;
 	}
 
 	@Programmatic
@@ -186,6 +192,7 @@ public class NotaRepositorio {
 	 * @param fecha
 	 * @return
 	 */
+	@NotContributed
 	@MemberOrder(sequence = "30")
 	public List<Nota> filtrar(final @Optional @Named("De:") Sector sector,
 			final @Optional @Named("Fecha") LocalDate fecha) {

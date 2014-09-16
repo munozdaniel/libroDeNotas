@@ -8,6 +8,7 @@ import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
@@ -37,7 +38,7 @@ public class ResolucionesRepositorio {
 	public String iconName() {
 		return "resolucion";
 	}
-
+	@NotContributed
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
 	public Resoluciones addResoluciones(
@@ -57,6 +58,8 @@ public class ResolucionesRepositorio {
 			final String descripcion, final String creadoPor, final Blob adjunto) {
 		final Resoluciones unaResolucion = this.container
 				.newTransientInstance(Resoluciones.class);
+		unaResolucion.setUltimo(false);
+		unaResolucion.setUltimoDelAnio(false);
 		unaResolucion.setNro_resolucion(nro_resolucion);
 		unaResolucion.setFecha(fecha);
 		unaResolucion.setTipo(3);
@@ -108,7 +111,7 @@ public class ResolucionesRepositorio {
 	// //////////////////////////////////////
 	// Filtrar por Fecha o Sector
 	// //////////////////////////////////////
-
+	@NotContributed
 	@MemberOrder(sequence = "30")
 	public List<Resoluciones> filtrar(
 			final @Optional @Named("De:") Sector sector,

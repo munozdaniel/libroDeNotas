@@ -11,6 +11,7 @@ import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
@@ -41,7 +42,7 @@ public class MemoRepositorio {
 	public String iconName() {
 		return "memo";
 	}
-
+	@NotContributed
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
 	public Memo addMemo(
@@ -104,6 +105,7 @@ public class MemoRepositorio {
 				}
 			}
 		} catch (InterruptedException e) {
+			this.container.informUser("Verifique que los datos se hayan almacenado");
 			e.printStackTrace();
 		}
 		return null;
@@ -121,6 +123,7 @@ public class MemoRepositorio {
 	@Named("Sector")
 	public List<Sector> choices1AddMemo() {
 		List<Sector> lista = sectorRepositorio.listar();
+		lista.remove(0);//Elimino el primer elemento: OTRO SECTOR
 		return lista;
 	}
 
@@ -137,7 +140,9 @@ public class MemoRepositorio {
 			String otro, final String descripcion, final Blob adj) {
 		if (!destino.getNombre_sector().contentEquals("OTRO SECTOR"))
 			otro = "";
-
+		else
+			if(otro == "" || otro ==null)
+				return "Ingrese un Sector.";
 		return null;
 
 	}
@@ -167,7 +172,7 @@ public class MemoRepositorio {
 	// //////////////////////////////////////
 	// Listar Memos
 	// //////////////////////////////////////
-
+	@NotContributed
 	@MemberOrder(sequence = "20")
 	@Named("Lista de Memo")
 	public List<Memo> listar() {

@@ -11,6 +11,7 @@ import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
@@ -42,7 +43,7 @@ public class ExpedienteRepositorio {
 	public String iconName() {
 		return "expediente";
 	}
-
+	@NotContributed
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
 	public Expediente addExpediente(
@@ -164,7 +165,7 @@ public class ExpedienteRepositorio {
 	// //////////////////////////////////////
 	// Filtrar por Fecha o Sector
 	// //////////////////////////////////////
-
+	@NotContributed
 	@MemberOrder(sequence = "30")
 	public List<Expediente> filtrar(
 			final @Optional @Named("De:") Sector sector,

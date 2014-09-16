@@ -11,6 +11,7 @@ import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
@@ -41,7 +42,7 @@ public class DisposicionRepositorio {
 	public String iconName() {
 		return "disposicion";
 	}
-
+	@NotContributed
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
 	public Disposicion addDisposicion(
@@ -174,7 +175,7 @@ public class DisposicionRepositorio {
 	// //////////////////////////////////////
 	// Filtrar por Fecha o Sector
 	// //////////////////////////////////////
-
+	@NotContributed
 	@MemberOrder(sequence = "30")
 	public List<Disposicion> filtrar(
 			final @Optional @Named("De:") Sector sector,
