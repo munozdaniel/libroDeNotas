@@ -7,6 +7,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
@@ -45,7 +46,7 @@ public class DisposicionRepositorio {
 	@MemberOrder(sequence = "10")
 	public Disposicion addDisposicion(
 			final @Named("Sector") Sector sector,
-			final @Named("Descripción:") @MultiLine(numberOfLines = 2) String descripcion,
+			final @Named("Descripción:") @MultiLine(numberOfLines = 2) @MaxLength(255) String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		Disposicion disposicion = this.nuevaDisposicion(sector, descripcion,
 				this.currentUserName(), adjunto);

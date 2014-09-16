@@ -7,6 +7,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
@@ -56,7 +57,7 @@ public class NotaRepositorio {
 	public Nota addNota(
 			final @Named("De:") Sector sector,
 			final @Named("Para:") String destino,
-			final @Named("Descripción:") @MultiLine(numberOfLines = 2) String descripcion,
+			final @Named("Descripción:") @MaxLength(255) @MultiLine(numberOfLines = 2) String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
 
 		Nota nota = nuevaNota(sector, destino, descripcion,
@@ -128,7 +129,7 @@ public class NotaRepositorio {
 		}
 		return null;
 	}
-	
+
 	@Programmatic
 	@NotInServiceMenu
 	private Nota recuperarElUltimo() {

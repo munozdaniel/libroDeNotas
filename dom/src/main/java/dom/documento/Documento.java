@@ -6,6 +6,7 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.validation.constraints.Size;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DescribedAs;
@@ -46,7 +47,7 @@ public abstract class Documento implements Comparable<Documento> {
 	@Disabled
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Named("Fecha")
-	@MemberOrder(sequence="1")
+	@MemberOrder(sequence = "1")
 	public LocalDate getFecha() {
 		return fecha;
 	}
@@ -79,7 +80,8 @@ public abstract class Documento implements Comparable<Documento> {
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@MemberOrder(name = "Observaciones", sequence = "4")
 	@MultiLine
-	@MaxLength(200)
+	@MaxLength(255)
+	@Size(max=12)
 	public String getDescripcion() {
 		return descripcion;
 	}
@@ -103,7 +105,7 @@ public abstract class Documento implements Comparable<Documento> {
 
 	private Blob adjuntar;
 
-	@MemberOrder(name = "Observaciones", sequence = "5")
+	@MemberOrder(name = "Observaciones", sequence = "7")
 	@javax.jdo.annotations.Persistent(defaultFetchGroup = "false")
 	@javax.jdo.annotations.Column(allowsNull = "true", name = "adjunto")
 	@Named("Adjuntar")
@@ -134,7 +136,7 @@ public abstract class Documento implements Comparable<Documento> {
 
 	private Sector sector;
 
-	// @MemberOrder(name="Datos Generales" ,sequence = "30")
+	@MemberOrder(sequence = "2")
 	@Column(allowsNull = "False")
 	@Named("Origen")
 	// @Hidden(where=Where.STANDALONE_TABLES)
@@ -181,14 +183,6 @@ public abstract class Documento implements Comparable<Documento> {
 		return ObjectContracts.compare(this, documento, "time,descripcion");
 	}
 
-	// //////////////////////////////////////
-	// Injected Services
-	// //////////////////////////////////////
-
-	@SuppressWarnings("unused")
-	@javax.inject.Inject
-	private DomainObjectContainer container;
-
 	// {{ UltimoDelAnio (property)
 	private boolean ultimoDelAnio;
 
@@ -202,7 +196,15 @@ public abstract class Documento implements Comparable<Documento> {
 	public void setUltimoDelAnio(final boolean ultimoDelAnio) {
 		this.ultimoDelAnio = ultimoDelAnio;
 	}
+
 	// }}
 
+	// //////////////////////////////////////
+	// Injected Services
+	// //////////////////////////////////////
+
+	@SuppressWarnings("unused")
+	@javax.inject.Inject
+	private DomainObjectContainer container;
 
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
@@ -16,7 +17,8 @@ import org.joda.time.LocalDateTime;
 
 import dom.sector.Sector;
 import dom.sector.SectorRepositorio;
-@DomainService(menuOrder="3")
+
+@DomainService(menuOrder = "3")
 @Named("RESOLUCIONES")
 public class ResolucionesRepositorio {
 
@@ -42,7 +44,7 @@ public class ResolucionesRepositorio {
 			final @Named("Nº Resolucion:") int nro_resolucion,
 			final @Named("Fecha:") LocalDate fecha,
 			final @Named("De: ") Sector sector,
-			final @Named("Descripción:") @MultiLine(numberOfLines = 2) String descripcion,
+			final @Named("Descripción:") @MultiLine(numberOfLines = 2) @MaxLength(255) String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		return this.nuevaResolucion(nro_resolucion, fecha, sector, descripcion,
 				this.currentUserName(), adjunto);
@@ -109,7 +111,7 @@ public class ResolucionesRepositorio {
 
 	@MemberOrder(sequence = "30")
 	public List<Resoluciones> filtrar(
-			final @Optional  @Named("De:") Sector sector,
+			final @Optional @Named("De:") Sector sector,
 			final @Optional @Named("Fecha") LocalDate fecha) {
 		if (fecha == null && sector == null) {
 			this.container.warnUser("Sin Filtro");

@@ -48,7 +48,7 @@ public class ExpedienteRepositorio {
 	public Expediente addExpediente(
 			final @Named("Inicia: ") Sector sector,
 			final @RegEx(validation = "^[a-zA-Z]") @MaxLength(1) @Named("Letra Inicial: ") String expte_cod_letra,
-			final @Named("Motivo:") @MultiLine(numberOfLines = 2) String descripcion,
+			final @Named("Motivo:") @MaxLength(255) @MultiLine(numberOfLines = 2) String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		Expediente expediente = this.nuevoExpediente(expte_cod_letra, sector,
 				descripcion, this.currentUserName(), adjunto);
