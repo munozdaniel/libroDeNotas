@@ -126,12 +126,14 @@ public class NotaServiceDocx {
 
 		Element body = new Element("body");
 		html.addContent(body);
+		
+		addPara(body, "titulo", "plain", " NOTA ");
 
-		addPara(body, "nro_nota", "plain", nota.getNro_nota() + "");
+		addPara(body, "nro", "plain", nota.getNro_nota() + "");
 		addPara(body, "fecha", "date", nota.getFecha().toString("dd-MMM-yyyy"));
-		addPara(body, "descripcion", "plain", nota.getDescripcion());
-		addPara(body, "nombre", "plain", nota.getSector().getNombre_sector());
+		addPara(body, "origen", "plain", nota.getSector().getNombre_sector());
 		addPara(body, "destino", "plain", nota.getDestino());
+		addPara(body, "descripcion", "plain", nota.getDescripcion());
 
 		// Element table = addTable(body, "Products");
 		// for (OrderLine orderLine : order.getOrderLines()) {
