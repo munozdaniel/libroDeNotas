@@ -42,6 +42,7 @@ public class DisposicionRepositorio {
 	public String iconName() {
 		return "disposicion";
 	}
+
 	@NotContributed
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
@@ -68,9 +69,12 @@ public class DisposicionRepositorio {
 					Disposicion anterior = recuperarUltimo();
 					Integer nro = Integer.valueOf(1);
 					if (anterior != null) {
-						if (!anterior.getUltimoDelAnio())
-							nro = anterior.getNro_Disposicion() + 1;
-						else
+						if (!anterior.getUltimoDelAnio()) {
+							if (!anterior.getHabilitado())
+								nro = anterior.getNro_Disposicion();
+							else
+								nro = anterior.getNro_Disposicion() + 1;
+						} else
 							anterior.setUltimoDelAnio(false);
 
 						anterior.setUltimo(false);

@@ -43,6 +43,7 @@ public class ExpedienteRepositorio {
 	public String iconName() {
 		return "expediente";
 	}
+
 	@NotContributed
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
@@ -70,9 +71,12 @@ public class ExpedienteRepositorio {
 					Expediente anterior = recuperarUltimo();
 					int nro = 1;
 					if (anterior != null) {
-						if (!anterior.getUltimoDelAnio())
-							nro = anterior.getNro_expediente() + 1;
-						else
+						if (!anterior.getUltimoDelAnio()) {
+							if (!anterior.getHabilitado())
+								nro = anterior.getNro_expediente();
+							else
+								nro = anterior.getNro_expediente() + 1;
+						} else
 							anterior.setUltimoDelAnio(false);
 
 						anterior.setUltimo(false);

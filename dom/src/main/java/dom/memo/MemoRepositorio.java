@@ -42,6 +42,7 @@ public class MemoRepositorio {
 	public String iconName() {
 		return "memo";
 	}
+
 	@NotContributed
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
@@ -73,9 +74,12 @@ public class MemoRepositorio {
 					Memo anterior = recuperarUltimo();
 					Integer nro = Integer.valueOf(1);
 					if (anterior != null) {
-						if (!anterior.getUltimoDelAnio())
-							nro = anterior.getNro_memo() + 1;
-						else
+						if (!anterior.getUltimoDelAnio()) {
+							if (!anterior.getHabilitado())
+								nro = anterior.getNro_memo();
+							else
+								nro = anterior.getNro_memo() + 1;
+						} else
 							anterior.setUltimoDelAnio(false);
 
 						anterior.setUltimo(false);
@@ -105,7 +109,8 @@ public class MemoRepositorio {
 				}
 			}
 		} catch (InterruptedException e) {
-			this.container.informUser("Verifique que los datos se hayan almacenado");
+			this.container
+					.informUser("Verifique que los datos se hayan almacenado");
 			e.printStackTrace();
 		}
 		return null;
@@ -122,27 +127,31 @@ public class MemoRepositorio {
 
 	@Named("Sector")
 	public List<Sector> choices1AddMemo() {
-		List<Sector> lista = sectorRepositorio.listar();
-		lista.remove(0);//Elimino el primer elemento: OTRO SECTOR
-		return lista;
+		return sectorRepositorio.listar();
+
 	}
 
 	@Named("Para")
 	public List<Sector> choices0AddMemo() {
-		return sectorRepositorio.listar();
+		List<Sector> lista = sectorRepositorio.listar();
+		if (!lista.isEmpty())
+			lista.remove(0);// Elimino el primer elemento: OTRO SECTOR
+		return lista;
 	}
 
 	public Sector default1AddMemo() {
-		return this.sectorRepositorio.listar().get(0);
+		List<Sector> lista = this.sectorRepositorio.listar();
+		if(!lista.isEmpty())
+			return lista.get(0);
+		return null;
 	}
 
 	public String validateAddMemo(final Sector sector, final Sector destino,
 			String otro, final String descripcion, final Blob adj) {
 		if (!destino.getNombre_sector().contentEquals("OTRO SECTOR"))
 			otro = "";
-		else
-			if(otro == "" || otro ==null)
-				return "Ingrese un Sector.";
+		else if (otro == "" || otro == null)
+			return "Ingrese un Sector.";
 		return null;
 
 	}
@@ -152,11 +161,9 @@ public class MemoRepositorio {
 		final List<Memo> memos = this.container
 				.allMatches(new QueryDefault<Memo>(Memo.class,
 						"listarHabilitados"));
-
-		if (memos.isEmpty())
-			return 0;
-		else
+		if (!memos.isEmpty())
 			return memos.get(memos.size() - 1).getNro_memo();
+		return 0;
 	}
 
 	// //////////////////////////////////////

@@ -83,16 +83,21 @@ public class NotaRepositorio {
 					Integer nro = Integer.valueOf(1);
 
 					Nota notaAnterior = recuperarElUltimo();
+					/*
+					 * Si es nulo => cero Si no es nulo, si no es el
+					 * ulitmoDelAnio y si no esta habilitado => igual Si no es
+					 * nulo y si no es el ultimoDelAnio y esta Habilitado =>
+					 * suma Si no es nulo y si es el ulitmo del Anio => cero
+					 */
 					if (notaAnterior != null) {
-						// Si no es el ultimo del año, continua sumando el nro
-						// de
-						// nota.
-						if (!notaAnterior.getUltimoDelAnio())
-							nro = notaAnterior.getNro_nota() + 1;
-						else
+						if (!notaAnterior.getUltimoDelAnio()) {
+							if (!notaAnterior.getHabilitado())
+								nro = notaAnterior.getNro_nota();
+							else
+								nro = notaAnterior.getNro_nota() + 1;
+						} else
 							notaAnterior.setUltimoDelAnio(false);
 						notaAnterior.setUltimo(false);
-						// container.flush();
 					}
 					// if (unaNota.getDescripcion().equalsIgnoreCase("ALGO")) {
 					// try {
@@ -150,7 +155,8 @@ public class NotaRepositorio {
 	@Named("Sector")
 	public List<Sector> choices0AddNota() {
 		List<Sector> lista = sectorRepositorio.listar();
-		lista.remove(0);// Elimino el primer elemento: OTRO SECTOR
+		if (!lista.isEmpty())
+			lista.remove(0);// Elimino el primer elemento: OTRO SECTOR
 		return lista;
 	}
 
