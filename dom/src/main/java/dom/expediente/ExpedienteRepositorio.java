@@ -93,9 +93,9 @@ public class ExpedienteRepositorio {
 					unExpediente.setCreadoPor(creadoPor);
 					unExpediente.setExpte_cod_anio(LocalDate.now().getYear());
 					unExpediente.setExpte_cod_empresa("IMPS");
+					int anio =LocalDate.now().getYear();
 					unExpediente
-							.setExpte_cod_numero((LocalDate.now().getYear() + "")
-									.charAt(3));
+							.setExpte_cod_numero((anio-2010));
 
 					unExpediente.setTime(LocalDateTime.now()
 							.withMillisOfSecond(3));
