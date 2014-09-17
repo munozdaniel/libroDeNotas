@@ -5,17 +5,17 @@
       "memberGroups": {
         "General": {
           "members": {
-            "sector": {
-              "named": {
-                "value": "Origen"
-              }
-            },
             "nro_resolucion": {
               "named": {
                 "value": "Nro"
               },
               "typicalLength": {
                 "value": 9
+              }
+            },
+            "sector": {
+              "named": {
+                "value": "Origen"
               }
             },
             "fecha": {
