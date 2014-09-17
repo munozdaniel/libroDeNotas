@@ -26,7 +26,7 @@
     </parent>
 
 	<artifactId>libroDeNotas-fixture</artifactId>
-	<name>libro de Notas Fixtures</name>
+	<name>libro Imps Fixtures</name>
 
 	<dependencies>
 		<dependency>
