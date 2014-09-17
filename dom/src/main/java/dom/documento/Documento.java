@@ -43,7 +43,7 @@ public abstract class Documento implements Comparable<Documento> {
 
 	private LocalDate fecha;
 
-	@Disabled
+	
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Named("Fecha")
 	@MemberOrder(sequence = "1")
