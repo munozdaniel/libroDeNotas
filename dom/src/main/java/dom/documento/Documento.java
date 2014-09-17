@@ -6,7 +6,6 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
-import javax.validation.constraints.Size;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DescribedAs;
@@ -76,12 +75,11 @@ public abstract class Documento implements Comparable<Documento> {
 
 	private String descripcion;
 
+	@MemberOrder(name = "Observaciones", sequence = "1")
 	@Named("Descripcion")
 	@javax.jdo.annotations.Column(allowsNull = "false")
-	@MemberOrder(name = "Observaciones", sequence = "4")
 	@MultiLine
 	@MaxLength(255)
-	@Size(max=12)
 	public String getDescripcion() {
 		return descripcion;
 	}
@@ -105,7 +103,7 @@ public abstract class Documento implements Comparable<Documento> {
 
 	private Blob adjuntar;
 
-	@MemberOrder(name = "Observaciones", sequence = "7")
+	@MemberOrder(name = "Observaciones", sequence = "5")
 	@javax.jdo.annotations.Persistent(defaultFetchGroup = "false")
 	@javax.jdo.annotations.Column(allowsNull = "true", name = "adjunto")
 	@Named("Adjuntar")
@@ -124,7 +122,6 @@ public abstract class Documento implements Comparable<Documento> {
 	private String creadoPor;
 
 	@Hidden
-	@Disabled
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	public String getCreadoPor() {
 		return creadoPor;

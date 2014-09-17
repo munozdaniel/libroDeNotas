@@ -111,8 +111,6 @@ public class Nota extends Documento {
 	@DescribedAs("Necesario privilegios de Administrador.")
 	public List<Nota> eliminar() {
 		this.setHabilitado(false);
-		if (this.getUltimo())
-			this.setNro_nota(this.getNro_nota() - 1);
 		return notaRepositorio.listar();
 	}
 

@@ -160,12 +160,9 @@ public class Memo extends Documento {
 	}
 
 	public boolean hideEliminar() {
-		// TODO: return true if action is hidden, false if
-		// visible
 		if (this.container.getUser().isCurrentUser("root"))
 			return false;
-		else
-			return true;
+		return true;
 	}
 
 	// @Named("Restaurar")
