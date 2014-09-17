@@ -67,7 +67,7 @@ public class MemoRepositorio {
 			final String otroSector, final String descripcion,
 			final String creadoPor, final Blob adjunto) {
 		try {
-			if (monitor.tryLock(1, TimeUnit.SECONDS)) {
+			if (monitor.tryLock(30, TimeUnit.MILLISECONDS)) {
 				try {
 					final Memo unMemo = this.container
 							.newTransientInstance(Memo.class);

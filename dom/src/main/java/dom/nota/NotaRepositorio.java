@@ -76,7 +76,7 @@ public class NotaRepositorio {
 	private Nota nuevaNota(final Sector sector, final String destino,
 			final String descripcion, final String creadoPor, final Blob adjunto) {
 		try {
-			if (monitor.tryLock(1, TimeUnit.SECONDS)) {
+			if (monitor.tryLock(30, TimeUnit.MILLISECONDS)) {
 				try {
 					final Nota unaNota = this.container
 							.newTransientInstance(Nota.class);

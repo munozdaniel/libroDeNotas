@@ -64,7 +64,7 @@ public class DisposicionRepositorio {
 		final Disposicion unaDisposicion = this.container
 				.newTransientInstance(Disposicion.class);
 		try {
-			if (monitor.tryLock(1, TimeUnit.SECONDS)) {
+			if (monitor.tryLock(30, TimeUnit.MILLISECONDS)) {
 				try {
 					Disposicion anterior = recuperarUltimo();
 					Integer nro = Integer.valueOf(1);

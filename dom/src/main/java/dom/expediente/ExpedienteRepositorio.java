@@ -64,7 +64,7 @@ public class ExpedienteRepositorio {
 			final Sector sector, final String descripcion,
 			final String creadoPor, final Blob adjunto) {
 		try {
-			if (monitor.tryLock(1, TimeUnit.SECONDS)) {
+			if (monitor.tryLock(30, TimeUnit.MILLISECONDS)) {
 				try {
 					final Expediente unExpediente = this.container
 							.newTransientInstance(Expediente.class);
