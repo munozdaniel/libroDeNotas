@@ -37,27 +37,12 @@ import dom.documento.Documento;
 				+ "FROM dom.nota.Nota " + "WHERE  habilitado == true"),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota "),
-		@javax.jdo.annotations.Query(name = "filtrarPorFechaSector", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Nota "
-				+ "WHERE  (habilitado == true) && (fecha==:fecha && sector==:sector)"),
-		@javax.jdo.annotations.Query(name = "filtrarPorFecha", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Nota "
-				+ "WHERE  (habilitado == true) && (fecha==:fecha)"),
-		@javax.jdo.annotations.Query(name = "filtrarPorSector", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Nota "
-				+ "WHERE  (habilitado == true) && (sector==:sector)"),
-		@javax.jdo.annotations.Query(name = "filtrarPorFechaSectorRoot", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Nota "
-				+ "WHERE (fecha==:fecha && sector==:sector)"),
-		@javax.jdo.annotations.Query(name = "filtrarPorFechaRoot", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Nota " + "WHERE  && (fecha==:fecha)"),
-		@javax.jdo.annotations.Query(name = "filtrarPorSectorRoot", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Nota " + "WHERE   (sector==:sector) "),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = " SELECT  "
-				+ "FROM dom.nota.Nota FOR UPDATE "
-				+ "WHERE  (ultimo == true)  "),
-
+				+ "FROM dom.nota.Nota " + "WHERE  (ultimo == true)  "),
 		@javax.jdo.annotations.Query(name = "filtrarEntreFechas", language = "JDOQL", value = " SELECT  "
+				+ "FROM dom.nota.Nota "
+				+ "WHERE  (habilitado==true)&&(fecha >= :desde) && (fecha<=:hasta) "),
+		@javax.jdo.annotations.Query(name = "filtrarEntreFechasRoot", language = "JDOQL", value = " SELECT  "
 				+ "FROM dom.nota.Nota "
 				+ "WHERE  fecha >= :desde && fecha<=:hasta  "),
 		@javax.jdo.annotations.Query(name = "esNuevoAnio", language = "JDOQL", value = "SELECT "

@@ -109,71 +109,14 @@ public class ResolucionesRepositorio {
 
 	}
 
-	// //////////////////////////////////////
-	// Filtrar por Fecha o Sector
-	// //////////////////////////////////////
-	@Programmatic
-	@NotContributed
-	@MemberOrder(sequence = "30")
-	public List<Resoluciones> filtrar(
-			final @Optional @Named("De:") Sector sector,
-			final @Optional @Named("Fecha") LocalDate fecha) {
-		if (fecha == null && sector == null) {
-			this.container.warnUser("Sin Filtro");
-			return this.listar();
-
-		} else {
-			if (fecha != null && sector == null) {
-				final List<Resoluciones> filtrarPorFecha = this.container
-						.allMatches(new QueryDefault<Resoluciones>(
-								Resoluciones.class, "filtrarPorFecha", "fecha",
-								fecha));
-
-				if (filtrarPorFecha.isEmpty()) {
-					this.container.warnUser("No se encontraron Notas.");
-				}
-				this.container.warnUser("Filtrado por Fechas.");
-
-				return filtrarPorFecha;
-			} else if (fecha == null && sector != null) {
-				final List<Resoluciones> filtrarPorSector = this.container
-						.allMatches(new QueryDefault<Resoluciones>(
-								Resoluciones.class, "filtrarPorSector",
-								"sector", sector));
-				this.container.warnUser("Filtrado por Sector.");
-
-				if (filtrarPorSector.isEmpty()) {
-					this.container.warnUser("No se encontraron Notas.");
-				}
-				return filtrarPorSector;
-			} else {
-				final List<Resoluciones> filtrarFechaSector = this.container
-						.allMatches(new QueryDefault<Resoluciones>(
-								Resoluciones.class, "filtrarPorFechaSector",
-								"fecha", fecha, "sector", sector));
-				this.container.warnUser("Filtrado por Fecha y Sector.");
-
-				if (filtrarFechaSector.isEmpty()) {
-					this.container.warnUser("No se encontraron Notas.");
-				}
-				return filtrarFechaSector;
-			}
-		}
-	}
-
-	// @Named("Sector")
-	// public List<Sector> choices0Filtrar() {
-	// return sectorRepositorio.listarResoluciones();
-	// }
-
 	public List<Resoluciones> filtrarPorFecha(
-			final  @Named("Fecha Inicio") LocalDate desde,
-			final  @Named("Fecha Final") LocalDate hasta) {
+			final @Named("Fecha Inicio") LocalDate desde,
+			final @Named("Fecha Final") LocalDate hasta) {
 		List<Resoluciones> lista = this.container
 				.allMatches(new QueryDefault<Resoluciones>(Resoluciones.class,
 						"filtrarEntreFechas", "desde", desde, "hasta", hasta));
 		if (lista.isEmpty())
-			this.container.warnUser("No existen notas generadas.");
+			this.container.warnUser("No existen resoluciones generadas en esas fechas.");
 		return lista;
 	}
 

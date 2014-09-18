@@ -191,72 +191,7 @@ public class NotaRepositorio {
 
 	}
 
-	/**
-	 * Filtrar por fecha o/y sector.
-	 * 
-	 * @param sector
-	 * @param fecha
-	 * @return
-	 */
-	@Programmatic
-	@NotContributed
-	@MemberOrder(sequence = "30")
-	public List<Nota> filtrar(final @Optional @Named("De:") Sector sector,
-			final @Optional @Named("Fecha") LocalDate fecha) {
-		if (fecha == null && sector == null) {
-			this.container.warnUser("Sin Filtro");
-			return this.listar();
-
-		} else {
-			if (fecha != null && sector == null) {
-				String criterio = "filtrarPorFecha";
-				if (this.container.getUser().isCurrentUser("root"))
-					criterio = "filtrarPorFechaRoot";
-				final List<Nota> notasPorFecha = this.container
-						.allMatches(new QueryDefault<Nota>(Nota.class,
-								criterio, "fecha", fecha));
-
-				if (notasPorFecha.isEmpty()) {
-					this.container.warnUser("No se encontraron Notas.");
-				}
-				this.container.warnUser("Filtrado por Fechas.");
-
-				return notasPorFecha;
-			} else if (fecha == null && sector != null) {
-				String criterio = "filtrarPorSector";
-				if (this.container.getUser().isCurrentUser("root"))
-					criterio = "filtrarPorSectorRoot";
-				final List<Nota> notasPorSector = this.container
-						.allMatches(new QueryDefault<Nota>(Nota.class,
-								criterio, "sector", sector));
-				this.container.warnUser("Filtrado por Sector.");
-
-				if (notasPorSector.isEmpty()) {
-					this.container.warnUser("No se encontraron Notas.");
-				}
-				return notasPorSector;
-			} else {
-				String criterio = "filtrarPorFechaSector";
-				if (this.container.getUser().isCurrentUser("root"))
-					criterio = "filtrarPorFechaSectorRoot";
-				final List<Nota> notas = this.container
-						.allMatches(new QueryDefault<Nota>(Nota.class,
-								criterio, "fecha", fecha, "sector", sector));
-				this.container.warnUser("Filtrado por Fecha y Sector.");
-
-				if (notas.isEmpty()) {
-					this.container.warnUser("No se encontraron Notas.");
-				}
-				return notas;
-			}
-		}
-	}
-
-	// @Named("Sector")
-	// public List<Sector> choices0Filtrar() {
-	// return sectorRepositorio.listar();
-	//
-	// }
+	
 	public List<Nota> filtrarPorFecha(
 			final  @Named("Fecha Inicio") LocalDate desde,
 			final  @Named("Fecha Final") LocalDate hasta) {
@@ -264,7 +199,7 @@ public class NotaRepositorio {
 				Nota.class, "filtrarEntreFechas", "desde", desde, "hasta",
 				hasta));
 		if (lista.isEmpty())
-			this.container.warnUser("No existen notas generadas.");
+			this.container.warnUser("No existen notas generadas en esas fechas.");
 		return lista;
 	}
 

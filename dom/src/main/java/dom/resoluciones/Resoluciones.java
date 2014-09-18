@@ -37,15 +37,12 @@ import dom.sector.SectorRepositorio;
 				+ "WHERE  habilitado == true"),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.resoluciones.Resoluciones  "),
-		@javax.jdo.annotations.Query(name = "filtrarPorFechaSector", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Resoluciones "
-				+ "WHERE  (habilitado == true) && (fecha==:fecha && sector==:sector)"),
-		@javax.jdo.annotations.Query(name = "filtrarPorFecha", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Resoluciones "
-				+ "WHERE  (habilitado == true) && (fecha==:fecha)"),
 		@javax.jdo.annotations.Query(name = "filtrarEntreFechas", language = "JDOQL", value = " SELECT  "
 				+ "FROM dom.nota.Resoluciones "
-				+ "WHERE  fecha >= :desde && fecha<=:hasta  "),
+				+ "WHERE  (habilitado==true)&&(fecha >= :desde) && (fecha<=:hasta) "),
+		@javax.jdo.annotations.Query(name = "filtrarEntreFechasRoot", language = "JDOQL", value = " SELECT  "
+				+ "FROM dom.nota.Resoluciones "
+				+ "WHERE  (fecha >= :desde) && (fecha<=:hasta) "),
 		@javax.jdo.annotations.Query(name = "filtrarPorSector", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Resoluciones "
 				+ "WHERE  (habilitado == true) && (sector==:sector)") })

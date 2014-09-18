@@ -176,71 +176,14 @@ public class DisposicionRepositorio {
 
 	}
 
-	// //////////////////////////////////////
-	// Filtrar por Fecha o Sector
-	// //////////////////////////////////////
-	@NotContributed
-	@MemberOrder(sequence = "30")
-	@Programmatic
-	public List<Disposicion> filtrar(
-			final @Optional @Named("De:") Sector sector,
-			final @Optional @Named("Fecha") LocalDate fecha) {
-		if (fecha == null && sector == null) {
-			this.container.warnUser("Sin Filtro");
-			return this.listar();
-
-		} else {
-			if (fecha != null && sector == null) {
-				final List<Disposicion> filtrarPorFecha = this.container
-						.allMatches(new QueryDefault<Disposicion>(
-								Disposicion.class, "filtrarPorFecha", "fecha",
-								fecha));
-
-				if (filtrarPorFecha.isEmpty()) {
-					this.container.warnUser("No se encontraron Notas.");
-				}
-				this.container.warnUser("Filtrado por Fechas.");
-
-				return filtrarPorFecha;
-			} else if (fecha == null && sector != null) {
-				final List<Disposicion> filtrarPorSector = this.container
-						.allMatches(new QueryDefault<Disposicion>(
-								Disposicion.class, "filtrarPorSector",
-								"sector", sector));
-				this.container.warnUser("Filtrado por Sector.");
-
-				if (filtrarPorSector.isEmpty()) {
-					this.container.warnUser("No se encontraron Notas.");
-				}
-				return filtrarPorSector;
-			} else {
-				final List<Disposicion> filtrarFechaSector = this.container
-						.allMatches(new QueryDefault<Disposicion>(
-								Disposicion.class, "filtrarPorFechaSector",
-								"fecha", fecha, "sector", sector));
-				this.container.warnUser("Filtrado por Fecha y Sector.");
-
-				if (filtrarFechaSector.isEmpty()) {
-					this.container.warnUser("No se encontraron Notas.");
-				}
-				return filtrarFechaSector;
-			}
-		}
-	}
-
-	// @Named("Sector")
-	// public List<Sector> choices0Filtrar() {
-	// return sectorRepositorio.listarDisposiciones();
-	// }
-
 	public List<Disposicion> filtrarPorFecha(
-			final  @Named("Fecha Inicio") LocalDate desde,
-			final  @Named("Fecha Final") LocalDate hasta) {
+			final @Named("Fecha Inicio") LocalDate desde,
+			final @Named("Fecha Final") LocalDate hasta) {
 		List<Disposicion> lista = this.container
 				.allMatches(new QueryDefault<Disposicion>(Disposicion.class,
 						"filtrarEntreFechas", "desde", desde, "hasta", hasta));
 		if (lista.isEmpty())
-			this.container.warnUser("No existen notas generadas.");
+			this.container.warnUser("No existen disposiciones generadas en esas fechas.");
 		return lista;
 	}
 
