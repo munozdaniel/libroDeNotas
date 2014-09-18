@@ -14,7 +14,6 @@
               }
             },
             "fecha": {
-              "disabled": {},
               "named": {
                 "value": "Fecha"
               },
