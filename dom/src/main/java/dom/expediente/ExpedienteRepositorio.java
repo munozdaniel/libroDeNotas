@@ -93,9 +93,8 @@ public class ExpedienteRepositorio {
 					unExpediente.setCreadoPor(creadoPor);
 					unExpediente.setExpte_cod_anio(LocalDate.now().getYear());
 					unExpediente.setExpte_cod_empresa("IMPS");
-					int anio =LocalDate.now().getYear();
-					unExpediente
-							.setExpte_cod_numero((anio-2010));
+					int anio = LocalDate.now().getYear();
+					unExpediente.setExpte_cod_numero((anio - 2010));
 
 					unExpediente.setTime(LocalDateTime.now()
 							.withMillisOfSecond(3));
@@ -171,6 +170,7 @@ public class ExpedienteRepositorio {
 	// //////////////////////////////////////
 	@NotContributed
 	@MemberOrder(sequence = "30")
+	@Programmatic
 	public List<Expediente> filtrar(
 			final @Optional @Named("De:") Sector sector,
 			final @Optional @Named("Fecha") LocalDate fecha) {
@@ -217,9 +217,21 @@ public class ExpedienteRepositorio {
 		}
 	}
 
-	@Named("Sector")
-	public List<Sector> choices0Filtrar() {
-		return sectorRepositorio.listarExpediente();
+	//
+	// @Named("Sector")
+	// public List<Sector> choices0Filtrar() {
+	// return sectorRepositorio.listarExpediente();
+	// }
+
+	public List<Expediente> filtrarPorFecha(
+			final  @Named("Fecha Inicio") LocalDate desde,
+			final  @Named("Fecha Final") LocalDate hasta) {
+		List<Expediente> lista = this.container
+				.allMatches(new QueryDefault<Expediente>(Expediente.class,
+						"filtrarEntreFechas", "desde", desde, "hasta", hasta));
+		if (lista.isEmpty())
+			this.container.warnUser("No existen notas generadas.");
+		return lista;
 	}
 
 	// //////////////////////////////////////

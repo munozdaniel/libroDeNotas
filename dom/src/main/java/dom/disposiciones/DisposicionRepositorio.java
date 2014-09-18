@@ -181,6 +181,7 @@ public class DisposicionRepositorio {
 	// //////////////////////////////////////
 	@NotContributed
 	@MemberOrder(sequence = "30")
+	@Programmatic
 	public List<Disposicion> filtrar(
 			final @Optional @Named("De:") Sector sector,
 			final @Optional @Named("Fecha") LocalDate fecha) {
@@ -227,9 +228,20 @@ public class DisposicionRepositorio {
 		}
 	}
 
-	@Named("Sector")
-	public List<Sector> choices0Filtrar() {
-		return sectorRepositorio.listarDisposiciones();
+	// @Named("Sector")
+	// public List<Sector> choices0Filtrar() {
+	// return sectorRepositorio.listarDisposiciones();
+	// }
+
+	public List<Disposicion> filtrarPorFecha(
+			final  @Named("Fecha Inicio") LocalDate desde,
+			final  @Named("Fecha Final") LocalDate hasta) {
+		List<Disposicion> lista = this.container
+				.allMatches(new QueryDefault<Disposicion>(Disposicion.class,
+						"filtrarEntreFechas", "desde", desde, "hasta", hasta));
+		if (lista.isEmpty())
+			this.container.warnUser("No existen notas generadas.");
+		return lista;
 	}
 
 	// //////////////////////////////////////

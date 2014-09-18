@@ -198,6 +198,7 @@ public class NotaRepositorio {
 	 * @param fecha
 	 * @return
 	 */
+	@Programmatic
 	@NotContributed
 	@MemberOrder(sequence = "30")
 	public List<Nota> filtrar(final @Optional @Named("De:") Sector sector,
@@ -251,10 +252,20 @@ public class NotaRepositorio {
 		}
 	}
 
-	@Named("Sector")
-	public List<Sector> choices0Filtrar() {
-		return sectorRepositorio.listar();
-
+	// @Named("Sector")
+	// public List<Sector> choices0Filtrar() {
+	// return sectorRepositorio.listar();
+	//
+	// }
+	public List<Nota> filtrarPorFecha(
+			final  @Named("Fecha Inicio") LocalDate desde,
+			final  @Named("Fecha Final") LocalDate hasta) {
+		List<Nota> lista = this.container.allMatches(new QueryDefault<Nota>(
+				Nota.class, "filtrarEntreFechas", "desde", desde, "hasta",
+				hasta));
+		if (lista.isEmpty())
+			this.container.warnUser("No existen notas generadas.");
+		return lista;
 	}
 
 	private String currentUserName() {

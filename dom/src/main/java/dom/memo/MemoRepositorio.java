@@ -141,7 +141,7 @@ public class MemoRepositorio {
 
 	public Sector default1AddMemo() {
 		List<Sector> lista = this.sectorRepositorio.listar();
-		if(!lista.isEmpty())
+		if (!lista.isEmpty())
 			return lista.get(0);
 		return null;
 	}
@@ -198,7 +198,7 @@ public class MemoRepositorio {
 	// //////////////////////////////////////
 	// Filtrar por Fecha o Sector
 	// //////////////////////////////////////
-
+	@Programmatic
 	@MemberOrder(sequence = "30")
 	public List<Memo> filtrar(final @Optional @Named("De:") Sector sector,
 			final @Optional @Named("Fecha") LocalDate fecha) {
@@ -243,9 +243,20 @@ public class MemoRepositorio {
 		}
 	}
 
-	@Named("Sector")
-	public List<Sector> choices0Filtrar() {
-		return sectorRepositorio.listar();
+	// @Named("Sector")
+	// public List<Sector> choices0Filtrar() {
+	// return sectorRepositorio.listar();
+	// }
+
+	public List<Memo> filtrarPorFecha(
+			final  @Named("Fecha Inicio") LocalDate desde,
+			final  @Named("Fecha Final") LocalDate hasta) {
+		List<Memo> lista = this.container.allMatches(new QueryDefault<Memo>(
+				Memo.class, "filtrarEntreFechas", "desde", desde, "hasta",
+				hasta));
+		if (lista.isEmpty())
+			this.container.warnUser("No existen notas generadas.");
+		return lista;
 	}
 
 	// //////////////////////////////////////

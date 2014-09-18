@@ -38,6 +38,7 @@ public class ResolucionesRepositorio {
 	public String iconName() {
 		return "resolucion";
 	}
+
 	@NotContributed
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
@@ -111,6 +112,7 @@ public class ResolucionesRepositorio {
 	// //////////////////////////////////////
 	// Filtrar por Fecha o Sector
 	// //////////////////////////////////////
+	@Programmatic
 	@NotContributed
 	@MemberOrder(sequence = "30")
 	public List<Resoluciones> filtrar(
@@ -159,9 +161,20 @@ public class ResolucionesRepositorio {
 		}
 	}
 
-	@Named("Sector")
-	public List<Sector> choices0Filtrar() {
-		return sectorRepositorio.listarResoluciones();
+	// @Named("Sector")
+	// public List<Sector> choices0Filtrar() {
+	// return sectorRepositorio.listarResoluciones();
+	// }
+
+	public List<Resoluciones> filtrarPorFecha(
+			final  @Named("Fecha Inicio") LocalDate desde,
+			final  @Named("Fecha Final") LocalDate hasta) {
+		List<Resoluciones> lista = this.container
+				.allMatches(new QueryDefault<Resoluciones>(Resoluciones.class,
+						"filtrarEntreFechas", "desde", desde, "hasta", hasta));
+		if (lista.isEmpty())
+			this.container.warnUser("No existen notas generadas.");
+		return lista;
 	}
 
 	// //////////////////////////////////////

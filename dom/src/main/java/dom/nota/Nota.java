@@ -48,14 +48,18 @@ import dom.documento.Documento;
 				+ "WHERE  (habilitado == true) && (sector==:sector)"),
 		@javax.jdo.annotations.Query(name = "filtrarPorFechaSectorRoot", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota "
-				+ "WHERE && (fecha==:fecha && sector==:sector)"),
+				+ "WHERE (fecha==:fecha && sector==:sector)"),
 		@javax.jdo.annotations.Query(name = "filtrarPorFechaRoot", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota " + "WHERE  && (fecha==:fecha)"),
 		@javax.jdo.annotations.Query(name = "filtrarPorSectorRoot", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota " + "WHERE   (sector==:sector) "),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = " SELECT  "
-				+ "FROM dom.nota.Nota FOR UPDATE " + "WHERE  (ultimo == true)  "),
+				+ "FROM dom.nota.Nota FOR UPDATE "
+				+ "WHERE  (ultimo == true)  "),
 
+		@javax.jdo.annotations.Query(name = "filtrarEntreFechas", language = "JDOQL", value = " SELECT  "
+				+ "FROM dom.nota.Nota "
+				+ "WHERE  fecha >= :desde && fecha<=:hasta  "),
 		@javax.jdo.annotations.Query(name = "esNuevoAnio", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota " + "WHERE fecha == :fecha") })
 @ObjectType("NOTA")
@@ -84,7 +88,7 @@ public class Nota extends Documento {
 	@Disabled
 	@javax.jdo.annotations.Column(allowsNull = "true")
 	// @Persistent(valueStrategy = IdGeneratorStrategy.INCREMENT)
-	@MemberOrder( sequence = "0")
+	@MemberOrder(sequence = "0")
 	@Named("Nro")
 	public int getNro_nota() {
 		return nro_nota;
@@ -98,7 +102,7 @@ public class Nota extends Documento {
 
 	@Named("Destino")
 	@javax.jdo.annotations.Column(allowsNull = "false")
-	@MemberOrder( sequence = "3")
+	@MemberOrder(sequence = "3")
 	public String getDestino() {
 		return destino;
 	}

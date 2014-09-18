@@ -45,6 +45,9 @@ import dom.sector.SectorRepositorio;
 		@javax.jdo.annotations.Query(name = "filtrarPorSector", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.disposiciones.Disposicion  "
 				+ "WHERE  (habilitado == true) && (sector==:sector)"),
+		@javax.jdo.annotations.Query(name = "filtrarEntreFechas", language = "JDOQL", value = " SELECT  "
+				+ "FROM dom.nota.Disposicion "
+				+ "WHERE  fecha >= :desde && fecha<=:hasta  "),
 
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Disposicion " + "WHERE  (ultimo == true)") })

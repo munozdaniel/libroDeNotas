@@ -47,14 +47,17 @@ import dom.sector.SectorRepositorio;
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.expediente.Expediente "),
 		@javax.jdo.annotations.Query(name = "filtrarPorFechaSector", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Nota "
+				+ "FROM dom.nota.Expediente "
 				+ "WHERE  (habilitado == true) && (fecha==:fecha && sector==:sector)"),
 		@javax.jdo.annotations.Query(name = "filtrarPorFecha", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Nota "
+				+ "FROM dom.nota.Expediente "
 				+ "WHERE  (habilitado == true) && (fecha==:fecha)"),
 		@javax.jdo.annotations.Query(name = "filtrarPorSector", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Nota "
+				+ "FROM dom.nota.Expediente "
 				+ "WHERE  (habilitado == true) && (sector==:sector)"),
+		@javax.jdo.annotations.Query(name = "filtrarEntreFechas", language = "JDOQL", value = " SELECT  "
+				+ "FROM dom.nota.Expediente "
+				+ "WHERE  fecha >= :desde && fecha<=:hasta  "),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Expediente " + "WHERE  (ultimo == true)") })
 @ObjectType("EXPEDIENTE")
