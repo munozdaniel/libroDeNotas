@@ -109,7 +109,24 @@ public class SectorRepositorio {
 					.warnUser("No se encontraron sectores.");
 		return listarSectores;
 	}
-
+	/**
+	 * Buscar Sector por id para migrar los datos.
+	 * 
+	 * @param nombreSector
+	 * @return
+	 */
+	
+	@MemberOrder(sequence = "21")
+	public Sector buscarPorNombre(
+			final String nombre) {
+		final Sector sector = this.container
+				.uniqueMatch(new QueryDefault<Sector>(Sector.class,
+						"buscarNombre", "nombre", nombre.toUpperCase()));
+		if (sector==null)
+			this.container
+					.warnUser("No se encontraron sectores.");
+		return sector;
+	}
 	/**
 	 * autoComplete
 	 * 

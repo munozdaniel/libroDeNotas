@@ -30,6 +30,8 @@ import org.apache.isis.applib.util.ObjectContracts;
 				+ " FROM dom.sector.Sector " + " WHERE resolucion==true"),
 		@javax.jdo.annotations.Query(name = "sectoresExpediente", language = "JDOQL", value = "SELECT "
 				+ " FROM dom.sector.Sector " + " WHERE expediente==true"),
+				@javax.jdo.annotations.Query(name = "buscarNombre", language = "JDOQL", value = "SELECT  "
+						+ " FROM dom.sector.Sector " + " WHERE nombre_sector==:nombre"),
 		@javax.jdo.annotations.Query(name = "buscarPorNombre", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.sector.Sector "
 				+ "WHERE "
