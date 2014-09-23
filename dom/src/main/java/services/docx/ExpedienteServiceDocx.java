@@ -107,7 +107,7 @@ public class ExpedienteServiceDocx {
 		addPara(body, "titulo", "plain", " EXPEDIENTE ");
 		
 		addPara(body, "nro", "plain", expediente.getNro_expediente() + "");
-		addPara(body, "fecha", "date", expediente.getFecha().toString("dd-MMM-yyyy"));
+		addPara(body, "fecha", "plain", expediente.getFecha());
 		addPara(body, "origen", "plain", expediente.getSector().getNombre_sector());
 		addPara(body, "descripcion", "plain", expediente.getDescripcion());
 

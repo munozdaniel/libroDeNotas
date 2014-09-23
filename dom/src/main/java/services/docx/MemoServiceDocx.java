@@ -105,7 +105,7 @@ public class MemoServiceDocx {
 		html.addContent(body);
 		addPara(body, "titulo", "plain", " MEMO ");
 		addPara(body, "nro", "plain", memo.getNro_memo() + "");
-		addPara(body, "fecha", "date", memo.getFecha().toString("dd-MMM-yyyy"));
+		addPara(body, "fecha", "plain", memo.getFecha());
 		addPara(body, "origen", "plain", memo.getSector().getNombre_sector());
 		if (memo.getDestinoSector() != null)
 			addPara(body, "destino", "plain", memo.getDestinoSector()

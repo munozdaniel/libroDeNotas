@@ -130,7 +130,7 @@ public class NotaServiceDocx {
 		addPara(body, "titulo", "plain", " NOTA ");
 
 		addPara(body, "nro", "plain", nota.getNro_nota() + "");
-		addPara(body, "fecha", "date", nota.getFecha().toString("dd-MMM-yyyy"));
+		addPara(body, "fecha", "plain", nota.getFecha());
 		addPara(body, "origen", "plain", nota.getSector().getNombre_sector());
 		addPara(body, "destino", "plain", nota.getDestino());
 		addPara(body, "descripcion", "plain", nota.getDescripcion());

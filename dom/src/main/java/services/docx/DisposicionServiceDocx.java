@@ -129,7 +129,7 @@ public class DisposicionServiceDocx {
 		addPara(body, "titulo", "plain", " DISPOSICION ");
 
 		addPara(body, "nro", "plain", disposicion.getNro_Disposicion() + "");
-		addPara(body, "fecha", "date", disposicion.getFecha().toString("dd-MMM-yyyy"));
+		addPara(body, "fecha", "plain", disposicion.getFecha());
 		addPara(body, "origen", "plain", disposicion.getSector().getNombre_sector());
 		addPara(body, "descripcion", "plain", disposicion.getDescripcion());
 

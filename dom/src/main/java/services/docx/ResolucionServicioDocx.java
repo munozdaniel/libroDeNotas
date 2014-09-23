@@ -105,7 +105,7 @@ public class ResolucionServicioDocx {
 		addPara(body, "titulo", "plain", " RESOLUCION ");
 
 		addPara(body, "nro", "plain", resolucion.getNro_resolucion() + "");
-		addPara(body, "fecha", "date", resolucion.getFecha().toString("dd-MMM-yyyy"));
+		addPara(body, "fecha", "plain", resolucion.getFecha());
 		addPara(body, "origen", "plain", resolucion.getSector().getNombre_sector());
 		addPara(body, "descripcion", "plain", resolucion.getDescripcion());
 
