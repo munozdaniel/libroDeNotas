@@ -37,17 +37,11 @@ import dom.sector.SectorRepositorio;
 				+ "WHERE  "
 				+ "nro_nota.indexOf(:nro_nota) >= 0"),
 		@javax.jdo.annotations.Query(name = "listarHabilitados", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.memo.Memo " + "WHERE  habilitado == true"),
+				+ "FROM dom.memo.Memo " + "WHERE  habilitado == true ORDER BY nro_memo DESC"),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.memo.Memo "),
-		@javax.jdo.annotations.Query(name = "filtrarEntreFechas", language = "JDOQL", value = " SELECT  "
-				+ "FROM dom.nota.Memo "
-				+ "WHERE (habilitado==true)&& (fecha >= :desde) && (fecha<=:hasta)  "),
-		@javax.jdo.annotations.Query(name = "filtrarEntreFechasRoot", language = "JDOQL", value = " SELECT  "
-				+ "FROM dom.nota.Memo "
-				+ "WHERE  fecha >= :desde && fecha<=:hasta  "),
+				+ "FROM dom.memo.Memo ORDER BY nro_memo DESC"),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Memo " + "WHERE  (ultimo == true)") })
+				+ "FROM dom.nota.Memo " + "WHERE  (ultimo == true)")  })
 @ObjectType("MEMO")
 @Audited
 @AutoComplete(repository = MemoRepositorio.class, action = "autoComplete")

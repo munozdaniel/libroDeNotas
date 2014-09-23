@@ -1,5 +1,6 @@
 package dom.nota;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -76,7 +77,7 @@ public class NotaRepositorio {
 	private Nota nuevaNota(final Sector sector, final String destino,
 			final String descripcion, final String creadoPor, final Blob adjunto) {
 		try {
-			if (monitor.tryLock(30, TimeUnit.MILLISECONDS)) {
+			if (monitor.tryLock(25, TimeUnit.MILLISECONDS)) {
 				try {
 					final Nota unaNota = this.container
 							.newTransientInstance(Nota.class);
@@ -114,7 +115,7 @@ public class NotaRepositorio {
 					unaNota.setDescripcion(descripcion.toUpperCase().trim());
 					unaNota.setUltimo(true);
 					unaNota.setNro_nota(nro);
-					unaNota.setFecha(LocalDate.now());
+					unaNota.setFecha(LocalDate.now().toString("dd/MM/yyyy"));
 					unaNota.setTipo(1);
 					unaNota.setCreadoPor(creadoPor);
 					unaNota.setDestino(destino);
@@ -191,20 +192,72 @@ public class NotaRepositorio {
 
 	}
 
-	
-	public List<Nota> filtrarPorFecha(
-			final  @Named("Fecha Inicio") LocalDate desde,
-			final  @Named("Fecha Final") LocalDate hasta) {
-		List<Nota> lista = this.container.allMatches(new QueryDefault<Nota>(
-				Nota.class, "filtrarEntreFechas", "desde", desde, "hasta",
-				hasta));
-		if (lista.isEmpty())
-			this.container.warnUser("No existen notas generadas en esas fechas.");
-		return lista;
+	public List<Nota> filtrarPorDescripcion(
+			final @Named("Descripcion") @MaxLength(255) @MultiLine(numberOfLines = 2) String descripcion) {
+		
+		List<Nota> lista = this.listar();
+		Nota unaNota = new Nota();
+		List<Nota> listaRetorno = new ArrayList<Nota>();
+		for(int i=0;i<lista.size();i++)
+		{
+			unaNota = new Nota();
+			unaNota = lista.get(i);
+			if(unaNota.getDescripcion().contains(descripcion.toUpperCase()))
+				listaRetorno.add(unaNota);
+		}
+		if (listaRetorno.isEmpty())
+			this.container.warnUser("No se encotraron Registros.");
+		return listaRetorno;
 	}
 
 	private String currentUserName() {
 		return container.getUser().getName();
+	}
+
+	/**
+	 * PARA MIGRAR
+	 */
+	@Programmatic
+	public Nota insertar(final int nro, final Sector sector,
+			final String destino, final String descripcion, final int ultimo,
+			final String fecha, final int habilitado, final String fechacompleta) {
+
+		final Nota unaNota = this.container.newTransientInstance(Nota.class);
+		unaNota.setNro_nota(nro);
+		unaNota.setSector(sector);
+		unaNota.setDestino(destino);
+		unaNota.setDescripcion(descripcion.toUpperCase().trim());
+		unaNota.setCreadoPor("root");
+		unaNota.setAdjuntar(null);
+		if (ultimo == 0)
+			unaNota.setUltimo(false);
+		else
+			unaNota.setUltimo(true);
+
+		unaNota.setUltimoDelAnio(false);
+		// String[] vector = fechacompleta.split("/");
+		// int dia = Integer.parseInt(vector[0]);
+		// int mes = Integer.parseInt(vector[1]);
+		// int anio = Integer.parseInt(vector[2]);
+		// LocalDate date =new LocalDate(anio, mes, dia);
+
+		// final DateTimeFormatter forPattern =
+		// DateTimeFormat.forPattern("yyyy-MMM-dd").withLocale(Locale.ENGLISH);
+		// LocalDate local =forPattern.parseLocalDate(anio+"-"+mes+"-"+dia);
+
+		// this.container.warnUser(fechacompleta);
+		unaNota.setFecha(fechacompleta);
+
+		if (habilitado == 0)
+			unaNota.setHabilitado(true);
+		else
+			unaNota.setHabilitado(false);
+		unaNota.setTipo(1);
+		unaNota.setTime(LocalDateTime.now().withMillisOfSecond(3));
+		container.persistIfNotAlready(unaNota);
+		container.flush();
+
+		return unaNota;
 	}
 
 	// //////////////////////////////////////

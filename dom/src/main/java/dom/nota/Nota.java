@@ -19,9 +19,6 @@ import org.apache.isis.applib.annotation.ObjectType;
 
 import dom.documento.Documento;
 
-//@PersistenceCapable(identityType=IdentityType.DATASTORE)
-//@Version(strategy=VersionStrategy.VERSION_NUMBER)
-//@DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id_documento")
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id_documento")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
@@ -34,19 +31,14 @@ import dom.documento.Documento;
 				+ "FROM dom.nota.Nota "
 				+ "WHERE destino.indexOf(:destino) >= 0"),
 		@javax.jdo.annotations.Query(name = "listarHabilitados", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Nota " + "WHERE  habilitado == true"),
+				+ "FROM dom.nota.Nota " + "WHERE  habilitado == true ORDER BY nro_nota DESC "),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Nota "),
+				+ "FROM dom.nota.Nota ORDER BY nro_nota DESC  "),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = " SELECT  "
 				+ "FROM dom.nota.Nota " + "WHERE  (ultimo == true)  "),
-		@javax.jdo.annotations.Query(name = "filtrarEntreFechas", language = "JDOQL", value = " SELECT  "
-				+ "FROM dom.nota.Nota "
-				+ "WHERE  (habilitado==true)&&(fecha >= :desde) && (fecha<=:hasta) "),
-		@javax.jdo.annotations.Query(name = "filtrarEntreFechasRoot", language = "JDOQL", value = " SELECT  "
-				+ "FROM dom.nota.Nota "
-				+ "WHERE  fecha >= :desde && fecha<=:hasta  "),
 		@javax.jdo.annotations.Query(name = "esNuevoAnio", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Nota " + "WHERE fecha == :fecha") })
+				+ "FROM dom.nota.Nota " + "WHERE fecha == :fecha ORDER BY nro_nota DESC ") 
+	 })
 @ObjectType("NOTA")
 @Audited
 @AutoComplete(repository = NotaRepositorio.class, action = "autoComplete")

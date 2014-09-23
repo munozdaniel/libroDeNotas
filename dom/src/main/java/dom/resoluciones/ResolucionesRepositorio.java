@@ -1,5 +1,6 @@
 package dom.resoluciones;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.isis.applib.DomainObjectContainer;
@@ -62,7 +63,7 @@ public class ResolucionesRepositorio {
 		unaResolucion.setUltimo(false);
 		unaResolucion.setUltimoDelAnio(false);
 		unaResolucion.setNro_resolucion(nro_resolucion);
-		unaResolucion.setFecha(fecha);
+		unaResolucion.setFecha(fecha.toString("dd/MM/yyyy"));
 		unaResolucion.setTipo(3);
 		unaResolucion.setDescripcion(descripcion.toUpperCase().trim());
 		unaResolucion.setHabilitado(true);
@@ -109,15 +110,22 @@ public class ResolucionesRepositorio {
 
 	}
 
-	public List<Resoluciones> filtrarPorFecha(
-			final @Named("Fecha Inicio") LocalDate desde,
-			final @Named("Fecha Final") LocalDate hasta) {
-		List<Resoluciones> lista = this.container
-				.allMatches(new QueryDefault<Resoluciones>(Resoluciones.class,
-						"filtrarEntreFechas", "desde", desde, "hasta", hasta));
-		if (lista.isEmpty())
-			this.container.warnUser("No existen resoluciones generadas en esas fechas.");
-		return lista;
+	public List<Resoluciones> filtrarPorDescripcion(
+			final @Named("Descripcion") @MaxLength(255) @MultiLine(numberOfLines = 2) String descripcion) {
+
+		List<Resoluciones> lista = this.listar();
+		Resoluciones unaResolucion = new Resoluciones();
+		List<Resoluciones> listaRetorno = new ArrayList<Resoluciones>();
+		for (int i = 0; i < lista.size(); i++) {
+			unaResolucion = new Resoluciones();
+			unaResolucion = lista.get(i);
+			if (unaResolucion.getDescripcion().contains(
+					descripcion.toUpperCase()))
+				listaRetorno.add(unaResolucion);
+		}
+		if (listaRetorno.isEmpty())
+			this.container.warnUser("No se encotraron Registros.");
+		return listaRetorno;
 	}
 
 	// //////////////////////////////////////
@@ -136,4 +144,45 @@ public class ResolucionesRepositorio {
 	private DomainObjectContainer container;
 	@javax.inject.Inject
 	private SectorRepositorio sectorRepositorio;
+
+	/**
+	 * PARA MIGRAR
+	 */
+	@Programmatic
+	public Resoluciones insertar(final int nro, final String fecha,
+			final int tipo, final Sector sector, final String descripcion,
+			final int eliminado, final int ultimo, final String fechacompleta) {
+
+		final Resoluciones doc = this.container
+				.newTransientInstance(Resoluciones.class);
+		doc.setNro_resolucion(nro);
+
+		// FECHA :: INICIO
+		doc.setFecha(fechacompleta);
+		doc.setTime(LocalDateTime.now().withMillisOfSecond(3));
+		// FIN :: FECHA
+
+		doc.setTipo(tipo);
+		if (sector != null)
+			doc.setSector(sector);
+		doc.setDescripcion(descripcion.toUpperCase().trim());
+		if (eliminado == 0)
+			doc.setHabilitado(true);
+		else
+			doc.setHabilitado(false);
+
+		if (ultimo == 0)
+			doc.setUltimo(false);
+		else
+			doc.setUltimo(true);
+
+		doc.setCreadoPor("root");
+		doc.setAdjuntar(null);
+		doc.setUltimoDelAnio(false);
+
+		container.persistIfNotAlready(doc);
+		container.flush();
+
+		return doc;
+	}
 }

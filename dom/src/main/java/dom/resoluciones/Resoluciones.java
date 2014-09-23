@@ -34,18 +34,9 @@ import dom.sector.SectorRepositorio;
 				+ "WHERE habilitado == false"),
 		@javax.jdo.annotations.Query(name = "listarHabilitados", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.resoluciones.Resoluciones "
-				+ "WHERE  habilitado == true"),
+				+ "WHERE  habilitado == true  ORDER BY nro_resolucion DESC"),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.resoluciones.Resoluciones  "),
-		@javax.jdo.annotations.Query(name = "filtrarEntreFechas", language = "JDOQL", value = " SELECT  "
-				+ "FROM dom.nota.Resoluciones "
-				+ "WHERE  (habilitado==true)&&(fecha >= :desde) && (fecha<=:hasta) "),
-		@javax.jdo.annotations.Query(name = "filtrarEntreFechasRoot", language = "JDOQL", value = " SELECT  "
-				+ "FROM dom.nota.Resoluciones "
-				+ "WHERE  (fecha >= :desde) && (fecha<=:hasta) "),
-		@javax.jdo.annotations.Query(name = "filtrarPorSector", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Resoluciones "
-				+ "WHERE  (habilitado == true) && (sector==:sector)") })
+				+ "FROM dom.resoluciones.Resoluciones   ORDER BY nro_resolucion DESC")})
 @ObjectType("RESOLUCIONES")
 @Audited
 @AutoComplete(repository = ResolucionesRepositorio.class, action = "autoComplete")

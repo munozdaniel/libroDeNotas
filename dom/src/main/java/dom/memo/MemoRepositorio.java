@@ -1,5 +1,6 @@
 package dom.memo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -67,7 +68,7 @@ public class MemoRepositorio {
 			final String otroSector, final String descripcion,
 			final String creadoPor, final Blob adjunto) {
 		try {
-			if (monitor.tryLock(30, TimeUnit.MILLISECONDS)) {
+			if (monitor.tryLock(25, TimeUnit.MILLISECONDS)) {
 				try {
 					final Memo unMemo = this.container
 							.newTransientInstance(Memo.class);
@@ -87,17 +88,15 @@ public class MemoRepositorio {
 
 					unMemo.setNro_memo(nro);
 					unMemo.setUltimo(true);
-
-					unMemo.setFecha(LocalDate.now());
+					unMemo.setFecha(LocalDate.now().toString("dd/MM/yyyy"));
 					unMemo.setAdjuntar(adjunto);
 					unMemo.setTipo(2);
 					unMemo.setDescripcion(descripcion.toUpperCase().trim());
 					unMemo.setHabilitado(true);
 					unMemo.setCreadoPor(creadoPor);
-					unMemo.setSector(sector);
 					unMemo.setTime(LocalDateTime.now().withMillisOfSecond(3));
-					unMemo.setDestinoSector(destinoSector);
 
+					unMemo.setDestinoSector(destinoSector);
 					unMemo.setOtroDestino(otroSector);
 					unMemo.setSector(sector);
 
@@ -185,15 +184,67 @@ public class MemoRepositorio {
 
 	}
 
-	public List<Memo> filtrarPorFecha(
-			final @Named("Fecha Inicio") LocalDate desde,
-			final @Named("Fecha Final") LocalDate hasta) {
-		List<Memo> lista = this.container.allMatches(new QueryDefault<Memo>(
-				Memo.class, "filtrarEntreFechas", "desde", desde, "hasta",
-				hasta));
-		if (lista.isEmpty())
-			this.container.warnUser("No existen memo generadas en esas fechas.");
-		return lista;
+	public List<Memo> filtrarPorDescripcion(
+			final @Named("Descripcion") @MaxLength(255) @MultiLine(numberOfLines = 2) String descripcion) {
+		
+		List<Memo> lista = this.listar();
+		Memo unMemo = new Memo();
+		List<Memo> listaRetorno = new ArrayList<Memo>();
+		for(int i=0;i<lista.size();i++)
+		{
+			unMemo = new Memo();
+			unMemo = lista.get(i);
+			if(unMemo.getDescripcion().contains(descripcion.toUpperCase()))
+				listaRetorno.add(unMemo);
+		}
+		if (listaRetorno.isEmpty())
+			this.container.warnUser("No se encotraron Registros.");
+		return listaRetorno;
+	}
+
+
+	/**
+	 * PARA MIGRAR
+	 */
+	@Programmatic
+	public Memo insertar(final int nro, final String fecha, final int tipo,
+			final Sector sector, final String descripcion, final int eliminado,
+			final int ultimo, final Sector destinoSector,
+			final String otroDestino, final String fechacompleta) {
+
+		final Memo doc = this.container.newTransientInstance(Memo.class);
+		doc.setNro_memo(nro);
+		doc.setCreadoPor("root");
+		doc.setAdjuntar(null);
+		doc.setUltimoDelAnio(false);
+		// FECHA :: INICIO
+		doc.setFecha(fechacompleta);
+		doc.setTime(LocalDateTime.now().withMillisOfSecond(3));
+		// FIN :: FECHA
+
+		doc.setTipo(tipo);
+		doc.setSector(sector);
+		doc.setDescripcion(descripcion.toUpperCase().trim());
+		if (eliminado == 0)
+			doc.setHabilitado(true);
+		else
+			doc.setHabilitado(false);
+
+		if (ultimo == 0)
+			doc.setUltimo(false);
+		else
+			doc.setUltimo(true);
+
+		if (destinoSector == null)
+			doc.setDestinoSector(null);
+		else
+			doc.setDestinoSector(destinoSector);
+		doc.setOtroDestino(otroDestino.toUpperCase());
+
+		container.persistIfNotAlready(doc);
+		container.flush();
+
+		return doc;
 	}
 
 	// //////////////////////////////////////

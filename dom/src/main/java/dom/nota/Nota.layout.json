@@ -83,11 +83,6 @@
         },
         "Observaciones": {
           "members": {
-            "adjuntar": {
-              "named": {
-                "value": "Adjuntar"
-              }
-            },
             "descripcion": {
               "named": {
                 "value": "Descripcion"
@@ -97,6 +92,11 @@
               },
               "multiLine": {
                 "numberOfLines": 6
+              }
+            },
+            "adjuntar": {
+              "named": {
+                "value": "Adjuntar"
               }
             }
           }
@@ -128,6 +128,14 @@
       },
       "describedAs": {
         "value": "Necesario privilegios de Administrador."
+      }
+    },
+    "downloadDocumento": {
+      "named": {
+        "value": "Descargar"
+      },
+      "cssClass": {
+        "value": "x-highlight"
       }
     }
   }
