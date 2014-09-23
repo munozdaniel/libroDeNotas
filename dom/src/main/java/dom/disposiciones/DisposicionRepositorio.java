@@ -1,5 +1,6 @@
 package dom.disposiciones;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -64,7 +65,7 @@ public class DisposicionRepositorio {
 		final Disposicion unaDisposicion = this.container
 				.newTransientInstance(Disposicion.class);
 		try {
-			if (monitor.tryLock(30, TimeUnit.MILLISECONDS)) {
+			if (monitor.tryLock(25, TimeUnit.MILLISECONDS)) {
 				try {
 					Disposicion anterior = recuperarUltimo();
 					Integer nro = Integer.valueOf(1);
@@ -82,8 +83,7 @@ public class DisposicionRepositorio {
 
 					unaDisposicion.setNro_Disposicion(nro);
 					unaDisposicion.setUltimo(true);
-
-					unaDisposicion.setFecha(LocalDate.now());
+					unaDisposicion.setFecha(LocalDate.now().toString("dd/MM/yyyy"));
 					unaDisposicion.setTipo(4);
 					unaDisposicion.setAdjuntar(adjunto);
 					unaDisposicion.setDescripcion(descripcion.toUpperCase()
@@ -125,17 +125,6 @@ public class DisposicionRepositorio {
 		// property
 	}
 
-	// @Programmatic
-	// private int recuperarNroDisposicion() {
-	//
-	// final Disposicion disposicion = this.container.firstMatch(new
-	// QueryDefault<Disposicion>(
-	// Disposicion.class, "buscarUltimaDisposicionTrue"));
-	// if (disposicion == null)
-	// return 0;
-	// else
-	// return disposicion.getNro_Disposicion();
-	// }
 	@Programmatic
 	private int recuperarNroDisposicion() {
 		final List<Disposicion> disposiciones = this.container
@@ -176,17 +165,23 @@ public class DisposicionRepositorio {
 
 	}
 
-	public List<Disposicion> filtrarPorFecha(
-			final @Named("Fecha Inicio") LocalDate desde,
-			final @Named("Fecha Final") LocalDate hasta) {
-		List<Disposicion> lista = this.container
-				.allMatches(new QueryDefault<Disposicion>(Disposicion.class,
-						"filtrarEntreFechas", "desde", desde, "hasta", hasta));
-		if (lista.isEmpty())
-			this.container.warnUser("No existen disposiciones generadas en esas fechas.");
-		return lista;
+	public List<Disposicion> filtrarPorDescripcion(
+			final @Named("Descripcion") @MaxLength(255) @MultiLine(numberOfLines = 2) String descripcion) {
+		
+		List<Disposicion> lista = this.listar();
+		Disposicion disposicion = new Disposicion();
+		List<Disposicion> listaRetorno = new ArrayList<Disposicion>();
+		for(int i=0;i<lista.size();i++)
+		{
+			disposicion = new Disposicion();
+			disposicion = lista.get(i);
+			if(disposicion.getDescripcion().contains(descripcion.toUpperCase()))
+				listaRetorno.add(disposicion);
+		}
+		if (listaRetorno.isEmpty())
+			this.container.warnUser("No se encotraron Registros.");
+		return listaRetorno;
 	}
-
 	// //////////////////////////////////////
 	// CurrentUserName
 	// //////////////////////////////////////
@@ -203,4 +198,46 @@ public class DisposicionRepositorio {
 	private DomainObjectContainer container;
 	@javax.inject.Inject
 	private SectorRepositorio sectorRepositorio;
+
+	/**
+	 * PARA MIGRAR
+	 */
+	@Programmatic
+	public Disposicion insertar(final int nro, final String fecha,
+			final int tipo, final Sector sector, final String descripcion,
+			final int eliminado, final int ultimo, final String fechacompleta) {
+
+		final Disposicion doc = this.container
+				.newTransientInstance(Disposicion.class);
+		doc.setNro_Disposicion(nro);
+
+		// FECHA :: INICIO
+		doc.setFecha(fechacompleta);
+		doc.setTime(LocalDateTime.now().withMillisOfSecond(3));
+		// FIN :: FECHA
+
+		doc.setTipo(tipo);
+		if (sector != null)
+			doc.setSector(sector);
+		doc.setDescripcion(descripcion.toUpperCase().trim());
+		if (eliminado == 0)
+			doc.setHabilitado(true);
+		else
+			doc.setHabilitado(false);
+
+		if (ultimo == 0)
+			doc.setUltimo(false);
+		else
+			doc.setUltimo(true);
+
+		doc.setCreadoPor("root");
+		doc.setAdjuntar(null);
+		doc.setUltimoDelAnio(false);
+
+		container.persistIfNotAlready(doc);
+		container.flush();
+
+		return doc;
+	}
+
 }

@@ -33,15 +33,9 @@ import dom.sector.SectorRepositorio;
 				+ "WHERE habilitado == false"),
 		@javax.jdo.annotations.Query(name = "listarHabilitados", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.disposiciones.Disposicion "
-				+ "WHERE  habilitado == true"),
+				+ "WHERE  habilitado == true  ORDER BY nro_Disposicion DESC"),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.disposiciones.Disposicion "),
-		@javax.jdo.annotations.Query(name = "filtrarEntreFechas", language = "JDOQL", value = " SELECT  "
-				+ "FROM dom.nota.Disposicion "
-				+ "WHERE  fecha >= :desde && fecha<=:hasta  "),
-		@javax.jdo.annotations.Query(name = "filtrarEntreFechasRoot", language = "JDOQL", value = " SELECT  "
-				+ "FROM dom.nota.Disposicion "
-				+ "WHERE (habilitados==true)&& (fecha >= :desde) && (fecha<=:hasta)  "),
+				+ "FROM dom.disposiciones.Disposicion ORDER BY nro_Disposicion DESC"),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Disposicion " + "WHERE  (ultimo == true)") })
 @ObjectType("DISPOSICION")
