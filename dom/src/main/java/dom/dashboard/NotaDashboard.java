@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.isis.applib.AbstractViewModel;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.MemberGroupLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
@@ -15,7 +16,7 @@ import dom.memo.MemoRepositorio;
 import dom.nota.Nota;
 import dom.nota.NotaRepositorio;
 import dom.resoluciones.ResolucionesRepositorio;
-
+@MemberGroupLayout(columnSpans = {0,0,0,12})
 public class NotaDashboard extends AbstractViewModel {
 	public String title() {
 		return "Inicio";
