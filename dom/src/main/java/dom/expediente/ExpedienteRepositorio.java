@@ -1,5 +1,6 @@
 package dom.expediente;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -64,7 +65,7 @@ public class ExpedienteRepositorio {
 			final Sector sector, final String descripcion,
 			final String creadoPor, final Blob adjunto) {
 		try {
-			if (monitor.tryLock(30, TimeUnit.MILLISECONDS)) {
+			if (monitor.tryLock(25, TimeUnit.MILLISECONDS)) {
 				try {
 					final Expediente unExpediente = this.container
 							.newTransientInstance(Expediente.class);
@@ -85,7 +86,7 @@ public class ExpedienteRepositorio {
 					unExpediente.setUltimo(true);
 
 					unExpediente.setExpte_cod_letra(expte_cod_letra);
-					unExpediente.setFecha(LocalDate.now());
+					unExpediente.setFecha(LocalDate.now().toString("dd/MM/yyyy"));
 					unExpediente.setTipo(5);
 					unExpediente.setDescripcion(descripcion.toUpperCase()
 							.trim());
@@ -165,18 +166,23 @@ public class ExpedienteRepositorio {
 				destino));
 	}
 
-
-	public List<Expediente> filtrarPorFecha(
-			final  @Named("Fecha Inicio") LocalDate desde,
-			final  @Named("Fecha Final") LocalDate hasta) {
-		List<Expediente> lista = this.container
-				.allMatches(new QueryDefault<Expediente>(Expediente.class,
-						"filtrarEntreFechas", "desde", desde, "hasta", hasta));
-		if (lista.isEmpty())
-			this.container.warnUser("No existen expedientes generados en esas fechas.");
-		return lista;
+	public List<Expediente> filtrarPorDescripcion(
+			final @Named("Descripcion") @MaxLength(255) @MultiLine(numberOfLines = 2) String descripcion) {
+		
+		List<Expediente> lista = this.listar();
+		Expediente expediente = new Expediente();
+		List<Expediente> listaRetorno = new ArrayList<Expediente>();
+		for(int i=0;i<lista.size();i++)
+		{
+			expediente = new Expediente();
+			expediente = lista.get(i);
+			if(expediente.getDescripcion().contains(descripcion.toUpperCase()))
+				listaRetorno.add(expediente);
+		}
+		if (listaRetorno.isEmpty())
+			this.container.warnUser("No se encotraron Registros.");
+		return listaRetorno;
 	}
-
 	// //////////////////////////////////////
 	// CurrentUserName
 	// //////////////////////////////////////
@@ -193,4 +199,53 @@ public class ExpedienteRepositorio {
 	private DomainObjectContainer container;
 	@javax.inject.Inject
 	private SectorRepositorio sectorRepositorio;
+
+	/**
+	 * PARA MIGRAR
+	 */
+	@Programmatic
+	public Expediente insertar(final int nro, final String fecha,
+			final int tipo, final Sector sector, final String descripcion,
+			final int eliminado, final int ultimo, final String empresa,
+			final int numero, final int anio, final String letra,
+			final String fechacompleta) {
+
+		final Expediente doc = this.container
+				.newTransientInstance(Expediente.class);
+		doc.setNro_expediente(nro);
+
+		// FECHA :: INICIO
+		doc.setFecha(fechacompleta);
+		doc.setTime(LocalDateTime.now().withMillisOfSecond(3));
+		// FIN :: FECHA
+
+		doc.setTipo(tipo);
+		if (sector != null)
+			doc.setSector(sector);
+		doc.setDescripcion(descripcion.toUpperCase().trim());
+		if (eliminado == 0)
+			doc.setHabilitado(true);
+		else
+			doc.setHabilitado(false);
+
+		if (ultimo == 0)
+			doc.setUltimo(false);
+		else
+			doc.setUltimo(true);
+
+		doc.setExpte_cod_empresa(empresa);
+		doc.setExpte_cod_numero(numero);
+		doc.setExpte_cod_anio(anio);
+		doc.setExpte_cod_letra(letra);
+
+		doc.setCreadoPor("root");
+		doc.setAdjuntar(null);
+		doc.setUltimoDelAnio(false);
+
+		container.persistIfNotAlready(doc);
+		container.flush();
+
+		return doc;
+	}
+
 }

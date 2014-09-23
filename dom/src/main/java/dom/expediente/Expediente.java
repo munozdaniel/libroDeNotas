@@ -43,15 +43,9 @@ import dom.sector.SectorRepositorio;
 				+ "nro_nota.indexOf(:nro_nota) >= 0"),
 		@javax.jdo.annotations.Query(name = "listarHabilitados", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.expediente.Expediente "
-				+ "WHERE  habilitado == true"),
+				+ "WHERE  habilitado == true ORDER BY nro_expediente DESC"),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.expediente.Expediente "),
-		@javax.jdo.annotations.Query(name = "filtrarEntreFechas", language = "JDOQL", value = " SELECT  "
-				+ "FROM dom.nota.Expediente "
-				+ "WHERE  fecha >= :desde && fecha<=:hasta  "),
-		@javax.jdo.annotations.Query(name = "filtrarEntreFechasRoot", language = "JDOQL", value = " SELECT  "
-				+ "FROM dom.nota.Expediente "
-				+ "WHERE  (habilitado == true)&&(fecha >= :desde) && (fecha<=:hasta)  "),
+				+ "FROM dom.expediente.Expediente ORDER BY nro_expediente DESC"),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Expediente " + "WHERE  (ultimo == true)") })
 @ObjectType("EXPEDIENTE")
