@@ -17,7 +17,6 @@ import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.util.ObjectContracts;
 import org.apache.isis.applib.value.Blob;
-import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 import dom.sector.Sector;
@@ -41,17 +40,17 @@ public abstract class Documento implements Comparable<Documento> {
 		this.time = time;
 	}
 
-	private LocalDate fecha;
+	private String fecha;
 
 	
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Named("Fecha")
 	@MemberOrder(sequence = "1")
-	public LocalDate getFecha() {
+	public String getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(LocalDate fecha) {
+	public void setFecha(String fecha) {
 		this.fecha = fecha;
 	}
 
@@ -134,7 +133,7 @@ public abstract class Documento implements Comparable<Documento> {
 	private Sector sector;
 
 	@MemberOrder(sequence = "2")
-	@Column(allowsNull = "False")
+	@Column(allowsNull = "True")
 	@Named("Origen")
 	// @Hidden(where=Where.STANDALONE_TABLES)
 	public Sector getSector() {
