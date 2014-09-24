@@ -41,6 +41,8 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.output.DOMOutputter;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.google.common.io.Resources;
 
@@ -130,7 +132,8 @@ public class NotaServiceDocx {
 		addPara(body, "titulo", "plain", " NOTA ");
 
 		addPara(body, "nro", "plain", nota.getNro_nota() + "");
-		addPara(body, "fecha", "plain", nota.getFecha());
+		DateTimeFormatter fmt = DateTimeFormat.forPattern("d MMMM, yyyy");
+		addPara(body, "fecha", "plain", nota.getFecha().toString(fmt));
 		addPara(body, "origen", "plain", nota.getSector().getNombre_sector());
 		addPara(body, "destino", "plain", nota.getDestino());
 		addPara(body, "descripcion", "plain", nota.getDescripcion());

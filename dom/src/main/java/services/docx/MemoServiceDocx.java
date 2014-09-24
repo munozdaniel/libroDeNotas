@@ -41,6 +41,8 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.output.DOMOutputter;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.google.common.io.Resources;
 
@@ -105,7 +107,8 @@ public class MemoServiceDocx {
 		html.addContent(body);
 		addPara(body, "titulo", "plain", " MEMO ");
 		addPara(body, "nro", "plain", memo.getNro_memo() + "");
-		addPara(body, "fecha", "plain", memo.getFecha());
+		DateTimeFormatter fmt = DateTimeFormat.forPattern("d MMMM, yyyy");
+		addPara(body, "fecha", "plain", memo.getFecha().toString(fmt));
 		addPara(body, "origen", "plain", memo.getSector().getNombre_sector());
 		if (memo.getDestinoSector() != null)
 			addPara(body, "destino", "plain", memo.getDestinoSector()

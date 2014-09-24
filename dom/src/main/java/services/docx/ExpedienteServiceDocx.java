@@ -41,6 +41,8 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.output.DOMOutputter;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.google.common.io.Resources;
 
@@ -107,7 +109,9 @@ public class ExpedienteServiceDocx {
 		addPara(body, "titulo", "plain", " EXPEDIENTE ");
 		
 		addPara(body, "nro", "plain", expediente.getNro_expediente() + "");
-		addPara(body, "fecha", "plain", expediente.getFecha());
+		DateTimeFormatter fmt = DateTimeFormat.forPattern("d MMMM, yyyy");
+
+		addPara(body, "fecha", "plain", expediente.getFecha().toString(fmt));
 		addPara(body, "origen", "plain", expediente.getSector().getNombre_sector());
 		addPara(body, "descripcion", "plain", expediente.getDescripcion());
 

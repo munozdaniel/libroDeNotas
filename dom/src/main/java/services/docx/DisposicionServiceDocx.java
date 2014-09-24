@@ -41,6 +41,8 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.output.DOMOutputter;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.google.common.io.Resources;
 
@@ -88,30 +90,6 @@ public class DisposicionServiceDocx {
 		return new Blob(blobName, blobMimeType, blobBytes);
 	}
 
-	// @NotContributed(NotContributed.As.ASSOCIATION)
-	// // ie contributed as action
-	// @Prototype
-	// @NotInServiceMenu
-	// @ActionSemantics(Of.SAFE)
-	// @MemberOrder(sequence = "11")
-	// public Clob downloadCustomerConfirmationInputHtml(final Nota order)
-	// throws IOException, JDOMException, MergeException {
-	//
-	// Document orderAsHtmlJdomDoc = asInputDocument(order);
-	//
-	// XMLOutputter xmlOutput = new XMLOutputter();
-	// xmlOutput.setFormat(Format.getPrettyFormat());
-	//
-	// final String html = xmlOutput.outputString(orderAsHtmlJdomDoc);
-	//
-	// final String clobName = "customerConfirmation-" + order.getNro_nota()
-	// + ".html";
-	// final String clobMimeType = "text/html";
-	// final String clobBytes = html;
-	//
-	// return new Clob(clobName, clobMimeType, clobBytes);
-	// }
-
 	private static org.w3c.dom.Document asInputW3cDocument(Disposicion disposicion)
 			throws JDOMException {
 		Document orderAsHtmlJdomDoc = asInputDocument(disposicion);
@@ -129,7 +107,8 @@ public class DisposicionServiceDocx {
 		addPara(body, "titulo", "plain", " DISPOSICION ");
 
 		addPara(body, "nro", "plain", disposicion.getNro_Disposicion() + "");
-		addPara(body, "fecha", "plain", disposicion.getFecha());
+		DateTimeFormatter fmt = DateTimeFormat.forPattern("d MMMM, yyyy");
+		addPara(body, "fecha", "plain", disposicion.getFecha().toString(fmt));
 		addPara(body, "origen", "plain", disposicion.getSector().getNombre_sector());
 		addPara(body, "descripcion", "plain", disposicion.getDescripcion());
 
