@@ -83,7 +83,7 @@ public class DisposicionRepositorio {
 
 					unaDisposicion.setNro_Disposicion(nro);
 					unaDisposicion.setUltimo(true);
-					unaDisposicion.setFecha(LocalDate.now().toString("dd/MM/yyyy"));
+					unaDisposicion.setFecha(LocalDate.now());
 					unaDisposicion.setTipo(4);
 					unaDisposicion.setAdjuntar(adjunto);
 					unaDisposicion.setDescripcion(descripcion.toUpperCase()
@@ -203,9 +203,9 @@ public class DisposicionRepositorio {
 	 * PARA MIGRAR
 	 */
 	@Programmatic
-	public Disposicion insertar(final int nro, final String fecha,
+	public Disposicion insertar(final int nro, 
 			final int tipo, final Sector sector, final String descripcion,
-			final int eliminado, final int ultimo, final String fechacompleta) {
+			final int eliminado, final int ultimo, final LocalDate fechacompleta) {
 
 		final Disposicion doc = this.container
 				.newTransientInstance(Disposicion.class);

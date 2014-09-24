@@ -88,7 +88,7 @@ public class MemoRepositorio {
 
 					unMemo.setNro_memo(nro);
 					unMemo.setUltimo(true);
-					unMemo.setFecha(LocalDate.now().toString("dd/MM/yyyy"));
+					unMemo.setFecha(LocalDate.now());
 					unMemo.setAdjuntar(adjunto);
 					unMemo.setTipo(2);
 					unMemo.setDescripcion(descripcion.toUpperCase().trim());
@@ -186,15 +186,14 @@ public class MemoRepositorio {
 
 	public List<Memo> filtrarPorDescripcion(
 			final @Named("Descripcion") @MaxLength(255) @MultiLine(numberOfLines = 2) String descripcion) {
-		
+
 		List<Memo> lista = this.listar();
 		Memo unMemo = new Memo();
 		List<Memo> listaRetorno = new ArrayList<Memo>();
-		for(int i=0;i<lista.size();i++)
-		{
+		for (int i = 0; i < lista.size(); i++) {
 			unMemo = new Memo();
 			unMemo = lista.get(i);
-			if(unMemo.getDescripcion().contains(descripcion.toUpperCase()))
+			if (unMemo.getDescripcion().contains(descripcion.toUpperCase()))
 				listaRetorno.add(unMemo);
 		}
 		if (listaRetorno.isEmpty())
@@ -202,15 +201,14 @@ public class MemoRepositorio {
 		return listaRetorno;
 	}
 
-
 	/**
 	 * PARA MIGRAR
 	 */
 	@Programmatic
-	public Memo insertar(final int nro, final String fecha, final int tipo,
-			final Sector sector, final String descripcion, final int eliminado,
-			final int ultimo, final Sector destinoSector,
-			final String otroDestino, final String fechacompleta) {
+	public Memo insertar(final int nro, final int tipo, final Sector sector,
+			final String descripcion, final int eliminado, final int ultimo,
+			final Sector destinoSector, final String otroDestino,
+			final LocalDate fechacompleta) {
 
 		final Memo doc = this.container.newTransientInstance(Memo.class);
 		doc.setNro_memo(nro);
@@ -235,10 +233,7 @@ public class MemoRepositorio {
 		else
 			doc.setUltimo(true);
 
-		if (destinoSector == null)
-			doc.setDestinoSector(null);
-		else
-			doc.setDestinoSector(destinoSector);
+		doc.setDestinoSector(destinoSector);
 		doc.setOtroDestino(otroDestino.toUpperCase());
 
 		container.persistIfNotAlready(doc);

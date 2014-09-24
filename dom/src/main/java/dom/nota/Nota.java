@@ -16,6 +16,7 @@ import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
+import org.joda.time.LocalDate;
 
 import dom.documento.Documento;
 
@@ -119,6 +120,7 @@ public class Nota extends Documento {
 	// else
 	// return true;
 	// }
+	
 
 	@javax.inject.Inject
 	private NotaRepositorio notaRepositorio;
@@ -133,6 +135,6 @@ public class Nota extends Documento {
 	// public int compareTo(Documento nota) {
 	// return ObjectContracts.compare(this, nota, "nro_nota");
 	// }
-	//
+	
 
 }

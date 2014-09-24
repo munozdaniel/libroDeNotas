@@ -63,7 +63,7 @@ public class ResolucionesRepositorio {
 		unaResolucion.setUltimo(false);
 		unaResolucion.setUltimoDelAnio(false);
 		unaResolucion.setNro_resolucion(nro_resolucion);
-		unaResolucion.setFecha(fecha.toString("dd/MM/yyyy"));
+		unaResolucion.setFecha(fecha);
 		unaResolucion.setTipo(3);
 		unaResolucion.setDescripcion(descripcion.toUpperCase().trim());
 		unaResolucion.setHabilitado(true);
@@ -149,9 +149,9 @@ public class ResolucionesRepositorio {
 	 * PARA MIGRAR
 	 */
 	@Programmatic
-	public Resoluciones insertar(final int nro, final String fecha,
+	public Resoluciones insertar(final int nro,
 			final int tipo, final Sector sector, final String descripcion,
-			final int eliminado, final int ultimo, final String fechacompleta) {
+			final int eliminado, final int ultimo, final LocalDate fechacompleta) {
 
 		final Resoluciones doc = this.container
 				.newTransientInstance(Resoluciones.class);

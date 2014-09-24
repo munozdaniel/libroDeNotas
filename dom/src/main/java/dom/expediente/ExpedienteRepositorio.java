@@ -86,7 +86,7 @@ public class ExpedienteRepositorio {
 					unExpediente.setUltimo(true);
 
 					unExpediente.setExpte_cod_letra(expte_cod_letra);
-					unExpediente.setFecha(LocalDate.now().toString("dd/MM/yyyy"));
+					unExpediente.setFecha(LocalDate.now());
 					unExpediente.setTipo(5);
 					unExpediente.setDescripcion(descripcion.toUpperCase()
 							.trim());
@@ -204,11 +204,11 @@ public class ExpedienteRepositorio {
 	 * PARA MIGRAR
 	 */
 	@Programmatic
-	public Expediente insertar(final int nro, final String fecha,
+	public Expediente insertar(final int nro, 
 			final int tipo, final Sector sector, final String descripcion,
 			final int eliminado, final int ultimo, final String empresa,
 			final int numero, final int anio, final String letra,
-			final String fechacompleta) {
+			final LocalDate fechacompleta) {
 
 		final Expediente doc = this.container
 				.newTransientInstance(Expediente.class);

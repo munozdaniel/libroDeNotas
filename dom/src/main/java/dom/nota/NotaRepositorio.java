@@ -115,7 +115,7 @@ public class NotaRepositorio {
 					unaNota.setDescripcion(descripcion.toUpperCase().trim());
 					unaNota.setUltimo(true);
 					unaNota.setNro_nota(nro);
-					unaNota.setFecha(LocalDate.now().toString("dd/MM/yyyy"));
+					unaNota.setFecha(LocalDate.now());
 					unaNota.setTipo(1);
 					unaNota.setCreadoPor(creadoPor);
 					unaNota.setDestino(destino);
@@ -220,7 +220,7 @@ public class NotaRepositorio {
 	@Programmatic
 	public Nota insertar(final int nro, final Sector sector,
 			final String destino, final String descripcion, final int ultimo,
-			final String fecha, final int habilitado, final String fechacompleta) {
+			final String fecha, final int habilitado, final LocalDate fechacompleta) {
 
 		final Nota unaNota = this.container.newTransientInstance(Nota.class);
 		unaNota.setNro_nota(nro);
