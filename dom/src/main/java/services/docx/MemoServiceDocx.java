@@ -89,7 +89,12 @@ public class MemoServiceDocx {
 
 		return new Blob(blobName, blobMimeType, blobBytes);
 	}
-
+	public String disableDownloadDocumento() {
+		if (this.container.getUser().isCurrentUser("root"))
+			return null;
+		else
+			return "Sin Permiso"; 
+	}
 
 	private static org.w3c.dom.Document asInputW3cDocument(Memo memo)
 			throws JDOMException {

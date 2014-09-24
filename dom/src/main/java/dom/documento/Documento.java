@@ -43,7 +43,6 @@ public abstract class Documento implements Comparable<Documento> {
 
 	private LocalDate fecha;
 
-	
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Named("Fecha")
 	@MemberOrder(sequence = "1")
@@ -53,6 +52,14 @@ public abstract class Documento implements Comparable<Documento> {
 
 	public void setFecha(LocalDate fecha) {
 		this.fecha = fecha;
+	}
+
+	public String disableFecha() {
+		if (this.container.getUser().isCurrentUser("root"))
+			return null;
+		else
+			return "Sin Permiso"; // TODO: return reason why action disabled,
+									// null if enabled
 	}
 
 	/*
@@ -88,6 +95,14 @@ public abstract class Documento implements Comparable<Documento> {
 		this.descripcion = descripcion;
 	}
 
+	public String disableDescripcion() {
+		if (this.container.getUser().isCurrentUser("root"))
+			return null;
+		else
+			return "Sin Permiso"; // TODO: return reason why action disabled,
+									// null if enabled
+	}
+
 	private Boolean habilitado;
 
 	@Hidden
@@ -114,7 +129,12 @@ public abstract class Documento implements Comparable<Documento> {
 	public void setAdjuntar(final Blob adjunto) {
 		this.adjuntar = adjunto;
 	}
-
+	public String disableAdjuntar() {
+		if (this.container.getUser().isCurrentUser("root"))
+			return null;
+		else
+		return "Sin Permiso"; // TODO: return reason why action disabled, null if enabled
+	}
 	// //////////////////////////////////////
 	// creadoPor
 	// //////////////////////////////////////
@@ -149,7 +169,12 @@ public abstract class Documento implements Comparable<Documento> {
 		if (this.getSector() != null)
 			this.setSector(null);
 	}
-
+	public String disableSector() {
+		if (this.container.getUser().isCurrentUser("root"))
+			return null;
+		else
+		return "Sin Permiso"; // TODO: return reason why action disabled, null if enabled
+	}
 	public List<Sector> choicesSector() {
 		return this.sectorRepositorio.listar();
 	}
@@ -200,7 +225,6 @@ public abstract class Documento implements Comparable<Documento> {
 	// Injected Services
 	// //////////////////////////////////////
 
-	@SuppressWarnings("unused")
 	@javax.inject.Inject
 	private DomainObjectContainer container;
 

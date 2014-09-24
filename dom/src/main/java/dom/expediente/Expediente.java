@@ -85,13 +85,19 @@ public class Expediente extends Documento {
 	public void setNro_expediente(int nro_expediente) {
 		this.nro_expediente = nro_expediente;
 	}
-
+	public String disableNro_expediente() {
+		if (this.container.getUser().isCurrentUser("root"))
+			return null;
+		else
+		return "Sin Permiso"; // TODO: return reason why action disabled, null if enabled
+	}
 	private String expte_cod_empresa;
 
 	@Named("Empresa")
 	@Hidden(where = Where.PARENTED_TABLES)
 	@MemberOrder(sequence = "20")
 	@javax.jdo.annotations.Column(allowsNull = "false")
+	@Disabled
 	public String getExpte_cod_empresa() {
 		return expte_cod_empresa;
 	}
@@ -113,7 +119,12 @@ public class Expediente extends Documento {
 	public void setExpte_cod_numero(int expte_cod_numero) {
 		this.expte_cod_numero = expte_cod_numero;
 	}
-
+	public String disableExpte_cod_numero() {
+		if (this.container.getUser().isCurrentUser("root"))
+			return null;
+		else
+		return "Sin Permiso"; // TODO: return reason why action disabled, null if enabled
+	}
 	public enum Letras {
 		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z
 	}
@@ -128,6 +139,14 @@ public class Expediente extends Documento {
 	@Hidden(where = Where.PARENTED_TABLES)
 	public String getExpte_cod_letra() {
 		return expte_cod_letra;
+	}
+
+	public String disableExpte_cod_letra() {
+		if (this.container.getUser().isCurrentUser("root"))
+			return null;
+		else
+			return "Sin Permiso"; // TODO: return reason why action disabled,
+									// null if enabled
 	}
 
 	public void setExpte_cod_letra(String expte_cod_letra) {

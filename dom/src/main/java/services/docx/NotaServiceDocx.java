@@ -90,29 +90,14 @@ public class NotaServiceDocx {
 		return new Blob(blobName, blobMimeType, blobBytes);
 	}
 
-	// @NotContributed(NotContributed.As.ASSOCIATION)
-	// // ie contributed as action
-	// @Prototype
-	// @NotInServiceMenu
-	// @ActionSemantics(Of.SAFE)
-	// @MemberOrder(sequence = "11")
-	// public Clob downloadCustomerConfirmationInputHtml(final Nota order)
-	// throws IOException, JDOMException, MergeException {
-	//
-	// Document orderAsHtmlJdomDoc = asInputDocument(order);
-	//
-	// XMLOutputter xmlOutput = new XMLOutputter();
-	// xmlOutput.setFormat(Format.getPrettyFormat());
-	//
-	// final String html = xmlOutput.outputString(orderAsHtmlJdomDoc);
-	//
-	// final String clobName = "customerConfirmation-" + order.getNro_nota()
-	// + ".html";
-	// final String clobMimeType = "text/html";
-	// final String clobBytes = html;
-	//
-	// return new Clob(clobName, clobMimeType, clobBytes);
-	// }
+	public String disableDownloadDocumento() {
+		if (this.container.getUser().isCurrentUser("root"))
+			return null;
+		else
+			return "Sin Permiso"; 
+	}
+
+	
 
 	private static org.w3c.dom.Document asInputW3cDocument(Nota nota)
 			throws JDOMException {
@@ -128,7 +113,7 @@ public class NotaServiceDocx {
 
 		Element body = new Element("body");
 		html.addContent(body);
-		
+
 		addPara(body, "titulo", "plain", " NOTA ");
 
 		addPara(body, "nro", "plain", nota.getNro_nota() + "");
@@ -137,20 +122,6 @@ public class NotaServiceDocx {
 		addPara(body, "origen", "plain", nota.getSector().getNombre_sector());
 		addPara(body, "destino", "plain", nota.getDestino());
 		addPara(body, "descripcion", "plain", nota.getDescripcion());
-
-		// Element table = addTable(body, "Products");
-		// for (OrderLine orderLine : order.getOrderLines()) {
-		// addTableRow(
-		// table,
-		// new String[] { orderLine.getDescription(),
-		// orderLine.getCost().toString(),
-		// "" + orderLine.getQuantity() });
-		// }
-
-		// Element ul = addList(body, "OrderPreferences");
-		// for (String preference : preferencesFor(order)) {
-		// addListItem(ul, preference);
-		// }
 		return document;
 	}
 
@@ -166,68 +137,6 @@ public class NotaServiceDocx {
 		p.setAttribute("class", clazz);
 		p.setText(text);
 	}
-
-	// private static final Function<String, String> TRIM = new Function<String,
-	// String>() {
-	// @Override
-	// public String apply(String input) {
-	// return input.trim();
-	// }
-	// };
-
-	// private static Iterable<String> preferencesFor(Nota order) {
-	// final String preferences = order.getPreferences();
-	// if (preferences == null) {
-	// return Collections.emptyList();
-	// }
-	// return Iterables.transform(Splitter.on(",").split(preferences), TRIM);
-	// }
-
-	// private static Element addList(Element body, String id) {
-	// Element ul = new Element("ul");
-	// body.addContent(ul);
-	// ul.setAttribute("id", id);
-	// return ul;
-	// }
-	//
-	// private static Element addListItem(Element ul, String... paras) {
-	// Element li = new Element("li");
-	// ul.addContent(li);
-	// for (String para : paras) {
-	// addPara(li, para);
-	// }
-	// return ul;
-	// }
-
-	// private static void addPara(Element li, String text) {
-	// if (text == null) {
-	// return;
-	// }
-	// Element p = new Element("p");
-	// li.addContent(p);
-	// p.setText(text);
-	// }
-
-	// private static Element addTable(Element body, String id) {
-	// Element table = new Element("table");
-	// body.addContent(table);
-	// table.setAttribute("id", id);
-	// return table;
-	// }
-	//
-	// private static void addTableRow(Element table, String[] cells) {
-	// Element tr = new Element("tr");
-	// table.addContent(tr);
-	// for (String columnName : cells) {
-	// Element td = new Element("td");
-	// tr.addContent(td);
-	// td.setText(columnName);
-	// }
-	// }
-
-	// endregion
-
-	// region > injected services
 
 	@javax.inject.Inject
 	DomainObjectContainer container;

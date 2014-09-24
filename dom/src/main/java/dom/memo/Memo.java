@@ -37,11 +37,12 @@ import dom.sector.SectorRepositorio;
 				+ "WHERE  "
 				+ "nro_nota.indexOf(:nro_nota) >= 0"),
 		@javax.jdo.annotations.Query(name = "listarHabilitados", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.memo.Memo " + "WHERE  habilitado == true ORDER BY nro_memo DESC"),
+				+ "FROM dom.memo.Memo "
+				+ "WHERE  habilitado == true ORDER BY nro_memo DESC"),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.memo.Memo ORDER BY nro_memo DESC"),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Memo " + "WHERE  (ultimo == true)")  })
+				+ "FROM dom.nota.Memo " + "WHERE  (ultimo == true)") })
 @ObjectType("MEMO")
 @Audited
 @AutoComplete(repository = MemoRepositorio.class, action = "autoComplete")
@@ -117,7 +118,12 @@ public class Memo extends Documento {
 		lista.remove(0);// debe ser 0
 		return lista;
 	}
-
+	public String disableUpdateDestinoSector() {
+		if (this.container.getUser().isCurrentUser("root"))
+			return null;
+		else
+		return "Sin Permiso"; // TODO: return reason why action disabled, null if enabled
+	}
 	private String otroDestino;
 
 	@Named("Otro")
@@ -140,6 +146,14 @@ public class Memo extends Documento {
 		this.setDestinoSector(lista.get(0));
 		this.setOtroDestino(otro);
 		return this;
+	}
+
+	public String disableOtroDestino() {
+		if (this.container.getUser().isCurrentUser("root"))
+			return null;
+		else
+			return "Sin Permiso"; // TODO: return reason why action disabled,
+									// null if enabled
 	}
 
 	@Named("Eliminar")
