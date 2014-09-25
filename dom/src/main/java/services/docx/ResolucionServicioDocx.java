@@ -74,8 +74,8 @@ public class ResolucionServicioDocx {
 	@MemberOrder(sequence = "10")
 	@Named("Descargar")
 	@CssClass("x-highlight")
-	public Blob downloadDocumento(final Resoluciones resolucion) throws IOException,
-			JDOMException, MergeException {
+	public Blob downloadDocumento(final Resoluciones resolucion)
+			throws IOException, JDOMException, MergeException {
 
 		final org.w3c.dom.Document w3cDocument = asInputW3cDocument(resolucion);
 
@@ -83,20 +83,22 @@ public class ResolucionServicioDocx {
 		docxService.merge(w3cDocument, wordprocessingMLPackage, docxTarget,
 				DocxService.MatchingPolicy.LAX);
 
-		final String blobName = "Resolucion-" + resolucion.getNro_resolucion() + ".docx";
+		final String blobName = "Resolucion-" + resolucion.getNro_resolucion()
+				+ ".docx";
 		final String blobMimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 		final byte[] blobBytes = docxTarget.toByteArray();
 
 		return new Blob(blobName, blobMimeType, blobBytes);
 	}
-	public String disableDownloadDocumento() {
-		if (this.container.getUser().isCurrentUser("root"))
-			return null;
-		else
-			return "Sin Permiso"; 
-	}
-	private static org.w3c.dom.Document asInputW3cDocument(Resoluciones resolucion)
-			throws JDOMException {
+
+	// public boolean hideDownloadDocumento() {
+	// if (this.container.getUser().isCurrentUser("root"))
+	// return false;
+	// else
+	// return true;
+	// }
+	private static org.w3c.dom.Document asInputW3cDocument(
+			Resoluciones resolucion) throws JDOMException {
 		Document orderAsHtmlJdomDoc = asInputDocument(resolucion);
 
 		DOMOutputter domOutputter = new DOMOutputter();
@@ -114,7 +116,8 @@ public class ResolucionServicioDocx {
 		addPara(body, "nro", "plain", resolucion.getNro_resolucion() + "");
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("d MMMM, yyyy");
 		addPara(body, "fecha", "plain", resolucion.getFecha().toString(fmt));
-		addPara(body, "origen", "plain", resolucion.getSector().getNombre_sector());
+		addPara(body, "origen", "plain", resolucion.getSector()
+				.getNombre_sector());
 		addPara(body, "descripcion", "plain", resolucion.getDescripcion());
 
 		return document;
@@ -132,7 +135,6 @@ public class ResolucionServicioDocx {
 		p.setAttribute("class", clazz);
 		p.setText(text);
 	}
-
 
 	// region > injected services
 

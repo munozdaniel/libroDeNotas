@@ -74,8 +74,8 @@ public class DisposicionServiceDocx {
 	@MemberOrder(sequence = "10")
 	@Named("Descargar")
 	@CssClass("x-highlight")
-	public Blob downloadDocumento(final Disposicion disposicion) throws IOException,
-			JDOMException, MergeException {
+	public Blob downloadDocumento(final Disposicion disposicion)
+			throws IOException, JDOMException, MergeException {
 
 		final org.w3c.dom.Document w3cDocument = asInputW3cDocument(disposicion);
 
@@ -83,20 +83,23 @@ public class DisposicionServiceDocx {
 		docxService.merge(w3cDocument, wordprocessingMLPackage, docxTarget,
 				DocxService.MatchingPolicy.LAX);
 
-		final String blobName = "Disposicion-" + disposicion.getNro_Disposicion() + ".docx";
+		final String blobName = "Disposicion-"
+				+ disposicion.getNro_Disposicion() + ".docx";
 		final String blobMimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 		final byte[] blobBytes = docxTarget.toByteArray();
 
 		return new Blob(blobName, blobMimeType, blobBytes);
 	}
-	public String disableDownloadDocumento() {
-		if (this.container.getUser().isCurrentUser("root"))
-			return null;
-		else
-			return "Sin Permiso"; 
-	}
-	private static org.w3c.dom.Document asInputW3cDocument(Disposicion disposicion)
-			throws JDOMException {
+
+	// public boolean hideDownloadDocumento() {
+	// if (this.container.getUser().isCurrentUser("root"))
+	// return false;
+	// else
+	// return true;
+	// }
+
+	private static org.w3c.dom.Document asInputW3cDocument(
+			Disposicion disposicion) throws JDOMException {
 		Document orderAsHtmlJdomDoc = asInputDocument(disposicion);
 
 		DOMOutputter domOutputter = new DOMOutputter();
@@ -114,7 +117,8 @@ public class DisposicionServiceDocx {
 		addPara(body, "nro", "plain", disposicion.getNro_Disposicion() + "");
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("d MMMM, yyyy");
 		addPara(body, "fecha", "plain", disposicion.getFecha().toString(fmt));
-		addPara(body, "origen", "plain", disposicion.getSector().getNombre_sector());
+		addPara(body, "origen", "plain", disposicion.getSector()
+				.getNombre_sector());
 		addPara(body, "descripcion", "plain", disposicion.getDescripcion());
 
 		return document;
@@ -132,7 +136,6 @@ public class DisposicionServiceDocx {
 		p.setAttribute("class", clazz);
 		p.setText(text);
 	}
-
 
 	@javax.inject.Inject
 	DomainObjectContainer container;
