@@ -7,6 +7,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -68,7 +69,7 @@ public class MemoRepositorio {
 			final String otroSector, final String descripcion,
 			final String creadoPor, final Blob adjunto) {
 		try {
-			if (monitor.tryLock(25, TimeUnit.MILLISECONDS)) {
+			if (monitor.tryLock(4, TimeUnit.MILLISECONDS)) {
 				try {
 					final Memo unMemo = this.container
 							.newTransientInstance(Memo.class);
@@ -199,6 +200,29 @@ public class MemoRepositorio {
 		if (listaRetorno.isEmpty())
 			this.container.warnUser("No se encotraron Registros.");
 		return listaRetorno;
+	}
+
+	/**
+	 * Filtrar por fecha
+	 * 
+	 * @param sector
+	 * @param fecha
+	 * @return
+	 */
+	@MemberOrder(sequence = "30")
+	@Named("Filtrar por Fecha")
+	@DescribedAs("Seleccione una fecha de inicio y una fecha final.")
+	public List<Memo> filtrarPorFecha(
+			final @Optional @Named("Desde:") LocalDate desde,
+			final @Optional @Named("Hasta:") LocalDate hasta) {
+
+		final List<Memo> lista = this.container
+				.allMatches(new QueryDefault<Memo>(Memo.class,
+						"filtrarPorFechas", "desde", desde, "hasta", hasta));
+		if (lista.isEmpty()) {
+			this.container.warnUser("No se encontraron Registros.");
+		}
+		return lista;
 	}
 
 	/**

@@ -47,7 +47,10 @@ import dom.sector.SectorRepositorio;
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.expediente.Expediente ORDER BY nro_expediente DESC"),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Expediente " + "WHERE  (ultimo == true)") })
+				+ "FROM dom.nota.Expediente " + "WHERE  (ultimo == true)"),
+		@javax.jdo.annotations.Query(name = "filtrarPorFechas", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.expediente.Expediente "
+				+ "WHERE  :desde <= fecha && fecha<=:hasta ORDER BY fecha DESC ") })
 @ObjectType("EXPEDIENTE")
 @Audited
 @AutoComplete(repository = ExpedienteRepositorio.class, action = "autoComplete")
@@ -78,6 +81,7 @@ public class Expediente extends Documento {
 	@Named("Nro")
 	@MemberOrder(sequence = "10")
 	@javax.jdo.annotations.Column(allowsNull = "false")
+	@Disabled
 	public int getNro_expediente() {
 		return nro_expediente;
 	}
@@ -85,19 +89,13 @@ public class Expediente extends Documento {
 	public void setNro_expediente(int nro_expediente) {
 		this.nro_expediente = nro_expediente;
 	}
-	public String disableNro_expediente() {
-		if (this.container.getUser().isCurrentUser("root"))
-			return null;
-		else
-		return "Sin Permiso"; // TODO: return reason why action disabled, null if enabled
-	}
+
 	private String expte_cod_empresa;
 
 	@Named("Empresa")
 	@Hidden(where = Where.PARENTED_TABLES)
 	@MemberOrder(sequence = "20")
 	@javax.jdo.annotations.Column(allowsNull = "false")
-	@Disabled
 	public String getExpte_cod_empresa() {
 		return expte_cod_empresa;
 	}
@@ -119,12 +117,7 @@ public class Expediente extends Documento {
 	public void setExpte_cod_numero(int expte_cod_numero) {
 		this.expte_cod_numero = expte_cod_numero;
 	}
-	public String disableExpte_cod_numero() {
-		if (this.container.getUser().isCurrentUser("root"))
-			return null;
-		else
-		return "Sin Permiso"; // TODO: return reason why action disabled, null if enabled
-	}
+
 	public enum Letras {
 		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z
 	}
@@ -141,14 +134,6 @@ public class Expediente extends Documento {
 		return expte_cod_letra;
 	}
 
-	public String disableExpte_cod_letra() {
-		if (this.container.getUser().isCurrentUser("root"))
-			return null;
-		else
-			return "Sin Permiso"; // TODO: return reason why action disabled,
-									// null if enabled
-	}
-
 	public void setExpte_cod_letra(String expte_cod_letra) {
 		this.expte_cod_letra = expte_cod_letra;
 	}
@@ -158,7 +143,6 @@ public class Expediente extends Documento {
 	@Hidden(where = Where.PARENTED_TABLES)
 	@MemberOrder(sequence = "50")
 	@javax.jdo.annotations.Column(allowsNull = "false")
-	@Disabled
 	@Named("Año")
 	public int getExpte_cod_anio() {
 		return expte_cod_anio;
@@ -181,29 +165,11 @@ public class Expediente extends Documento {
 	}
 
 	public boolean hideEliminar() {
-		// TODO: return true if action is hidden, false if
-		// visible
 		if (this.container.getUser().isCurrentUser("root"))
 			return false;
 		else
 			return true;
 	}
-
-	// @Named("Restaurar")
-	// @DescribedAs("Necesario privilegios de Administrador.")
-	// public Expediente restaurar() {
-	// this.setHabilitado(true);
-	// return this;
-	// }
-	//
-	// public boolean hideRestaurar() {
-	// // TODO: return true if action is hidden, false if
-	// // visible
-	// if (this.container.getUser().isCurrentUser("root"))
-	// return false;
-	// else
-	// return true;
-	// }
 
 	@javax.inject.Inject
 	private SectorRepositorio sectorRepositorio;

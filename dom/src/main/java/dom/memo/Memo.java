@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.CssClass;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
@@ -42,7 +43,10 @@ import dom.sector.SectorRepositorio;
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.memo.Memo ORDER BY nro_memo DESC"),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Memo " + "WHERE  (ultimo == true)") })
+				+ "FROM dom.nota.Memo " + "WHERE  (ultimo == true)"),
+		@javax.jdo.annotations.Query(name = "filtrarPorFechas", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.memo.Memo "
+				+ "WHERE  :desde <= fecha && fecha<=:hasta ORDER BY fecha DESC ") })
 @ObjectType("MEMO")
 @Audited
 @AutoComplete(repository = MemoRepositorio.class, action = "autoComplete")
@@ -78,14 +82,6 @@ public class Memo extends Documento {
 		this.nro_memo = nro_memo;
 	}
 
-	// private ButtonGroup tipoMemo;
-	//
-	// @MemberOrder(name = "Sectores", sequence = "20")
-	// @javax.jdo.annotations.Column(allowsNull = "false")
-	// public ButtonGroup getTipoMemo() {
-	// return tipoMemo;
-	// }
-
 	private Sector destinoSector;
 
 	@Disabled
@@ -118,12 +114,14 @@ public class Memo extends Documento {
 		lista.remove(0);// debe ser 0
 		return lista;
 	}
-	public String disableUpdateDestinoSector() {
+
+	public boolean hideUpdateDestinoSector() {
 		if (this.container.getUser().isCurrentUser("root"))
-			return null;
+			return false;
 		else
-		return "Sin Permiso"; // TODO: return reason why action disabled, null if enabled
+			return true;
 	}
+
 	private String otroDestino;
 
 	@Named("Otro")
@@ -148,12 +146,10 @@ public class Memo extends Documento {
 		return this;
 	}
 
-	public String disableOtroDestino() {
+	public boolean hideUpdateOtroDestino() {
 		if (this.container.getUser().isCurrentUser("root"))
-			return null;
-		else
-			return "Sin Permiso"; // TODO: return reason why action disabled,
-									// null if enabled
+			return false;
+		return true;
 	}
 
 	@Named("Eliminar")
@@ -166,24 +162,17 @@ public class Memo extends Documento {
 	public boolean hideEliminar() {
 		if (this.container.getUser().isCurrentUser("root"))
 			return false;
-		return true;
+		else
+			return true;
 	}
-
-	// @Named("Restaurar")
-	// @DescribedAs("Necesario privilegios de Administrador.")
-	// public Memo restaurar() {
-	// this.setHabilitado(true);
-	// return this;
-	// }
-	//
-	// public boolean hideRestaurar() {
-	// // TODO: return true if action is hidden, false if
-	// // visible
-	// if (this.container.getUser().isCurrentUser("root"))
-	// return false;
-	// else
-	// return true;
-	// }
+	@Named("Para")
+	@Mandatory
+	public List<Sector> choicesSector() {
+		List<Sector> lista = sectorRepositorio.listar();
+		if (!lista.isEmpty())
+			lista.remove(0);// Elimino el primer elemento: OTRO SECTOR
+		return lista;
+	}
 
 	@javax.inject.Inject
 	private MemoRepositorio memoRepositorio;

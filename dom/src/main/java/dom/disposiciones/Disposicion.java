@@ -38,7 +38,10 @@ import dom.sector.SectorRepositorio;
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.disposiciones.Disposicion ORDER BY nro_Disposicion DESC"),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Disposicion " + "WHERE  (ultimo == true)") })
+				+ "FROM dom.nota.Disposicion " + "WHERE  (ultimo == true)"),
+		@javax.jdo.annotations.Query(name = "filtrarPorFechas", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.disposicion.Disposicion "
+				+ "WHERE  :desde <= fecha && fecha<=:hasta ORDER BY fecha DESC ") })
 @ObjectType("DISPOSICION")
 @Audited
 @AutoComplete(repository = DisposicionRepositorio.class, action = "autoComplete")
@@ -91,8 +94,6 @@ public class Disposicion extends Documento {
 	}
 
 	public boolean hideEliminar() {
-		// TODO: return true if action is hidden, false if
-		// visible
 		if (this.container.getUser().isCurrentUser("root"))
 			return false;
 		else

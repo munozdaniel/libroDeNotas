@@ -36,7 +36,10 @@ import dom.sector.SectorRepositorio;
 				+ "FROM dom.resoluciones.Resoluciones "
 				+ "WHERE  habilitado == true  ORDER BY nro_resolucion DESC"),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.resoluciones.Resoluciones   ORDER BY nro_resolucion DESC")})
+				+ "FROM dom.resoluciones.Resoluciones   ORDER BY nro_resolucion DESC"),
+		@javax.jdo.annotations.Query(name = "filtrarPorFechas", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.resoluciones.Resoluciones "
+				+ "WHERE  :desde <= fecha && fecha<=:hasta ORDER BY fecha DESC ") })
 @ObjectType("RESOLUCIONES")
 @Audited
 @AutoComplete(repository = ResolucionesRepositorio.class, action = "autoComplete")
@@ -71,11 +74,6 @@ public class Resoluciones extends Documento {
 		this.nro_resolucion = nro_resolucion;
 	}
 
-	@Override
-	public List<Sector> choicesSector() {
-		return this.sectorRepositorio.listarResoluciones();
-	}
-
 	@Named("Eliminar")
 	@DescribedAs("Necesario privilegios de Administrador.")
 	public List<Resoluciones> eliminar() {
@@ -92,21 +90,10 @@ public class Resoluciones extends Documento {
 			return true;
 	}
 
-	// @Named("Restaurar")
-	// @DescribedAs("Necesario privilegios de Administrador.")
-	// public Resoluciones restaurar() {
-	// this.setHabilitado(true);
-	// return this;
-	// }
-	//
-	// public boolean hideRestaurar() {
-	// // TODO: return true if action is hidden, false if
-	// // visible
-	// if (this.container.getUser().isCurrentUser("root"))
-	// return false;
-	// else
-	// return true;
-	// }
+	@Override
+	public List<Sector> choicesSector() {
+		return this.sectorRepositorio.listarResoluciones();
+	}
 
 	@javax.inject.Inject
 	private ResolucionesRepositorio resolucionRepositorio;

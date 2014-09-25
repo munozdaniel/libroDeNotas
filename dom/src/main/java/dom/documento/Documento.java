@@ -7,10 +7,10 @@ import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MultiLine;
@@ -54,14 +54,6 @@ public abstract class Documento implements Comparable<Documento> {
 		this.fecha = fecha;
 	}
 
-	public String disableFecha() {
-		if (this.container.getUser().isCurrentUser("root"))
-			return null;
-		else
-			return "Sin Permiso"; // TODO: return reason why action disabled,
-									// null if enabled
-	}
-
 	/*
 	 * tipo - 1:Nota - 2:Memo - 3:Resoluciones - 4:Disposiciones - 5:Expedientes
 	 */
@@ -95,13 +87,6 @@ public abstract class Documento implements Comparable<Documento> {
 		this.descripcion = descripcion;
 	}
 
-	public String disableDescripcion() {
-		if (this.container.getUser().isCurrentUser("root"))
-			return null;
-		else
-			return "Sin Permiso"; // TODO: return reason why action disabled,
-									// null if enabled
-	}
 
 	private Boolean habilitado;
 
@@ -129,12 +114,7 @@ public abstract class Documento implements Comparable<Documento> {
 	public void setAdjuntar(final Blob adjunto) {
 		this.adjuntar = adjunto;
 	}
-	public String disableAdjuntar() {
-		if (this.container.getUser().isCurrentUser("root"))
-			return null;
-		else
-		return "Sin Permiso"; // TODO: return reason why action disabled, null if enabled
-	}
+	
 	// //////////////////////////////////////
 	// creadoPor
 	// //////////////////////////////////////
@@ -156,7 +136,7 @@ public abstract class Documento implements Comparable<Documento> {
 	@MemberOrder(sequence = "2")
 	@Column(allowsNull = "True")
 	@Named("Origen")
-	// @Hidden(where=Where.STANDALONE_TABLES)
+	@Mandatory
 	public Sector getSector() {
 		return sector;
 	}
@@ -169,12 +149,7 @@ public abstract class Documento implements Comparable<Documento> {
 		if (this.getSector() != null)
 			this.setSector(null);
 	}
-	public String disableSector() {
-		if (this.container.getUser().isCurrentUser("root"))
-			return null;
-		else
-		return "Sin Permiso"; // TODO: return reason why action disabled, null if enabled
-	}
+
 	public List<Sector> choicesSector() {
 		return this.sectorRepositorio.listar();
 	}
@@ -221,11 +196,5 @@ public abstract class Documento implements Comparable<Documento> {
 
 	// }}
 
-	// //////////////////////////////////////
-	// Injected Services
-	// //////////////////////////////////////
-
-	@javax.inject.Inject
-	private DomainObjectContainer container;
 
 }

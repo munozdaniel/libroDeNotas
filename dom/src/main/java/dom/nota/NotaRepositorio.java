@@ -7,6 +7,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -77,7 +78,7 @@ public class NotaRepositorio {
 	private Nota nuevaNota(final Sector sector, final String destino,
 			final String descripcion, final String creadoPor, final Blob adjunto) {
 		try {
-			if (monitor.tryLock(25, TimeUnit.MILLISECONDS)) {
+			if (monitor.tryLock(5, TimeUnit.MILLISECONDS)) {
 				try {
 					final Nota unaNota = this.container
 							.newTransientInstance(Nota.class);
@@ -194,15 +195,14 @@ public class NotaRepositorio {
 
 	public List<Nota> filtrarPorDescripcion(
 			final @Named("Descripcion") @MaxLength(255) @MultiLine(numberOfLines = 2) String descripcion) {
-		
+
 		List<Nota> lista = this.listar();
 		Nota unaNota = new Nota();
 		List<Nota> listaRetorno = new ArrayList<Nota>();
-		for(int i=0;i<lista.size();i++)
-		{
+		for (int i = 0; i < lista.size(); i++) {
 			unaNota = new Nota();
 			unaNota = lista.get(i);
-			if(unaNota.getDescripcion().contains(descripcion.toUpperCase()))
+			if (unaNota.getDescripcion().contains(descripcion.toUpperCase()))
 				listaRetorno.add(unaNota);
 		}
 		if (listaRetorno.isEmpty())
@@ -210,17 +210,42 @@ public class NotaRepositorio {
 		return listaRetorno;
 	}
 
+	/**
+	 * Filtrar por fecha
+	 * 
+	 * @param sector
+	 * @param fecha
+	 * @return
+	 */
+	@MemberOrder(sequence = "30")
+	@Named("Filtrar por Fecha")
+	@DescribedAs("Seleccione una fecha de inicio y una fecha final.")
+	public List<Nota> filtrarPorFecha(
+			final @Optional @Named("Desde:") LocalDate desde,
+			final @Optional @Named("Hasta:") LocalDate hasta) {
+
+		final List<Nota> notas = this.container
+				.allMatches(new QueryDefault<Nota>(Nota.class,
+						"filtrarPorFechas", "desde", desde, "hasta", hasta));
+		if (notas.isEmpty()) {
+			this.container.warnUser("No se encontraron Registros.");
+		}
+		return notas;
+	}
+
+	
 	private String currentUserName() {
 		return container.getUser().getName();
 	}
 
-	/**
+	/*********************************************************************************
 	 * PARA MIGRAR
 	 */
 	@Programmatic
 	public Nota insertar(final int nro, final Sector sector,
 			final String destino, final String descripcion, final int ultimo,
-			final String fecha, final int habilitado, final LocalDate fechacompleta) {
+			final String fecha, final int habilitado,
+			final LocalDate fechacompleta) {
 
 		final Nota unaNota = this.container.newTransientInstance(Nota.class);
 		unaNota.setNro_nota(nro);
@@ -235,17 +260,6 @@ public class NotaRepositorio {
 			unaNota.setUltimo(true);
 
 		unaNota.setUltimoDelAnio(false);
-		// String[] vector = fechacompleta.split("/");
-		// int dia = Integer.parseInt(vector[0]);
-		// int mes = Integer.parseInt(vector[1]);
-		// int anio = Integer.parseInt(vector[2]);
-		// LocalDate date =new LocalDate(anio, mes, dia);
-
-		// final DateTimeFormatter forPattern =
-		// DateTimeFormat.forPattern("yyyy-MMM-dd").withLocale(Locale.ENGLISH);
-		// LocalDate local =forPattern.parseLocalDate(anio+"-"+mes+"-"+dia);
-
-		// this.container.warnUser(fechacompleta);
 		unaNota.setFecha(fechacompleta);
 
 		if (habilitado == 0)

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -128,6 +129,29 @@ public class ResolucionesRepositorio {
 		return listaRetorno;
 	}
 
+	/**
+	 * Filtrar por fecha
+	 * 
+	 * @param sector
+	 * @param fecha
+	 * @return
+	 */
+	@MemberOrder(sequence = "30")
+	@Named("Filtrar por Fecha")
+	@DescribedAs("Seleccione una fecha de inicio y una fecha final.")
+	public List<Resoluciones> filtrarPorFecha(
+			final @Optional @Named("Desde:") LocalDate desde,
+			final @Optional @Named("Hasta:") LocalDate hasta) {
+
+		final List<Resoluciones> lista = this.container
+				.allMatches(new QueryDefault<Resoluciones>(Resoluciones.class,
+						"filtrarPorFechas", "desde", desde, "hasta", hasta));
+		if (lista.isEmpty()) {
+			this.container.warnUser("No se encontraron Registros.");
+		}
+		return lista;
+	}
+
 	// //////////////////////////////////////
 	// CurrentUserName
 	// //////////////////////////////////////
@@ -149,9 +173,9 @@ public class ResolucionesRepositorio {
 	 * PARA MIGRAR
 	 */
 	@Programmatic
-	public Resoluciones insertar(final int nro,
-			final int tipo, final Sector sector, final String descripcion,
-			final int eliminado, final int ultimo, final LocalDate fechacompleta) {
+	public Resoluciones insertar(final int nro, final int tipo,
+			final Sector sector, final String descripcion, final int eliminado,
+			final int ultimo, final LocalDate fechacompleta) {
 
 		final Resoluciones doc = this.container
 				.newTransientInstance(Resoluciones.class);
