@@ -168,21 +168,22 @@ public class DisposicionRepositorio {
 
 	public List<Disposicion> filtrarPorDescripcion(
 			final @Named("Descripcion") @MaxLength(255) @MultiLine(numberOfLines = 2) String descripcion) {
-		
+
 		List<Disposicion> lista = this.listar();
 		Disposicion disposicion = new Disposicion();
 		List<Disposicion> listaRetorno = new ArrayList<Disposicion>();
-		for(int i=0;i<lista.size();i++)
-		{
+		for (int i = 0; i < lista.size(); i++) {
 			disposicion = new Disposicion();
 			disposicion = lista.get(i);
-			if(disposicion.getDescripcion().contains(descripcion.toUpperCase()))
+			if (disposicion.getDescripcion()
+					.contains(descripcion.toUpperCase()))
 				listaRetorno.add(disposicion);
 		}
 		if (listaRetorno.isEmpty())
 			this.container.warnUser("No se encotraron Registros.");
 		return listaRetorno;
 	}
+
 	/**
 	 * Filtrar por fecha
 	 * 
@@ -191,20 +192,20 @@ public class DisposicionRepositorio {
 	 * @return
 	 */
 	@MemberOrder(sequence = "30")
-	@Named("Filtrar por Fecha")
+	@Named("Disposiciones: Filtro por Fecha.")
 	@DescribedAs("Seleccione una fecha de inicio y una fecha final.")
 	public List<Disposicion> filtrarPorFecha(
-			final @Optional @Named("Desde:") LocalDate desde, final @Optional @Named("Hasta:") LocalDate hasta) {
-			
-				final List<Disposicion> lista = this.container
-						.allMatches(new QueryDefault<Disposicion>(Disposicion.class,
-								"filtrarPorFechas", "desde", desde, "hasta", hasta));
-				if (lista.isEmpty()) {
-					this.container.warnUser("No se encontraron Registros.");
-				}
-				return lista;
-	}
+			final @Named("Desde:") LocalDate desde,
+			final @Named("Hasta:") LocalDate hasta) {
 
+		final List<Disposicion> lista = this.container
+				.allMatches(new QueryDefault<Disposicion>(Disposicion.class,
+						"filtrarPorFechas", "desde", desde, "hasta", hasta));
+		if (lista.isEmpty()) {
+			this.container.warnUser("No se encontraron Registros.");
+		}
+		return lista;
+	}
 
 	// //////////////////////////////////////
 	// CurrentUserName
@@ -227,9 +228,9 @@ public class DisposicionRepositorio {
 	 * PARA MIGRAR
 	 */
 	@Programmatic
-	public Disposicion insertar(final int nro, 
-			final int tipo, final Sector sector, final String descripcion,
-			final int eliminado, final int ultimo, final LocalDate fechacompleta) {
+	public Disposicion insertar(final int nro, final int tipo,
+			final Sector sector, final String descripcion, final int eliminado,
+			final int ultimo, final LocalDate fechacompleta) {
 
 		final Disposicion doc = this.container
 				.newTransientInstance(Disposicion.class);
@@ -263,6 +264,5 @@ public class DisposicionRepositorio {
 
 		return doc;
 	}
-	
 
 }

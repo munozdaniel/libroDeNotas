@@ -210,7 +210,7 @@ public class MemoRepositorio {
 	 * @return
 	 */
 	@MemberOrder(sequence = "30")
-	@Named("Filtrar por Fecha")
+	@Named("Memo: Filtro por Fecha.")
 	@DescribedAs("Seleccione una fecha de inicio y una fecha final.")
 	public List<Memo> filtrarPorFecha(
 			final @Optional @Named("Desde:") LocalDate desde,

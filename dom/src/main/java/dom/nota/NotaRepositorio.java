@@ -78,7 +78,7 @@ public class NotaRepositorio {
 	private Nota nuevaNota(final Sector sector, final String destino,
 			final String descripcion, final String creadoPor, final Blob adjunto) {
 		try {
-			if (monitor.tryLock(5, TimeUnit.MILLISECONDS)) {
+			if (monitor.tryLock(25, TimeUnit.MILLISECONDS)) {
 				try {
 					final Nota unaNota = this.container
 							.newTransientInstance(Nota.class);
@@ -218,11 +218,11 @@ public class NotaRepositorio {
 	 * @return
 	 */
 	@MemberOrder(sequence = "30")
-	@Named("Filtrar por Fecha")
+	@Named("Notas: Filtro por Fecha.")
 	@DescribedAs("Seleccione una fecha de inicio y una fecha final.")
 	public List<Nota> filtrarPorFecha(
-			final @Optional @Named("Desde:") LocalDate desde,
-			final @Optional @Named("Hasta:") LocalDate hasta) {
+			final  @Named("Desde:") LocalDate desde,
+			final  @Named("Hasta:") LocalDate hasta) {
 
 		final List<Nota> notas = this.container
 				.allMatches(new QueryDefault<Nota>(Nota.class,

@@ -137,11 +137,11 @@ public class ResolucionesRepositorio {
 	 * @return
 	 */
 	@MemberOrder(sequence = "30")
-	@Named("Filtrar por Fecha")
+	@Named("Resoluciones: Filtro por Fecha.")
 	@DescribedAs("Seleccione una fecha de inicio y una fecha final.")
 	public List<Resoluciones> filtrarPorFecha(
-			final @Optional @Named("Desde:") LocalDate desde,
-			final @Optional @Named("Hasta:") LocalDate hasta) {
+			final  @Named("Desde:") LocalDate desde,
+			final  @Named("Hasta:") LocalDate hasta) {
 
 		final List<Resoluciones> lista = this.container
 				.allMatches(new QueryDefault<Resoluciones>(Resoluciones.class,
