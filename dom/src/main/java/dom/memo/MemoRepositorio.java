@@ -2,9 +2,6 @@ package dom.memo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DescribedAs;
@@ -27,7 +24,8 @@ import dom.sector.SectorRepositorio;
 @DomainService(menuOrder = "2")
 @Named("MEMO")
 public class MemoRepositorio {
-	public final Lock monitor = new ReentrantLock();
+	// public final Lock monitor = new ReentrantLock();
+	public boolean ocupado = false;
 
 	public MemoRepositorio() {
 
@@ -68,51 +66,54 @@ public class MemoRepositorio {
 	private Memo nuevoMemo(final Sector sector, final Sector destinoSector,
 			final String otroSector, final String descripcion,
 			final String creadoPor, final Blob adjunto) {
+		// try {
+		// if (monitor.tryLock(4, TimeUnit.MILLISECONDS)) {
 		try {
-			if (monitor.tryLock(4, TimeUnit.MILLISECONDS)) {
-				try {
-					final Memo unMemo = this.container
-							.newTransientInstance(Memo.class);
-					Memo anterior = recuperarUltimo();
-					Integer nro = Integer.valueOf(1);
-					if (anterior != null) {
-						if (!anterior.getUltimoDelAnio()) {
-							if (!anterior.getHabilitado())
-								nro = anterior.getNro_memo();
-							else
-								nro = anterior.getNro_memo() + 1;
-						} else
-							anterior.setUltimoDelAnio(false);
+			final Memo unMemo = this.container.newTransientInstance(Memo.class);
+			Memo anterior = recuperarUltimo();
+			Integer nro = Integer.valueOf(1);
+			if (anterior != null) {
+				if (!anterior.getUltimoDelAnio()) {
+					if (!anterior.getHabilitado())
+						nro = anterior.getNro_memo();
+					else
+						nro = anterior.getNro_memo() + 1;
+				} else
+					anterior.setUltimoDelAnio(false);
 
-						anterior.setUltimo(false);
-					}
-
-					unMemo.setNro_memo(nro);
-					unMemo.setUltimo(true);
-					unMemo.setFecha(LocalDate.now());
-					unMemo.setAdjuntar(adjunto);
-					unMemo.setTipo(2);
-					unMemo.setDescripcion(descripcion.toUpperCase().trim());
-					unMemo.setHabilitado(true);
-					unMemo.setCreadoPor(creadoPor);
-					unMemo.setTime(LocalDateTime.now().withMillisOfSecond(3));
-
-					unMemo.setDestinoSector(destinoSector);
-					unMemo.setOtroDestino(otroSector);
-					unMemo.setSector(sector);
-
-					container.persistIfNotAlready(unMemo);
-					container.flush();
-					return unMemo;
-				} finally {
-					monitor.unlock();
-				}
+				anterior.setUltimo(false);
 			}
-		} catch (InterruptedException e) {
-			this.container
-					.informUser("Verifique que los datos se hayan almacenado");
-			e.printStackTrace();
+
+			unMemo.setNro_memo(nro);
+			unMemo.setUltimo(true);
+			unMemo.setFecha(LocalDate.now());
+			unMemo.setAdjuntar(adjunto);
+			unMemo.setTipo(2);
+			unMemo.setDescripcion(descripcion.toUpperCase().trim());
+			unMemo.setHabilitado(true);
+			unMemo.setCreadoPor(creadoPor);
+			unMemo.setTime(LocalDateTime.now().withMillisOfSecond(3));
+
+			unMemo.setDestinoSector(destinoSector);
+			unMemo.setOtroDestino(otroSector);
+			unMemo.setSector(sector);
+
+			container.persistIfNotAlready(unMemo);
+			container.flush();
+			return unMemo;
+		} catch (Exception e) {
+			container
+					.warnUser("Por favor, verifique que la informacion se ha guardado correctamente. En caso contrario informar a Sistemas.");
+		} finally {
+			// monitor.unlock();
+			this.ocupado = false;
 		}
+		// }
+		// } catch (InterruptedException e) {
+		// this.container
+		// .informUser("Verifique que los datos se hayan almacenado");
+		// e.printStackTrace();
+		// }
 		return null;
 	}
 
@@ -148,6 +149,10 @@ public class MemoRepositorio {
 
 	public String validateAddMemo(final Sector sector, final Sector destino,
 			String otro, final String descripcion, final Blob adj) {
+		if (!this.ocupado)
+			this.ocupado = true;
+		else
+			return "Sistema ocupado, intente nuevamente.";
 		if (!destino.getNombre_sector().contentEquals("OTRO SECTOR"))
 			otro = "";
 		else if (otro == "" || otro == null)
@@ -210,7 +215,7 @@ public class MemoRepositorio {
 	 * @return
 	 */
 	@MemberOrder(sequence = "30")
-	@Named("Memo: Filtro por Fecha.")
+	@Named("Filtro por Fecha.")
 	@DescribedAs("Seleccione una fecha de inicio y una fecha final.")
 	public List<Memo> filtrarPorFecha(
 			final @Optional @Named("Desde:") LocalDate desde,

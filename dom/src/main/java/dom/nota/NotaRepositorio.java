@@ -2,9 +2,6 @@ package dom.nota;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DescribedAs;
@@ -29,7 +26,8 @@ import dom.sector.SectorRepositorio;
 @DomainService(menuOrder = "1")
 @Named("Notas")
 public class NotaRepositorio {
-	public final Lock monitor = new ReentrantLock();
+	// public final Lock monitor = new ReentrantLock();
+	public boolean ocupado = false;
 
 	public NotaRepositorio() {
 
@@ -63,7 +61,6 @@ public class NotaRepositorio {
 			final @Named("Para:") String destino,
 			final @Named("Descripción:") @MaxLength(255) @MultiLine(numberOfLines = 2) String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
-
 		Nota nota = nuevaNota(sector, destino, descripcion,
 				this.currentUserName(), adjunto);
 		if (nota != null)
@@ -74,72 +71,85 @@ public class NotaRepositorio {
 
 	}
 
+	public String validateAddNota(final Sector sector, final String destino,
+			final String descripcion, final Blob adjunto) {
+		if (!this.ocupado) {
+			this.ocupado = true;
+			return null;
+		} else
+			return "Sistema ocupado, intente nuevamente.";
+	}
+
 	@Programmatic
 	private Nota nuevaNota(final Sector sector, final String destino,
 			final String descripcion, final String creadoPor, final Blob adjunto) {
+		// try {
+		// if (monitor.tryLock(1, TimeUnit.MILLISECONDS)) {
 		try {
-			if (monitor.tryLock(25, TimeUnit.MILLISECONDS)) {
-				try {
-					final Nota unaNota = this.container
-							.newTransientInstance(Nota.class);
-					Integer nro = Integer.valueOf(1);
+			final Nota unaNota = this.container
+					.newTransientInstance(Nota.class);
+			Integer nro = Integer.valueOf(1);
 
-					Nota notaAnterior = recuperarElUltimo();
-					/*
-					 * Si es nulo => cero Si no es nulo, si no es el
-					 * ulitmoDelAnio y si no esta habilitado => igual Si no es
-					 * nulo y si no es el ultimoDelAnio y esta Habilitado =>
-					 * suma Si no es nulo y si es el ulitmo del Anio => cero
-					 */
-					if (notaAnterior != null) {
-						if (!notaAnterior.getUltimoDelAnio()) {
-							if (!notaAnterior.getHabilitado())
-								nro = notaAnterior.getNro_nota();
-							else
-								nro = notaAnterior.getNro_nota() + 1;
-						} else
-							notaAnterior.setUltimoDelAnio(false);
-						notaAnterior.setUltimo(false);
-					}
-					// if (unaNota.getDescripcion().equalsIgnoreCase("ALGO")) {
-					// try {
-					// Thread.sleep(11000);
-					// } catch (InterruptedException e) {
-					//
-					// }
-					//
-					// }
-					// Si no habian nota, o si es el ultimo del año, el proximo
-					// nro
-					// comienza en 1.
-
-					unaNota.setDescripcion(descripcion.toUpperCase().trim());
-					unaNota.setUltimo(true);
-					unaNota.setNro_nota(nro);
-					unaNota.setFecha(LocalDate.now());
-					unaNota.setTipo(1);
-					unaNota.setCreadoPor(creadoPor);
-					unaNota.setDestino(destino);
-					unaNota.setTime(LocalDateTime.now().withMillisOfSecond(3));
-					unaNota.setAdjuntar(adjunto);
-					unaNota.setSector(sector);
-					unaNota.setHabilitado(true);
-
-					container.persistIfNotAlready(unaNota);
-					container.flush();
-
-					return unaNota;
-				} finally {
-					monitor.unlock();
-				}
+			Nota notaAnterior = recuperarElUltimo();
+			/*
+			 * Si es nulo => cero Si no es nulo, si no es el ulitmoDelAnio y si
+			 * no esta habilitado => igual Si no es nulo y si no es el
+			 * ultimoDelAnio y esta Habilitado => suma Si no es nulo y si es el
+			 * ulitmo del Anio => cero
+			 */
+			if (notaAnterior != null) {
+				if (!notaAnterior.getUltimoDelAnio()) {
+					if (!notaAnterior.getHabilitado())
+						nro = notaAnterior.getNro_nota();
+					else
+						nro = notaAnterior.getNro_nota() + 1;
+				} else
+					notaAnterior.setUltimoDelAnio(false);
+				notaAnterior.setUltimo(false);
 			}
-		} catch (InterruptedException e) {
-			this.container
-					.informUser("Verifique que los datos se hayan almacenado");
+			// if (unaNota.getDescripcion().equalsIgnoreCase("ALGO")) {
+			// try {
+			// Thread.sleep(11000);
+			// } catch (InterruptedException e) {
+			//
+			// }
+			//
+			// }
+			// Si no habian nota, o si es el ultimo del año, el proximo
+			// nro
+			// comienza en 1.
+			unaNota.setDescripcion(descripcion.toUpperCase().trim());
+			unaNota.setUltimo(true);
+			unaNota.setNro_nota(nro);
+			unaNota.setFecha(LocalDate.now());
+			unaNota.setTipo(1);
+			unaNota.setCreadoPor(creadoPor);
+			unaNota.setDestino(destino);
+			unaNota.setTime(LocalDateTime.now().withMillisOfSecond(3));
+			unaNota.setAdjuntar(adjunto);
+			unaNota.setSector(sector);
+			unaNota.setHabilitado(true);
 
-			e.printStackTrace();
+			container.persistIfNotAlready(unaNota);
+			container.flush();
+
+			return unaNota;
+		} catch (Exception e) {
+			container
+					.warnUser("Por favor, verifique que la informacion se ha guardado correctamente. En caso contrario informar a Sistemas.");
+		} finally {
+			// monitor.unlock();
+			this.ocupado = false;
 		}
+		// }
+		// } catch (InterruptedException e) {
+		// this.container
+		// .informUser("Verifique que los datos se hayan almacenado");
 		return null;
+
+		// e.printStackTrace();
+		// }
+		// return null;
 	}
 
 	@Programmatic
@@ -218,11 +228,10 @@ public class NotaRepositorio {
 	 * @return
 	 */
 	@MemberOrder(sequence = "30")
-	@Named("Notas: Filtro por Fecha.")
+	@Named("Filtro por Fecha.")
 	@DescribedAs("Seleccione una fecha de inicio y una fecha final.")
-	public List<Nota> filtrarPorFecha(
-			final  @Named("Desde:") LocalDate desde,
-			final  @Named("Hasta:") LocalDate hasta) {
+	public List<Nota> filtrarPorFecha(final @Named("Desde:") LocalDate desde,
+			final @Named("Hasta:") LocalDate hasta) {
 
 		final List<Nota> notas = this.container
 				.allMatches(new QueryDefault<Nota>(Nota.class,
@@ -233,7 +242,6 @@ public class NotaRepositorio {
 		return notas;
 	}
 
-	
 	private String currentUserName() {
 		return container.getUser().getName();
 	}
