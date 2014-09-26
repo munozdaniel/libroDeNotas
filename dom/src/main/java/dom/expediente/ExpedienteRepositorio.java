@@ -86,7 +86,7 @@ public class ExpedienteRepositorio {
 					unExpediente.setNro_expediente(nro);
 					unExpediente.setUltimo(true);
 
-					unExpediente.setExpte_cod_letra(expte_cod_letra);
+					unExpediente.setExpte_cod_letra(expte_cod_letra.toUpperCase());
 					unExpediente.setFecha(LocalDate.now());
 					unExpediente.setTipo(5);
 					unExpediente.setDescripcion(descripcion.toUpperCase()

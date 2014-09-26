@@ -137,7 +137,7 @@ public class ResolucionesRepositorio {
 	 * @return
 	 */
 	@MemberOrder(sequence = "30")
-	@Named("Filtro por Fecha.")
+	@Named("Filtro por Fecha")
 	@DescribedAs("Seleccione una fecha de inicio y una fecha final.")
 	public List<Resoluciones> filtrarPorFecha(
 			final  @Named("Desde:") LocalDate desde,

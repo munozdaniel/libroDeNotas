@@ -49,7 +49,7 @@ import com.google.common.io.Resources;
 import dom.resoluciones.Resoluciones;
 
 @DomainService(repositoryFor = Resoluciones.class)
-public class ResolucionServicioDocx {
+public class ResolucionServiceDocx {
 
 	// region > init
 
