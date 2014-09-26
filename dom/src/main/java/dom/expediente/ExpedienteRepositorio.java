@@ -192,7 +192,7 @@ public class ExpedienteRepositorio {
 	 * @return
 	 */
 	@MemberOrder(sequence = "30")
-	@Named("Expediente: Filtro por Fecha.")
+	@Named("Filtro por Fecha")
 	@DescribedAs("Seleccione una fecha de inicio y una fecha final.")
 	public List<Expediente> filtrarPorFecha(
 			final  @Named("Desde:") LocalDate desde, final  @Named("Hasta:") LocalDate hasta) {

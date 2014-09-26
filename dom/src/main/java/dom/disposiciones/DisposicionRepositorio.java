@@ -192,7 +192,7 @@ public class DisposicionRepositorio {
 	 * @return
 	 */
 	@MemberOrder(sequence = "30")
-	@Named("Disposiciones: Filtro por Fecha.")
+	@Named("Filtro por Fecha")
 	@DescribedAs("Seleccione una fecha de inicio y una fecha final.")
 	public List<Disposicion> filtrarPorFecha(
 			final @Named("Desde:") LocalDate desde,
