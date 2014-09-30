@@ -56,17 +56,16 @@ public class NotaRepositorio {
 	@NotContributed
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
-	public List<Nota> addNota(
+	public Nota addNota(
 			final @Named("De:") Sector sector,
 			final @Named("Para:") String destino,
 			final @Named("Descripción:") @MaxLength(255) @MultiLine(numberOfLines = 2) String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		Nota nota = nuevaNota(sector, destino, descripcion,
 				this.currentUserName(), adjunto);
-		if (nota != null) {
-			this.container.informUser("LA NOTA FUE INGRESADA CORRECTAMENTE.");
-			return this.listar();
-		}
+		if (nota != null)
+			return nota;
+
 		this.container.informUser("SISTEMA OCUPADO, INTENTELO NUEVAMENTE.");
 		return null;
 
