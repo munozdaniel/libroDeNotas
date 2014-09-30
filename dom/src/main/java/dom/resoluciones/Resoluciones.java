@@ -39,7 +39,9 @@ import dom.sector.SectorRepositorio;
 				+ "FROM dom.resoluciones.Resoluciones   ORDER BY nro_resolucion DESC"),
 		@javax.jdo.annotations.Query(name = "filtrarPorFechas", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.resoluciones.Resoluciones "
-				+ "WHERE  :desde <= fecha && fecha<=:hasta ORDER BY fecha DESC ") })
+				+ "WHERE  :desde <= fecha && fecha<=:hasta ORDER BY fecha DESC "),
+		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = " SELECT  "
+				+ "FROM dom.resoluciones.Resoluciones " + "WHERE  (ultimo == true)  ") })
 @ObjectType("RESOLUCIONES")
 @Audited
 @AutoComplete(repository = ResolucionesRepositorio.class, action = "autoComplete")

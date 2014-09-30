@@ -24,6 +24,7 @@ import dom.sector.SectorRepositorio;
 @DomainService(menuOrder = "3")
 @Named("RESOLUCIONES")
 public class ResolucionesRepositorio {
+	public boolean ocupado = false;
 
 	public ResolucionesRepositorio() {
 
@@ -55,27 +56,73 @@ public class ResolucionesRepositorio {
 
 	}
 
+	public String validateAddResoluciones(final int nro_resolucion,
+			final LocalDate fecha, final Sector sector,
+			final String descripcion, final Blob adjunto) {
+		if (!this.ocupado) {
+			this.ocupado = true;
+			return null;
+		} else
+			return "Sistema ocupado, intente nuevamente.";
+	}
+
 	@Programmatic
 	private Resoluciones nuevaResolucion(final int nro_resolucion,
 			final LocalDate fecha, final Sector sector,
 			final String descripcion, final String creadoPor, final Blob adjunto) {
-		final Resoluciones unaResolucion = this.container
-				.newTransientInstance(Resoluciones.class);
-		unaResolucion.setUltimo(false);
-		unaResolucion.setUltimoDelAnio(false);
-		unaResolucion.setNro_resolucion(nro_resolucion);
-		unaResolucion.setFecha(fecha);
-		unaResolucion.setTipo(3);
-		unaResolucion.setDescripcion(descripcion.toUpperCase().trim());
-		unaResolucion.setHabilitado(true);
-		unaResolucion.setCreadoPor(creadoPor);
-		unaResolucion.setAdjuntar(adjunto);
-		unaResolucion.setTime(LocalDateTime.now().withMillisOfSecond(3));
-		unaResolucion.setSector(sector);
 
-		container.persistIfNotAlready(unaResolucion);
-		container.flush();
-		return unaResolucion;
+		try {
+			final Resoluciones unaResolucion = this.container
+					.newTransientInstance(Resoluciones.class);
+			Integer nro = Integer.valueOf(1);
+
+			Resoluciones resolucionAnterior = recuperarElUltimo();
+
+			if (resolucionAnterior != null) {
+				if (!resolucionAnterior.getUltimoDelAnio()) {
+					if (!resolucionAnterior.getHabilitado())
+						nro = resolucionAnterior.getNro_resolucion();
+					else
+						nro = resolucionAnterior.getNro_resolucion() + 1;
+				} else
+					resolucionAnterior.setUltimoDelAnio(false);
+				resolucionAnterior.setUltimo(false);
+			}
+
+			unaResolucion.setNro_resolucion(nro);
+			unaResolucion.setUltimo(false);
+			unaResolucion.setUltimoDelAnio(false);
+			unaResolucion.setNro_resolucion(nro_resolucion);
+			unaResolucion.setFecha(fecha);
+			unaResolucion.setTipo(3);
+			unaResolucion.setDescripcion(descripcion.toUpperCase().trim());
+			unaResolucion.setHabilitado(true);
+			unaResolucion.setCreadoPor(creadoPor);
+			unaResolucion.setAdjuntar(adjunto);
+			unaResolucion.setTime(LocalDateTime.now().withMillisOfSecond(3));
+			unaResolucion.setSector(sector);
+
+			container.persistIfNotAlready(unaResolucion);
+			container.flush();
+			return unaResolucion;
+		} catch (Exception e) {
+			container
+					.warnUser("Por favor, verifique que la informacion se ha guardado correctamente. En caso contrario informar a Sistemas.");
+		} finally {
+			// monitor.unlock();
+			this.ocupado = false;
+		}
+		return null;
+
+	}
+
+	private Resoluciones recuperarElUltimo() {
+		final Resoluciones resoluciones = this.container
+				.firstMatch(new QueryDefault<Resoluciones>(Resoluciones.class,
+						"recuperarUltimo"));
+		if (resoluciones == null)
+			return null;
+		return resoluciones;
 	}
 
 	@Programmatic
@@ -140,8 +187,8 @@ public class ResolucionesRepositorio {
 	@Named("Filtro por Fecha")
 	@DescribedAs("Seleccione una fecha de inicio y una fecha final.")
 	public List<Resoluciones> filtrarPorFecha(
-			final  @Named("Desde:") LocalDate desde,
-			final  @Named("Hasta:") LocalDate hasta) {
+			final @Named("Desde:") LocalDate desde,
+			final @Named("Hasta:") LocalDate hasta) {
 
 		final List<Resoluciones> lista = this.container
 				.allMatches(new QueryDefault<Resoluciones>(Resoluciones.class,
