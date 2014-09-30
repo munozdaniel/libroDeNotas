@@ -13,7 +13,6 @@ import javax.inject.Inject;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DomainService;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 
 import dom.disposiciones.Disposicion;
 import dom.disposiciones.DisposicionRepositorio;
@@ -39,130 +38,7 @@ import dom.sector.SectorRepositorio;
  */
 @DomainService
 public class MigrarServicio {
-	/**
-	 * Las fechas en la base de datos original fueron guardadas como string. Se
-	 * realiza un casteo a LocalDate
-	 * 
-	 * @param fecha
-	 * @return
-	 */
-	// public String conversionDeFechaMarciana(final String fecha) {
-	// System.out.println("now -> "
-	// + MyUtils.getFormattedDate(Str2Time.convert("now")));
-	// System.out.println("tomorrow -> "
-	// + MyUtils.getFormattedDate(Str2Time.convert("tomorrow")));
-	// System.out.println("yesterday -> "
-	// + MyUtils.getFormattedDate(Str2Time.convert("yesterday")));
-	// System.out.println("+80 minutes -> "
-	// + MyUtils.getFormattedDate(Str2Time.convert("80 minutes")));
-	// System.out.println("-160 minutes -> "
-	// + MyUtils.getFormattedDate(Str2Time.convert("-160 minutes")));
-	// System.out.println("+8 days -> "
-	// + MyUtils.getFormattedDate(Str2Time.convert("8 days")));
-	// System.out.println("-16 days -> "
-	// + MyUtils.getFormattedDate(Str2Time.convert("-16 days")));
-	// System.out.println("+2 weeks -> "
-	// + MyUtils.getFormattedDate(Str2Time.convert("2 weeks")));
-	// System.out.println("-4 weeks -> "
-	// + MyUtils.getFormattedDate(Str2Time.convert("-4 weeks")));
-	// System.out.println("Mon Sep 24 03:35:21 +0000 2012 -> "
-	// + MyUtils.getFormattedDate(Str2Time
-	// .convert("Mon Sep 24 03:35:21 +0000 2012")));
-	// return "Mon Agu 24 03:35:21 +0000 1980 -> "
-	// + MyUtils.getFormattedDate(Str2Time
-	// .convert("Mon Sep 24 03:35:21 +0000 2012"));
-	// }
-
-	/**
-	 * public static function marciana2Humana($timeStamp) { $fechaReferencia =
-	 * strtotime("22-08-1980");
-	 * 
-	 * $resta = $fechaReferencia - (138661 - $timeStamp)*86400;
-	 * 
-	 * $sale = Date("d/m/Y",$res);
-	 * 
-	 * return $sale; }
-	 * 
-	 * @param cadenafecha
-	 * @return
-	 */
-	// public Date marciana2Humana(final String cadenafecha) {
-	// @SuppressWarnings("deprecation")
-	// Date fechaRef = new Date(1980, 8, 22);
-	// // fechaRef = strtotime("22-08-1980");
-	// int fecha = Integer.parseInt(cadenafecha);
-	//
-	// // long res = fechaRef - (138661 - fecha)*86400;
-	// long res = fechaRef.getTime()-(138661 - 147570) * 86400;
-	// // res -= res;
-	// Date sale = new Date(res);
-	// // sale = Date("d/m/Y",res);
-	//
-	// return sale;
-	// }
-
-	// @Prototype
-	// public String migrarUltimoAnio() {
-	// String retorno = "";
-	// try {
-	// sectores.migrar();
-	// notas.migrar();
-	// memos.migrar();
-	// expedientes.migrar();
-	// disposiciones.migrar();
-	// resoluciones.migrar();
-	// retorno = "Operacion Realizada con Exito.";
-	// } catch (Exception e) {
-	// System.out.println(e.getMessage());
-	// retorno = e.getMessage();
-	// }
-	// return retorno;
-	// }
-	//
-	// @Prototype
-	// public List<Sector> migrarSectores() {
-	// return sectores.migrar();
-	//
-	// }
-	// @Prototype
-	// public List<Nota> migrarNotas() {
-	// return notas.migrar();
-	//
-	// }
-	// @Prototype
-	// public List<Memo> migrarMemo() {
-	// return memos.migrar();
-	//
-	// }
-	// @Prototype
-	// public List<Expediente> migrarExpedientes() {
-	// return expedientes.migrar();
-	//
-	// }
-	// @Prototype
-	// public List<Disposicion> migrarDisposiciones() {
-	// return disposiciones.migrar();
-	//
-	// }
-	// @Prototype
-	// public List<Resoluciones> migrarResoluciones() {
-	// return resoluciones.migrar();
-	//
-	// }
-	//
-	// @Inject
-	// private MigrarSectores sectores;
-	// @Inject
-	// private MigrarNotas notas;
-	// @Inject
-	// private MigrarMemos memos;
-	// @Inject
-	// private MigrarExpedientes expedientes;
-	// @Inject
-	// private MigrarDisposiciones disposiciones;
-	// @Inject
-	// private MigrarResoluciones resoluciones;
-
+	
 	public List<Sector> migrarSectores() {
 		Connection con = Conexion.GetConnection();
 		List<Sector> lista = new ArrayList<Sector>();
@@ -246,149 +122,86 @@ public class MigrarServicio {
 
 	}
 
-	public List<Nota> buscarDateCompleta() {
-		Connection con = Conexion.GetConnection();
-		List<Nota> lista = new ArrayList<Nota>();
-		Sector sector = new Sector();
-		try {
-			PreparedStatement stmt = con
-					.prepareStatement("Select * from documento as doc JOIN nota AS n ON doc.id_documento=n.id_documento AND fechacompleta like '%2014'");
-			ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				Date date = rs.getDate("datecompleta");
-				final Nota unaNota = this.container
-						.newTransientInstance(Nota.class);
-				unaNota.setNro_nota(1);
-				sector = this.sectorRepositorio.buscarPorNombre("FARMACIA");
-				unaNota.setSector(sector);
-				unaNota.setDestino("AFUERA");
-				unaNota.setDescripcion("NO PROBLEMO".toUpperCase().trim());
-				unaNota.setCreadoPor("root");
-				unaNota.setAdjuntar(null);
-				unaNota.setUltimo(true);
-				unaNota.setUltimoDelAnio(false);
-				unaNota.setFecha(new LocalDate(date.getTime()));
-				unaNota.setHabilitado(true);
-				unaNota.setTipo(1);
-				LocalDateTime local = LocalDateTime.parse(date.toString());
-				unaNota.setTime(local);
-//				LocalDate localdate = new LocalDate(date.getTime());
-//				unaNota.setDatecompleta(localdate);
-				container.persistIfNotAlready(unaNota);
-				container.flush();
-				lista.add(unaNota);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return lista;
-
-	}
-
-	public List<String> describir() {
-		Connection con = Conexion.GetConnection();
-		List<String> lista = new ArrayList<String>();
-		try {
-			PreparedStatement stmt = con
-					.prepareStatement("Select * from documento as doc JOIN nota AS n ON doc.id_documento=n.id_documento AND fechacompleta like '%2014'");
-			ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				Date date = rs.getDate("datecompleta");
-
-				lista.add(date.toString());
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return lista;
-	}
-
-	public List<LocalDateTime> data() {
-		Connection con = Conexion.GetConnection();
-		List<LocalDateTime> lista = new ArrayList<LocalDateTime>();
-		try {
-			PreparedStatement stmt = con
-					.prepareStatement("Select * from documento as doc JOIN nota AS n ON doc.id_documento=n.id_documento AND fechacompleta like '%2014'");
-			ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				Date date = rs.getDate("datecompleta");
-				LocalDateTime local = LocalDateTime.parse(date.toString());
-				lista.add(local);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return lista;
-	}
+//	public List<Nota> buscarDateCompleta() {
+//		Connection con = Conexion.GetConnection();
+//		List<Nota> lista = new ArrayList<Nota>();
+//		Sector sector = new Sector();
+//		try {
+//			PreparedStatement stmt = con
+//					.prepareStatement("Select * from documento as doc JOIN nota AS n ON doc.id_documento=n.id_documento AND fechacompleta like '%2014'");
+//			ResultSet rs = stmt.executeQuery();
+//			while (rs.next()) {
+//				Date date = rs.getDate("datecompleta");
+//				final Nota unaNota = this.container
+//						.newTransientInstance(Nota.class);
+//				unaNota.setNro_nota(1);
+//				sector = this.sectorRepositorio.buscarPorNombre("FARMACIA");
+//				unaNota.setSector(sector);
+//				unaNota.setDestino("AFUERA");
+//				unaNota.setDescripcion("NO PROBLEMO".toUpperCase().trim());
+//				unaNota.setCreadoPor("root");
+//				unaNota.setAdjuntar(null);
+//				unaNota.setUltimo(true);
+//				unaNota.setUltimoDelAnio(false);
+//				unaNota.setFecha(new LocalDate(date.getTime()));
+//				unaNota.setHabilitado(true);
+//				unaNota.setTipo(1);
+//				LocalDateTime local = LocalDateTime.parse(date.toString());
+//				unaNota.setTime(local);
+////				LocalDate localdate = new LocalDate(date.getTime());
+////				unaNota.setDatecompleta(localdate);
+//				container.persistIfNotAlready(unaNota);
+//				container.flush();
+//				lista.add(unaNota);
+//			}
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return lista;
+//
+//	}
+//
+//	public List<String> describir() {
+//		Connection con = Conexion.GetConnection();
+//		List<String> lista = new ArrayList<String>();
+//		try {
+//			PreparedStatement stmt = con
+//					.prepareStatement("Select * from documento as doc JOIN nota AS n ON doc.id_documento=n.id_documento AND fechacompleta like '%2014'");
+//			ResultSet rs = stmt.executeQuery();
+//			while (rs.next()) {
+//				Date date = rs.getDate("datecompleta");
+//
+//				lista.add(date.toString());
+//			}
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return lista;
+//	}
+//
+//	public List<LocalDateTime> data() {
+//		Connection con = Conexion.GetConnection();
+//		List<LocalDateTime> lista = new ArrayList<LocalDateTime>();
+//		try {
+//			PreparedStatement stmt = con
+//					.prepareStatement("Select * from documento as doc JOIN nota AS n ON doc.id_documento=n.id_documento AND fechacompleta like '%2014'");
+//			ResultSet rs = stmt.executeQuery();
+//			while (rs.next()) {
+//				Date date = rs.getDate("datecompleta");
+//				LocalDateTime local = LocalDateTime.parse(date.toString());
+//				lista.add(local);
+//			}
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return lista;
+//	}
 
 	@Inject
 	private SectorRepositorio sectorRepositorio;
-
-	/**
-	 * Migrar con sector
-	 * 
-	 * @return
-	 */
-	// public List<Memo> migrarConSector() {
-	// Connection con = Conexion.GetConnection();
-	// List<Memo> lista = new ArrayList<Memo>();
-	// Memo memo = null;
-	// Sector sector = new Sector();
-	// Sector sectord = new Sector();
-	// try {
-	// // memo sector
-	// PreparedStatement stmt = con
-	// .prepareStatement("SELECT * FROM documento d JOIN memos AS m ON d.id_documento = m.id_documento JOIN  memo_sector AS s ON s.id_documento = m.id_documento WHERE fechacompleta like '%2014';");
-	//
-	// ResultSet rs = stmt.executeQuery();
-	// while (rs.next()) {
-	// int idsector = rs.getInt("id_sector");
-	// if (idsector == -1)
-	// idsector = 0;// Sin Definir
-	// stmt = con
-	// .prepareStatement("Select nombre_sector from sector where id_sector =?");
-	// stmt.setString(1, idsector + "");
-	// ResultSet rsector = stmt.executeQuery();
-	// while (rsector.next()){
-	// sector = sectores.buscarPorNombre(rsector
-	// .getString("nombre_sector"));
-	// }
-	// int idsector2 = rs.getInt("id_sectord");// Cambiar nombre del
-	// // campo
-	// // en la base de datos.
-	// if (idsector2 == -1)
-	// idsector2 = 0;// Sin Definir
-	// stmt = con
-	// .prepareStatement("Select nombre_sector from sector where id_sector =?");
-	// stmt.setString(1, idsector2 + "");
-	// rsector = stmt.executeQuery();
-	// while (rsector.next()) {
-	// sectord = sectores.buscarPorNombre(rsector.getString(
-	// "nombre_sector").toUpperCase());
-	// }
-	// if (sectord == null)
-	// this.container.warnUser("SECTORD ;; "
-	// + rs.getInt("id_sectord"));
-	//
-	// memo = memos.insertar(rs.getInt("nro_documento"),
-	// rs.getString("fecha"), 2, sector,
-	// rs.getString("descripcion"), rs.getInt("eliminado"),
-	// rs.getInt("ultimo"), sectord, "",
-	// rs.getString("fechacompleta"));
-	//
-	// lista.add(memo);
-	//
-	// }
-	// } catch (SQLException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// return lista;
-	//
-	// }
 
 	public List<Memo> migrarMemos() {
 		Connection con = Conexion.GetConnection();
@@ -476,84 +289,7 @@ public class MigrarServicio {
 
 	}
 
-	// public List<Sector> buscarSectores() {
-	// Connection con = Conexion.GetConnection();
-	// List<Sector> lista = new ArrayList<Sector>();
-	// Sector sector = new Sector();
-	// try {
-	// // memo sector
-	// PreparedStatement stmt = con
-	// .prepareStatement("SELECT * FROM documento d JOIN memos AS m ON d.id_documento = m.id_documento JOIN  memo_sector AS s ON s.id_documento = m.id_documento WHERE fechacompleta like '%2014';");
-	// ResultSet rs = stmt.executeQuery();
-	// while (rs.next()) {
-	//
-	// int idsector = rs.getInt("id_sectord");
-	// this.container.warnUser("con sector" + " ID SECTOR: "
-	// + idsector);
-	//
-	// if (idsector == -1)
-	// idsector = 0;// Sin Definir
-	// stmt = con
-	// .prepareStatement("Select nombre_sector from sector where id_sector =?");
-	// stmt.setString(1, idsector + "");
-	// ResultSet rsector = stmt.executeQuery();
-	// while (rsector.next()) {
-	// sector = sectores.buscarPorNombre(rsector.getString(
-	// "nombre_sector").toUpperCase());
-	// }
-	// lista.add(sector);
-	// }
-	//
-	// } catch (SQLException e) {
-	// // TODO Auto-generated catch block
-	// this.container.warnUser(e.getMessage());
-	// e.printStackTrace();
-	// }
-	// return lista;
-	// }
-
-	// public List<Memo> migrarMemosNoSector() {
-	// Connection con = Conexion.GetConnection();
-	// List<Memo> lista = new ArrayList<Memo>();
-	// Memo memo = null;
-	// Sector sector = new Sector();
-	// try {
-	// // memo sector
-	// PreparedStatement stmt = con
-	// .prepareStatement("SELECT * FROM documento d JOIN memos AS m ON d.id_documento = m.id_documento JOIN  memo_no_sector AS nos ON nos.id_documento = m.id_documento WHERE fechacompleta like '%2014';");
-	// ResultSet rs = stmt.executeQuery();
-	// while (rs.next()) {
-	//
-	// int idsector = rs.getInt("id_sector");
-	// this.container.warnUser(rs.getString("destino")
-	// + " ID SECTOR: " + idsector);
-	//
-	// if (idsector == -1)
-	// idsector = 0;// Sin Definir
-	// stmt = con
-	// .prepareStatement("Select nombre_sector from sector where id_sector =?");
-	// stmt.setString(1, idsector + "");
-	// ResultSet rsector = stmt.executeQuery();
-	// while (rsector.next()) {
-	// sector = sectores.buscarPorNombre(rsector.getString(
-	// "nombre_sector").toUpperCase());
-	// }
-	// memo = memos.insertar(rs.getInt("nro_documento"),
-	// rs.getString("fecha"), 2, sector,
-	// rs.getString("descripcion"), rs.getInt("eliminado"),
-	// rs.getInt("ultimo"), new Sector(),
-	// rs.getString("destino"), rs.getString("fechacompleta"));
-	// lista.add(memo);
-	// }
-	//
-	// } catch (SQLException e) {
-	// // TODO Auto-generated catch block
-	// this.container.warnUser(e.getMessage());
-	// e.printStackTrace();
-	// }
-	// return lista;
-	//
-	// }
+	
 
 	public List<Resoluciones> migrarResoluciones() {
 		Connection con = Conexion.GetConnection();
