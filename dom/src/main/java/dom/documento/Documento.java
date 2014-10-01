@@ -15,6 +15,7 @@ import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.util.ObjectContracts;
 import org.apache.isis.applib.value.Blob;
 import org.joda.time.LocalDate;
@@ -87,7 +88,6 @@ public abstract class Documento implements Comparable<Documento> {
 		this.descripcion = descripcion;
 	}
 
-
 	private Boolean habilitado;
 
 	@Hidden
@@ -107,6 +107,7 @@ public abstract class Documento implements Comparable<Documento> {
 	@javax.jdo.annotations.Persistent(defaultFetchGroup = "false")
 	@javax.jdo.annotations.Column(allowsNull = "true", name = "adjunto")
 	@Named("Adjuntar")
+	@Hidden(where = Where.ALL_TABLES)
 	public Blob getAdjuntar() {
 		return adjuntar;
 	}
@@ -114,7 +115,7 @@ public abstract class Documento implements Comparable<Documento> {
 	public void setAdjuntar(final Blob adjunto) {
 		this.adjuntar = adjunto;
 	}
-	
+
 	// //////////////////////////////////////
 	// creadoPor
 	// //////////////////////////////////////
@@ -195,6 +196,5 @@ public abstract class Documento implements Comparable<Documento> {
 	}
 
 	// }}
-
 
 }
