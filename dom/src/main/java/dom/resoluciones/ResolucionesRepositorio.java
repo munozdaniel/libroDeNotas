@@ -46,19 +46,17 @@ public class ResolucionesRepositorio {
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
 	public Resoluciones addResoluciones(
-			final @Named("Nº Resolucion:") int nro_resolucion,
 			final @Named("Fecha:") LocalDate fecha,
 			final @Named("De: ") Sector sector,
 			final @Named("Descripción:") @MultiLine(numberOfLines = 2) @MaxLength(255) String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
-		return this.nuevaResolucion(nro_resolucion, fecha, sector, descripcion,
+		return this.nuevaResolucion(fecha, sector, descripcion,
 				this.currentUserName(), adjunto);
 
 	}
 
-	public String validateAddResoluciones(final int nro_resolucion,
-			final LocalDate fecha, final Sector sector,
-			final String descripcion, final Blob adjunto) {
+	public String validateAddResoluciones(final LocalDate fecha,
+			final Sector sector, final String descripcion, final Blob adjunto) {
 		if (!this.ocupado) {
 			this.ocupado = true;
 			return null;
@@ -67,9 +65,9 @@ public class ResolucionesRepositorio {
 	}
 
 	@Programmatic
-	private Resoluciones nuevaResolucion(final int nro_resolucion,
-			final LocalDate fecha, final Sector sector,
-			final String descripcion, final String creadoPor, final Blob adjunto) {
+	private Resoluciones nuevaResolucion(final LocalDate fecha,
+			final Sector sector, final String descripcion,
+			final String creadoPor, final Blob adjunto) {
 
 		try {
 			final Resoluciones unaResolucion = this.container
@@ -88,14 +86,23 @@ public class ResolucionesRepositorio {
 					resolucionAnterior.setUltimoDelAnio(false);
 				resolucionAnterior.setUltimo(false);
 			}
-
+			unaResolucion.setDescripcion(descripcion.toUpperCase().trim());
+			// if (unaResolucion.getDescripcion().equalsIgnoreCase("ALGO")) {
+			// try {
+			// Thread.sleep(11000);
+			// } catch (InterruptedException e) {
+			//
+			// }
+			//
+			// }
+			// Si no habian nota, o si es el ultimo del año, el proximo
+			// nro
+						// comienza en 1.
 			unaResolucion.setNro_resolucion(nro);
-			unaResolucion.setUltimo(false);
+			unaResolucion.setUltimo(true);
 			unaResolucion.setUltimoDelAnio(false);
-			unaResolucion.setNro_resolucion(nro_resolucion);
 			unaResolucion.setFecha(fecha);
 			unaResolucion.setTipo(3);
-			unaResolucion.setDescripcion(descripcion.toUpperCase().trim());
 			unaResolucion.setHabilitado(true);
 			unaResolucion.setCreadoPor(creadoPor);
 			unaResolucion.setAdjuntar(adjunto);
@@ -133,7 +140,7 @@ public class ResolucionesRepositorio {
 	}
 
 	@Named("Sector")
-	public List<Sector> choices2AddResoluciones() {
+	public List<Sector> choices1AddResoluciones() {
 		return sectorRepositorio.listarResoluciones();
 	}
 

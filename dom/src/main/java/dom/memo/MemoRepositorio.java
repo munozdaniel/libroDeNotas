@@ -56,8 +56,10 @@ public class MemoRepositorio {
 			otroSector = "";
 		Memo memo = this.nuevoMemo(sector, destinoSector, otroSector,
 				descripcion, this.currentUserName(), adjunto);
-		if (memo != null)
+		if (memo != null){
+			this.container.informUser("El Memo ha sido guardado correctamente.");
 			return memo;
+		}
 		this.container.informUser("SISTEMA OCUPADO, INTENTELO NUEVAMENTE.");
 		return null;
 	}

@@ -54,8 +54,10 @@ public class DisposicionRepositorio {
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		Disposicion disposicion = this.nuevaDisposicion(sector, descripcion,
 				this.currentUserName(), adjunto);
-		if (disposicion != null)
+		if (disposicion != null){
+			this.container.informUser("La Disposicion ha sido guardada correctamente.");
 			return disposicion;
+		}
 		this.container.informUser("SISTEMA OCUPADO, INTENTELO NUEVAMENTE.");
 		return null;
 	}

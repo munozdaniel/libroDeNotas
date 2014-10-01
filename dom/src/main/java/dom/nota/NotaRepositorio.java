@@ -63,9 +63,10 @@ public class NotaRepositorio {
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		Nota nota = nuevaNota(sector, destino, descripcion,
 				this.currentUserName(), adjunto);
-		if (nota != null)
+		if (nota != null) {
+			this.container.informUser("La Nota ha sido guardada correctamente.");
 			return nota;
-
+		}
 		this.container.informUser("SISTEMA OCUPADO, INTENTELO NUEVAMENTE.");
 		return null;
 

@@ -2,9 +2,6 @@ package dom.expediente;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DescribedAs;
@@ -28,7 +25,8 @@ import dom.sector.SectorRepositorio;
 @DomainService(menuOrder = "5")
 @Named("EXPEDIENTE")
 public class ExpedienteRepositorio {
-	public final Lock monitor = new ReentrantLock();
+	// public final Lock monitor = new ReentrantLock();
+	public boolean ocupado = false;
 
 	public ExpedienteRepositorio() {
 
@@ -56,8 +54,11 @@ public class ExpedienteRepositorio {
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
 		Expediente expediente = this.nuevoExpediente(expte_cod_letra, sector,
 				descripcion, this.currentUserName(), adjunto);
-		if (expediente != null)
+		if (expediente != null) {
+			this.container
+					.informUser("El Expediente ha sido guardado correctamente.");
 			return expediente;
+		}
 		this.container.informUser("SISTEMA OCUPADO, INTENTELO NUEVAMENTE.");
 		return null;
 	}
@@ -66,54 +67,59 @@ public class ExpedienteRepositorio {
 			final Sector sector, final String descripcion,
 			final String creadoPor, final Blob adjunto) {
 		try {
-			if (monitor.tryLock(25, TimeUnit.MILLISECONDS)) {
-				try {
-					final Expediente unExpediente = this.container
-							.newTransientInstance(Expediente.class);
-					Expediente anterior = recuperarUltimo();
-					int nro = 1;
-					if (anterior != null) {
-						if (!anterior.getUltimoDelAnio()) {
-							if (!anterior.getHabilitado())
-								nro = anterior.getNro_expediente();
-							else
-								nro = anterior.getNro_expediente() + 1;
-						} else
-							anterior.setUltimoDelAnio(false);
+			final Expediente unExpediente = this.container
+					.newTransientInstance(Expediente.class);
+			Expediente anterior = recuperarUltimo();
+			int nro = 1;
+			if (anterior != null) {
+				if (!anterior.getUltimoDelAnio()) {
+					if (!anterior.getHabilitado())
+						nro = anterior.getNro_expediente();
+					else
+						nro = anterior.getNro_expediente() + 1;
+				} else
+					anterior.setUltimoDelAnio(false);
 
-						anterior.setUltimo(false);
-					}
-					unExpediente.setNro_expediente(nro);
-					unExpediente.setUltimo(true);
-
-					unExpediente.setExpte_cod_letra(expte_cod_letra.toUpperCase());
-					unExpediente.setFecha(LocalDate.now());
-					unExpediente.setTipo(5);
-					unExpediente.setDescripcion(descripcion.toUpperCase()
-							.trim());
-					unExpediente.setHabilitado(true);
-					unExpediente.setCreadoPor(creadoPor);
-					unExpediente.setExpte_cod_anio(LocalDate.now().getYear());
-					unExpediente.setExpte_cod_empresa("IMPS");
-					int anio = LocalDate.now().getYear();
-					unExpediente.setExpte_cod_numero((anio - 2010));
-
-					unExpediente.setTime(LocalDateTime.now()
-							.withMillisOfSecond(3));
-					unExpediente.setAdjuntar(adjunto);
-					unExpediente.setSector(sector);
-
-					container.persistIfNotAlready(unExpediente);
-					container.flush();
-					return unExpediente;
-				} finally {
-					monitor.unlock();
-				}
+				anterior.setUltimo(false);
 			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+			unExpediente.setNro_expediente(nro);
+			unExpediente.setUltimo(true);
+
+			unExpediente.setExpte_cod_letra(expte_cod_letra.toUpperCase());
+			unExpediente.setFecha(LocalDate.now());
+			unExpediente.setTipo(5);
+			unExpediente.setDescripcion(descripcion.toUpperCase().trim());
+			unExpediente.setHabilitado(true);
+			unExpediente.setCreadoPor(creadoPor);
+			unExpediente.setExpte_cod_anio(LocalDate.now().getYear());
+			unExpediente.setExpte_cod_empresa("IMPS");
+			int anio = LocalDate.now().getYear();
+			unExpediente.setExpte_cod_numero((anio - 2010));
+
+			unExpediente.setTime(LocalDateTime.now().withMillisOfSecond(3));
+			unExpediente.setAdjuntar(adjunto);
+			unExpediente.setSector(sector);
+
+			container.persistIfNotAlready(unExpediente);
+			container.flush();
+			return unExpediente;
+		} catch (Exception e) {
+			container
+					.warnUser("Por favor, verifique que la informacion se ha guardado correctamente. En caso contrario informar a Sistemas.");
+		} finally {
+			this.ocupado = false;
 		}
 		return null;
+	}
+
+	public String validateAddExpediente(final Sector sector,
+			final String expte_cod_letra, final String descripcion,
+			final Blob adjunto) {
+		if (!this.ocupado) {
+			this.ocupado = true;
+			return null;
+		} else
+			return "Sistema ocupado, intente nuevamente.";
 	}
 
 	@Programmatic
@@ -169,21 +175,21 @@ public class ExpedienteRepositorio {
 
 	public List<Expediente> filtrarPorDescripcion(
 			final @Named("Descripcion") @MaxLength(255) @MultiLine(numberOfLines = 2) String descripcion) {
-		
+
 		List<Expediente> lista = this.listar();
 		Expediente expediente = new Expediente();
 		List<Expediente> listaRetorno = new ArrayList<Expediente>();
-		for(int i=0;i<lista.size();i++)
-		{
+		for (int i = 0; i < lista.size(); i++) {
 			expediente = new Expediente();
 			expediente = lista.get(i);
-			if(expediente.getDescripcion().contains(descripcion.toUpperCase()))
+			if (expediente.getDescripcion().contains(descripcion.toUpperCase()))
 				listaRetorno.add(expediente);
 		}
 		if (listaRetorno.isEmpty())
 			this.container.warnUser("No se encotraron Registros.");
 		return listaRetorno;
 	}
+
 	/**
 	 * Filtrar por fecha
 	 * 
@@ -195,15 +201,16 @@ public class ExpedienteRepositorio {
 	@Named("Filtro por Fecha")
 	@DescribedAs("Seleccione una fecha de inicio y una fecha final.")
 	public List<Expediente> filtrarPorFecha(
-			final  @Named("Desde:") LocalDate desde, final  @Named("Hasta:") LocalDate hasta) {
-			
-				final List<Expediente> lista = this.container
-						.allMatches(new QueryDefault<Expediente>(Expediente.class,
-								"filtrarPorFechas", "desde", desde, "hasta", hasta));
-				if (lista.isEmpty()) {
-					this.container.warnUser("No se encontraron Registros.");
-				}
-				return lista;
+			final @Named("Desde:") LocalDate desde,
+			final @Named("Hasta:") LocalDate hasta) {
+
+		final List<Expediente> lista = this.container
+				.allMatches(new QueryDefault<Expediente>(Expediente.class,
+						"filtrarPorFechas", "desde", desde, "hasta", hasta));
+		if (lista.isEmpty()) {
+			this.container.warnUser("No se encontraron Registros.");
+		}
+		return lista;
 	}
 
 	// //////////////////////////////////////
@@ -227,11 +234,10 @@ public class ExpedienteRepositorio {
 	 * PARA MIGRAR
 	 */
 	@Programmatic
-	public Expediente insertar(final int nro, 
-			final int tipo, final Sector sector, final String descripcion,
-			final int eliminado, final int ultimo, final String empresa,
-			final int numero, final int anio, final String letra,
-			final LocalDate fechacompleta) {
+	public Expediente insertar(final int nro, final int tipo,
+			final Sector sector, final String descripcion, final int eliminado,
+			final int ultimo, final String empresa, final int numero,
+			final int anio, final String letra, final LocalDate fechacompleta) {
 
 		final Expediente doc = this.container
 				.newTransientInstance(Expediente.class);
