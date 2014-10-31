@@ -107,7 +107,7 @@ public abstract class Documento implements Comparable<Documento> {
 	@javax.jdo.annotations.Persistent(defaultFetchGroup = "false")
 	@javax.jdo.annotations.Column(allowsNull = "true", name = "adjunto")
 	@Named("Adjuntar")
-	@Hidden(where = Where.ALL_TABLES)
+	@Hidden//where = Where.ALL_TABLES)
 	public Blob getAdjuntar() {
 		return adjuntar;
 	}
