@@ -1,21 +1,33 @@
 package dom.usuarioshiro;
 
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import javax.jdo.annotations.Column;
+import javax.jdo.annotations.Element;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Join;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Bounded;
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.util.ObjectContracts;
 import org.apache.isis.applib.value.Date;
+
+import dom.rol.Rol;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @ObjectType("usuarios")
 @Bounded
-public class Usuario {
+public class Usuario implements Comparable<Usuario>{
 	
 	private int usuario_id;
 	
@@ -114,6 +126,50 @@ public class Usuario {
 
 	public void setUsuario_fechaCreacion(Date usuario_fechaCreacion) {
 		this.usuario_fechaCreacion = usuario_fechaCreacion;
+	}
+	
+	/* ************** SHIRO *********************** */
+	@Join
+	@Element(dependent = "false")
+	private SortedSet<Rol> listaDeRoles = new TreeSet<Rol>();
+
+	@MemberOrder(sequence = "3")
+	@Render(org.apache.isis.applib.annotation.Render.Type.EAGERLY)
+	public SortedSet<Rol> getListaDeRoles() {
+		return listaDeRoles;
+	}
+
+	public void setRolesList(final SortedSet<Rol> listaDeRoles) {
+		this.listaDeRoles = listaDeRoles;
+	}
+
+	@MemberOrder(sequence = "3")
+	@Named("Agregar Rol")
+	@DescribedAs("Agrega un Rol al Usuario.")
+	public Usuario addRole(final @Named("Role") Rol rol) {
+
+		listaDeRoles.add(rol);
+
+		return this;
+	}
+
+	@MemberOrder(sequence = "5")
+	@Named("Eliminar")
+	public Usuario removeRole(final @Named("Rol") Rol rol) {
+
+		getListaDeRoles().remove(rol);
+		return this;
+	}
+
+	public SortedSet<Rol> choices0RemoveRole() {
+		return getListaDeRoles();
+	}
+
+	@javax.inject.Inject
+	DomainObjectContainer container;
+	@Override
+	public int compareTo(Usuario usuario) {
+		return ObjectContracts.compare(this, usuario, "usuario_id");
 	}
 
 
