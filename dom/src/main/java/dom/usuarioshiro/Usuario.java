@@ -24,15 +24,17 @@ import org.apache.isis.applib.value.Date;
 
 import dom.rol.Rol;
 
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
-@ObjectType("usuarios")
-@Bounded
-public class Usuario implements Comparable<Usuario>{
-	
+//@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
+//@javax.jdo.annotations.Queries({ @javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
+//		+ "FROM dom.usuarioshiro.Usuario ") })
+//@ObjectType("usuarios")
+//@Bounded
+public class Usuario implements Comparable<Usuario> {
+
 	private int usuario_id;
-	
-	@Persistent(valueStrategy=IdGeneratorStrategy.IDENTITY)
-    @PrimaryKey
+
+	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+	@PrimaryKey
 	@MemberOrder(sequence = "0")
 	@Column(allowsNull = "false")
 	public int getUsuario_id() {
@@ -42,7 +44,7 @@ public class Usuario implements Comparable<Usuario>{
 	public void setUsuario_id(int usuario_id) {
 		this.usuario_id = usuario_id;
 	}
-	
+
 	private String usuario_nick;
 
 	@MemberOrder(sequence = "10")
@@ -127,7 +129,7 @@ public class Usuario implements Comparable<Usuario>{
 	public void setUsuario_fechaCreacion(Date usuario_fechaCreacion) {
 		this.usuario_fechaCreacion = usuario_fechaCreacion;
 	}
-	
+
 	/* ************** SHIRO *********************** */
 	@Join
 	@Element(dependent = "false")
@@ -167,11 +169,10 @@ public class Usuario implements Comparable<Usuario>{
 
 	@javax.inject.Inject
 	DomainObjectContainer container;
+
 	@Override
 	public int compareTo(Usuario usuario) {
 		return ObjectContracts.compare(this, usuario, "usuario_id");
 	}
-
-
 
 }
