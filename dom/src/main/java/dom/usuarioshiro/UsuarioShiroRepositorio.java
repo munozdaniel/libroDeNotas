@@ -45,7 +45,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
 import dom.permiso.Permiso;
 import dom.rol.Rol;
@@ -92,7 +91,6 @@ public class UsuarioShiroRepositorio {
 			for (Usuario user : externos) {
 				byte[] decodedBytes = Base64.decodeBase64(user
 						.getUsuario_contrasenia());
-				System.out.println(user.getUsuario_contrasenia());
 				if (user.getUsuario_nick().contentEquals("root")) {
 
 					Permiso permiso = new Permiso();
@@ -114,6 +112,10 @@ public class UsuarioShiroRepositorio {
 				}
 			}
 		}
+		else
+		{
+			this.actualizarUserPass();
+		}
 	}
 
 	@ActionSemantics(Of.SAFE)
@@ -123,10 +125,32 @@ public class UsuarioShiroRepositorio {
 		return container.allInstances(UsuarioShiro.class);
 	}
 
+	@ActionSemantics(Of.SAFE)
+	@MemberOrder(sequence = "1")
+	@Named("Verificar Actualizacion")
+	public List<UsuarioShiro> actualizarUserPass() throws NoSuchAlgorithmException {
+		List<UsuarioShiro> listashiro = this.listAll();
+		List<Usuario> externos = this.listAllExternos();
+		for (UsuarioShiro usuario : listashiro) {
+			for (Usuario userExt : externos) {
+				if (userExt.getUsuario_nick().contentEquals(usuario.getNick())) {
+					byte[] decodedBytes = Base64.decodeBase64(userExt
+							.getUsuario_contrasenia());
+						String pass = hash256(new String(
+								decodedBytes));
+						usuario.setPassword(pass);
+						this.container.flush();
+				}
+			}
+		}
+		return listashiro;
+
+	}
+
 	@MemberOrder(sequence = "2")
 	@Named("Crear Usuario")
 	@Hidden(where = Where.OBJECT_FORMS)
-	public UsuarioShiro addUsuarioShiro(final @Named("Nick") String nick,
+	private UsuarioShiro addUsuarioShiro(final @Named("Nick") String nick,
 			final @Named("Password") String password,
 			final @Named("Rol") Rol rol) {
 		final UsuarioShiro obj = container
@@ -146,7 +170,7 @@ public class UsuarioShiroRepositorio {
 	@MemberOrder(sequence = "2")
 	@Named("Crear Usuario")
 	@Hidden(where = Where.OBJECT_FORMS)
-	public UsuarioShiro addUsuarioShiro(final @Named("Nick") String nick,
+	private UsuarioShiro addUsuarioShiro(final @Named("Nick") String nick,
 			final @Named("Password") String password) {
 		final UsuarioShiro obj = container
 				.newTransientInstance(UsuarioShiro.class);
@@ -158,7 +182,7 @@ public class UsuarioShiroRepositorio {
 	}
 
 	@Programmatic
-	public UsuarioShiro addUsuarioShiro(final @Named("Nick") String nick,
+	private UsuarioShiro addUsuarioShiro(final @Named("Nick") String nick,
 			final @Named("Password") String password,
 			final @Named("Rol") List<Rol> rol) {
 		final UsuarioShiro obj = container
@@ -174,22 +198,12 @@ public class UsuarioShiroRepositorio {
 		return obj;
 	}
 
-	@ActionSemantics(Of.NON_IDEMPOTENT)
-	@MemberOrder(sequence = "4")
-	@Named("Eliminar Usuario")
-	public String removeUsuarioShiro(@Named("Usuario") UsuarioShiro usuarioShiro) {
-		String userName = usuarioShiro.getNick();
-		container.remove(usuarioShiro);
-		return "El usuario de sistema " + userName
-				+ " se ha eliminado correctamente.";
-	}
-
 	private static PersistenceManager persistencia;
 
 	@ActionSemantics(Of.SAFE)
 	@MemberOrder(sequence = "1")
 	@Named("Ver todos")
-	public List<Usuario> listAllExternos() {
+	private List<Usuario> listAllExternos() {
 
 		System.out.println("------------externos---------");
 		PersistenceManagerFactory pm = this.conexion();
@@ -219,6 +233,6 @@ public class UsuarioShiroRepositorio {
 	}
 
 	@javax.inject.Inject
-	DomainObjectContainer container;
+	private DomainObjectContainer container;
 
 }
