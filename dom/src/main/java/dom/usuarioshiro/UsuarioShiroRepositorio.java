@@ -21,6 +21,9 @@
  */
 package dom.usuarioshiro;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Properties;
 import java.util.SortedSet;
@@ -42,12 +45,13 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
 import dom.permiso.Permiso;
 import dom.rol.Rol;
 
 @DomainService(menuOrder = "80", repositoryFor = UsuarioShiro.class)
-@Named("Configuracion")
+@Named("Usuarios")
 public class UsuarioShiroRepositorio {
 
 	public String getId() {
@@ -58,29 +62,57 @@ public class UsuarioShiroRepositorio {
 		return "Tecnico";
 	}
 
+	private static String hash256(String data) throws NoSuchAlgorithmException {
+		MessageDigest md = MessageDigest.getInstance("SHA-256");
+		md.update(data.getBytes());
+		return bytesToHex(md.digest());
+	}
+
+	private static String bytesToHex(byte[] bytes) {
+		StringBuffer result = new StringBuffer();
+		for (byte byt : bytes)
+			result.append(Integer.toString((byt & 0xff) + 0x100, 16).substring(
+					1));
+		return result.toString();
+	}
+
 	@Programmatic
 	@PostConstruct
-	public void init() {
+	public void init() throws NoSuchAlgorithmException,
+			UnsupportedEncodingException {
 		List<UsuarioShiro> usuarios = listAll();
 		if (usuarios.isEmpty()) {
+			// isisJdoSupport
+			// .executeUpdate("delete from UsuarioShiro_listaDeRoles");
+			// isisJdoSupport.executeUpdate("delete from Rol_listaPermisos");
+			// isisJdoSupport.executeUpdate("delete from Permiso");
+			// isisJdoSupport.executeUpdate("delete from Rol");
+			// isisJdoSupport.executeUpdate("delete from UsuarioShiro");
 			List<Usuario> externos = this.listAllExternos();
-			for(Usuario user : externos)
-			{
-				byte[] decodedBytes = Base64.decodeBase64(user.getUsuario_contrasenia());
-				addUsuarioShiro(user.getUsuario_nick(), new String(decodedBytes));
+			for (Usuario user : externos) {
+				byte[] decodedBytes = Base64.decodeBase64(user
+						.getUsuario_contrasenia());
+				System.out.println(user.getUsuario_contrasenia());
+				if (user.getUsuario_nick().contentEquals("root")) {
 
+					Permiso permiso = new Permiso();
+					Rol rol = new Rol();
+					SortedSet<Permiso> permisos = new TreeSet<Permiso>();
+
+					permiso.setNombre("ADMIN");
+					permiso.setPath("*");
+					permisos.add(permiso);
+					rol.setNombre("ADMINISTRADOR");
+					rol.setListaPermisos(permisos);
+					addUsuarioShiro(user.getUsuario_nick(), hash256(new String(
+							decodedBytes)), rol);// new
+					// String(decodedBytes));user.getUsuario_contrasenia()
+
+				} else {
+					addUsuarioShiro(user.getUsuario_nick(), hash256(new String(
+							decodedBytes)));
+				}
 			}
-			Permiso permiso = new Permiso();
-			Rol rol = new Rol();
-			SortedSet<Permiso> permisos = new TreeSet<Permiso>();
-
-			permiso.setNombre("ADMIN");
-			permiso.setPath("*");
-			permisos.add(permiso);
-			rol.setNombre("ADMINISTRADOR");
-			rol.setListaPermisos(permisos);
-
-			addUsuarioShiro("root", "infoimps", rol);
 		}
 	}
 
@@ -110,6 +142,7 @@ public class UsuarioShiroRepositorio {
 		container.persistIfNotAlready(obj);
 		return obj;
 	}
+
 	@MemberOrder(sequence = "2")
 	@Named("Crear Usuario")
 	@Hidden(where = Where.OBJECT_FORMS)
@@ -123,6 +156,7 @@ public class UsuarioShiroRepositorio {
 		container.persistIfNotAlready(obj);
 		return obj;
 	}
+
 	@Programmatic
 	public UsuarioShiro addUsuarioShiro(final @Named("Nick") String nick,
 			final @Named("Password") String password,
@@ -149,6 +183,7 @@ public class UsuarioShiroRepositorio {
 		return "El usuario de sistema " + userName
 				+ " se ha eliminado correctamente.";
 	}
+
 	private static PersistenceManager persistencia;
 
 	@ActionSemantics(Of.SAFE)
