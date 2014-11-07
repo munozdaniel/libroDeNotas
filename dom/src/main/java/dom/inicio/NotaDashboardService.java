@@ -1,4 +1,4 @@
-package dom.dashboard;
+package dom.inicio;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.ActionSemantics;

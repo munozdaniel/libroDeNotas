@@ -1,4 +1,4 @@
-package dom.dashboard;
+package dom.inicio;
 
 import java.util.List;
 
