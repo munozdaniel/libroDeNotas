@@ -1,4 +1,4 @@
-package dom.usuarioshiro;
+package dom.usuario;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

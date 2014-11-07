@@ -1,4 +1,4 @@
-package dom.usuarioshiro;
+package dom.usuario;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
