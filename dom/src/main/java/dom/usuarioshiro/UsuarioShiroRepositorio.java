@@ -40,11 +40,9 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Where;
 
 import dom.permiso.Permiso;
 import dom.rol.Rol;
@@ -126,8 +124,8 @@ public class UsuarioShiroRepositorio {
 	}
 
 	@ActionSemantics(Of.SAFE)
-	@MemberOrder(sequence = "1")
-	@Named("Verificar Actualizacion")
+	@MemberOrder(sequence = "10")
+	@Named("Actualizar Contraseñas")
 	public List<UsuarioShiro> actualizarUserPass() throws NoSuchAlgorithmException {
 		List<UsuarioShiro> listashiro = this.listAll();
 		List<Usuario> externos = this.listAllExternos();
@@ -146,11 +144,9 @@ public class UsuarioShiroRepositorio {
 		return listashiro;
 
 	}
-
-	@MemberOrder(sequence = "2")
-	@Named("Crear Usuario")
-	@Hidden(where = Where.OBJECT_FORMS)
-	private UsuarioShiro addUsuarioShiro(final @Named("Nick") String nick,
+	@MemberOrder(sequence = "10")
+	@Named("Agregar Usuario")
+	public UsuarioShiro addUsuarioShiro(final @Named("Nick") String nick,
 			final @Named("Password") String password,
 			final @Named("Rol") Rol rol) {
 		final UsuarioShiro obj = container
@@ -166,10 +162,7 @@ public class UsuarioShiroRepositorio {
 		container.persistIfNotAlready(obj);
 		return obj;
 	}
-
-	@MemberOrder(sequence = "2")
-	@Named("Crear Usuario")
-	@Hidden(where = Where.OBJECT_FORMS)
+	
 	private UsuarioShiro addUsuarioShiro(final @Named("Nick") String nick,
 			final @Named("Password") String password) {
 		final UsuarioShiro obj = container
@@ -180,9 +173,10 @@ public class UsuarioShiroRepositorio {
 		container.persistIfNotAlready(obj);
 		return obj;
 	}
-
 	@Programmatic
-	private UsuarioShiro addUsuarioShiro(final @Named("Nick") String nick,
+	@MemberOrder(sequence = "10")
+	@Named("Agregar Usuario 2")
+	public UsuarioShiro addUsuarioShiro(final @Named("Nick") String nick,
 			final @Named("Password") String password,
 			final @Named("Rol") List<Rol> rol) {
 		final UsuarioShiro obj = container
@@ -200,9 +194,6 @@ public class UsuarioShiroRepositorio {
 
 	private static PersistenceManager persistencia;
 
-	@ActionSemantics(Of.SAFE)
-	@MemberOrder(sequence = "1")
-	@Named("Ver todos")
 	private List<Usuario> listAllExternos() {
 
 		System.out.println("------------externos---------");

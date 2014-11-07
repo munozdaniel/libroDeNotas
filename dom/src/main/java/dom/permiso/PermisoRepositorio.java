@@ -99,6 +99,12 @@ public class PermisoRepositorio {
 		return container.allInstances(Permiso.class);
 	}
 
+	public static enum CategoriaClase {
+		Seagate, Western, Otro;
+	}
+
+
+
 	@javax.inject.Inject
 	DomainObjectContainer container;
 
