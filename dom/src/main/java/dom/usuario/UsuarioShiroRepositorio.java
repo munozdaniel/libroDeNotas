@@ -24,12 +24,14 @@ package dom.usuario;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
@@ -46,6 +48,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import dom.permiso.Permiso;
 import dom.rol.Rol;
+import dom.rol.RolRepositorio;
 
 @DomainService(menuOrder = "80", repositoryFor = UsuarioShiro.class)
 @Named("Usuarios")
@@ -77,6 +80,7 @@ public class UsuarioShiroRepositorio {
 	@PostConstruct
 	public void init() throws NoSuchAlgorithmException,
 			UnsupportedEncodingException {
+
 		List<UsuarioShiro> usuarios = listAll();
 		if (usuarios.isEmpty()) {
 			// isisJdoSupport
@@ -87,6 +91,7 @@ public class UsuarioShiroRepositorio {
 			// isisJdoSupport.executeUpdate("delete from UsuarioShiro");
 			List<Usuario> externos = this.listAllExternos();
 			for (Usuario user : externos) {
+
 				byte[] decodedBytes = Base64.decodeBase64(user
 						.getUsuario_contrasenia());
 				if (user.getUsuario_nick().contentEquals("root")) {
@@ -95,10 +100,10 @@ public class UsuarioShiroRepositorio {
 					Rol rol = new Rol();
 					SortedSet<Permiso> permisos = new TreeSet<Permiso>();
 
-					permiso.setNombre("ADMIN");
+					permiso.setNombre("SUPERUSUARIO");
 					permiso.setPath("*");
 					permisos.add(permiso);
-					rol.setNombre("ADMINISTRADOR");
+					rol.setNombre("SUPERUSUARIO");
 					rol.setListaPermisos(permisos);
 					addUsuarioShiro(user.getUsuario_nick(), hash256(new String(
 							decodedBytes)), rol);// new
@@ -109,11 +114,145 @@ public class UsuarioShiroRepositorio {
 							decodedBytes)));
 				}
 			}
-		}
-		else
-		{
+			this.createPermisosBasicos();
+			this.createPermisosBasicosEscritura();
+			this.createPermisosRepo();
+
+		} else {
 			this.actualizarUserPass();
 		}
+	}
+
+	@Inject
+	private RolRepositorio rolRepositorio;
+
+	private void createPermisosBasicos() {
+		List<Permiso> permisos = new ArrayList<Permiso>();
+		// read_dashboard,block_disposiciones,read_expediente,read_memo,read_nota,read_resoluciones,read_service
+
+		Permiso permiso = new Permiso();
+
+		permiso.setNombre("Disposiciones (LECTURA)");
+		permiso.setPath("dom.documento:*:*:r");
+		permisos.add(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Expedientes (Lectura)");
+		permiso.setPath("dom.expediente:*:*:r");
+		permisos.add(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Memo (Lectura)");
+		permiso.setPath("dom.memo:Memo:*:*:r");
+		permisos.add(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Nota (Lectura)");
+		permiso.setPath("dom.nota:*:*:r");
+		permisos.add(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Resoluciones (Lectura)");
+		permiso.setPath("dom.resoluciones:*:*:r");
+		permisos.add(permiso);
+		
+		permiso = new Permiso();
+		permiso.setNombre("Disposiciones (Lectura)");
+		permiso.setPath("dom.disposiciones:DisposicionRepositorio:*:*:r");
+		permisos.add(permiso);
+		
+		permiso = new Permiso();
+		permiso.setNombre("Servicio ");
+		permiso.setPath("services:*:*:*");
+		permisos.add(permiso);
+
+		rolRepositorio.addRol("IMPS (LECTURA)", permisos);
+	}
+
+	private void createPermisosBasicosEscritura() {
+		List<Permiso> permisos = new ArrayList<Permiso>();
+		// read_dashboard,block_disposiciones,read_expediente,read_memo,read_nota,read_resoluciones,read_service
+
+		Permiso permiso = new Permiso();
+
+		permiso.setNombre("Disposiciones (Escritura)");
+		permiso.setPath("dom.documento:*:*:*");
+		permisos.add(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Expedientes (Escritura)");
+		permiso.setPath("dom.expediente:*:*:*");
+		permisos.add(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Memo (Escritura)");
+		permiso.setPath("dom.memo:Memo:*:*:*");
+		permisos.add(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Nota (Escritura)");
+		permiso.setPath("dom.nota:*:*:*");
+		permisos.add(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Resoluciones (Escritura)");
+		permiso.setPath("dom.resoluciones:*:*:*");
+		permisos.add(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Servicio ");
+		permiso.setPath("services:*:*:*");
+		permisos.add(permiso);
+
+		rolRepositorio.addRol("IMPS (ADMINISTRADOR)", permisos);
+	}
+
+
+	private void createPermisosRepo() {
+		List<Permiso> permisos = new ArrayList<Permiso>();
+		// read_dashboard,block_disposiciones,read_expediente,read_memo,read_nota,read_resoluciones,read_service
+
+		Permiso permiso = new Permiso();
+		permiso.setNombre("Inicio");
+		permiso.setPath("dom.inicio:*:*:r");
+		permisos.add(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Documento (Lectura)");
+		permiso.setPath("dom.documento:*:*:r");
+		permisos.add(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Documento (Escritura)");
+		permiso.setPath("dom.documento:*:*:*");
+		permisos.add(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Disposiciones (Acciones)");
+		permiso.setPath("dom.disposiciones:DisposicionRepositorio:*:*");
+		permisos.add(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Expedientes (Acciones)");
+		permiso.setPath("dom.expediente:ExpedienteRepositorio:*:*");
+		permisos.add(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Memo (Acciones)");
+		permiso.setPath("dom.memo:MemoRepositorio:*:*");
+		permisos.add(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Nota (Acciones)");
+		permiso.setPath("dom.nota:NotaRepositorio:*:*");
+		permisos.add(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Resoluciones (Acciones)");
+		permiso.setPath("dom.resoluciones:ResolucionesRepositorio:*:*");
+		permisos.add(permiso);
+
+		rolRepositorio.addRol("IMPS (ACCIONES)", permisos);
 	}
 
 	@ActionSemantics(Of.SAFE)
@@ -126,7 +265,8 @@ public class UsuarioShiroRepositorio {
 	@ActionSemantics(Of.SAFE)
 	@MemberOrder(sequence = "10")
 	@Named("Actualizar Contraseñas")
-	public List<UsuarioShiro> actualizarUserPass() throws NoSuchAlgorithmException {
+	public List<UsuarioShiro> actualizarUserPass()
+			throws NoSuchAlgorithmException {
 		List<UsuarioShiro> listashiro = this.listAll();
 		List<Usuario> externos = this.listAllExternos();
 		for (UsuarioShiro usuario : listashiro) {
@@ -134,16 +274,16 @@ public class UsuarioShiroRepositorio {
 				if (userExt.getUsuario_nick().contentEquals(usuario.getNick())) {
 					byte[] decodedBytes = Base64.decodeBase64(userExt
 							.getUsuario_contrasenia());
-						String pass = hash256(new String(
-								decodedBytes));
-						usuario.setPassword(pass);
-						this.container.flush();
+					String pass = hash256(new String(decodedBytes));
+					usuario.setPassword(pass);
+					this.container.flush();
 				}
 			}
 		}
 		return listashiro;
 
 	}
+
 	@MemberOrder(sequence = "10")
 	@Named("Agregar Usuario")
 	public UsuarioShiro addUsuarioShiro(final @Named("Nick") String nick,
@@ -162,7 +302,7 @@ public class UsuarioShiroRepositorio {
 		container.persistIfNotAlready(obj);
 		return obj;
 	}
-	
+
 	private UsuarioShiro addUsuarioShiro(final @Named("Nick") String nick,
 			final @Named("Password") String password) {
 		final UsuarioShiro obj = container
@@ -173,6 +313,7 @@ public class UsuarioShiroRepositorio {
 		container.persistIfNotAlready(obj);
 		return obj;
 	}
+
 	@Programmatic
 	@MemberOrder(sequence = "10")
 	@Named("Agregar Usuario 2")
