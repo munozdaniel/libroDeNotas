@@ -43,25 +43,88 @@ public class MemoRepositorio {
 		return "memo";
 	}
 
-	@NotContributed
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
 	public Memo addMemo(
 			final @Named("De:") Sector sector,
-			final @Named("Sector Destino:") Sector destinoSector,
-			@Optional @Named("otro Sector:") String otroSector,
+			final @Optional @Named("Sector Destino:") Sector destinoSector,
+			final @Named("otro Sector? ") boolean otro,
+			@Optional @Named("Destino:") String otroSector,
 			final @Named("Descripción:") @MultiLine(numberOfLines = 2) @MaxLength(255) String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
-		if (!destinoSector.getNombre_sector().contentEquals("OTRO SECTOR"))
+		// if (!destinoSector.getNombre_sector().contentEquals("OTRO SECTOR"))
+		// otroSector = "";
+		if (!otro)
 			otroSector = "";
 		Memo memo = this.nuevoMemo(sector, destinoSector, otroSector,
 				descripcion, this.currentUserName(), adjunto);
-		if (memo != null){
-			this.container.informUser("El Memo ha sido guardado correctamente.");
+		if (memo != null) {
+			this.container
+					.informUser("El Memo ha sido guardado correctamente.");
 			return memo;
 		}
 		this.container.informUser("SISTEMA OCUPADO, INTENTELO NUEVAMENTE.");
 		return null;
+	}
+
+	// @Named("Enviar")
+	// @MemberOrder(sequence = "10")
+	// public Memo enviarMemo(
+	// final @Named("De:") Sector sector,
+	// final @Named("Sector Destino:") Sector destinoSector,
+	// final @Named("otro Sector? ") boolean otro,
+	// @Optional @Named("otro Sector:") String otroSector,
+	// final @Named("Descripción:") @MultiLine(numberOfLines = 2)
+	// @MaxLength(255) String descripcion,
+	// final @Optional @Named("Ajuntar:") Blob adjunto) {
+	// if (!destinoSector.getNombre_sector().contentEquals("OTRO SECTOR"))
+	// otroSector = "";
+	// Memo memo = this.nuevoMemo(sector, destinoSector, otroSector,
+	// descripcion, this.currentUserName(), adjunto);
+	// if (memo != null) {
+	// this.container
+	// .informUser("El Memo ha sido guardado correctamente.");
+	// return memo;
+	// }
+	// this.container.informUser("SISTEMA OCUPADO, INTENTELO NUEVAMENTE.");
+	// return null;
+	// }
+
+	public String validateAddMemo(Sector sector, Sector destinoSector,
+			boolean otro, String otroSector, String descripcion, Blob adjunto) {
+		if (!otro && destinoSector == null)
+			return "Seleccione un destino.";
+		if (otro && (otroSector == null || otroSector == ""))
+			return "Ingrese un Sector Destino.";
+		if (!this.ocupado)
+			this.ocupado = true;
+		else
+			return "Sistema ocupado, intente nuevamente.";
+
+		return null;
+	}
+
+	// public String validateAddMemo(final Sector sector, final Sector destino,
+	// String otro, final String descripcion, final Blob adj) {
+	// if (!this.ocupado)
+	// this.ocupado = true;
+	// else
+	// return "Sistema ocupado, intente nuevamente.";
+	// if (!destino.getNombre_sector().contentEquals("OTRO SECTOR"))
+	// otro = "";
+	// else if (otro == "" || otro == null)
+	// return "Ingrese un Sector.";
+	// return null;
+	//
+	// }
+	public List<Sector> choices1AddMemo(Sector sector, Sector destinoSector,
+			boolean otro, String otroSector) {
+		if (otro)
+			return null;
+		else {
+			otroSector = "";
+			return sectorRepositorio.listar();
+		}
 	}
 
 	@Programmatic
@@ -128,11 +191,11 @@ public class MemoRepositorio {
 		return doc;
 	}
 
-	@Named("Sector")
-	public List<Sector> choices1AddMemo() {
-		return sectorRepositorio.listar();
-
-	}
+	// @Named("Sector")
+	// public List<Sector> choices1AddMemo() {
+	// return sectorRepositorio.listar();
+	//
+	// }
 
 	@Named("Para")
 	public List<Sector> choices0AddMemo() {
@@ -147,20 +210,6 @@ public class MemoRepositorio {
 		if (!lista.isEmpty())
 			return lista.get(0);
 		return null;
-	}
-
-	public String validateAddMemo(final Sector sector, final Sector destino,
-			String otro, final String descripcion, final Blob adj) {
-		if (!this.ocupado)
-			this.ocupado = true;
-		else
-			return "Sistema ocupado, intente nuevamente.";
-		if (!destino.getNombre_sector().contentEquals("OTRO SECTOR"))
-			otro = "";
-		else if (otro == "" || otro == null)
-			return "Ingrese un Sector.";
-		return null;
-
 	}
 
 	// //////////////////////////////////////
@@ -219,9 +268,8 @@ public class MemoRepositorio {
 	@MemberOrder(sequence = "30")
 	@Named("Filtro por Fecha")
 	@DescribedAs("Seleccione una fecha de inicio y una fecha final.")
-	public List<Memo> filtrarPorFecha(
-			final  @Named("Desde:") LocalDate desde,
-			final  @Named("Hasta:") LocalDate hasta) {
+	public List<Memo> filtrarPorFecha(final @Named("Desde:") LocalDate desde,
+			final @Named("Hasta:") LocalDate hasta) {
 
 		final List<Memo> lista = this.container
 				.allMatches(new QueryDefault<Memo>(Memo.class,
