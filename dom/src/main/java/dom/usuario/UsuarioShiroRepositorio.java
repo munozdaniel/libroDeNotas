@@ -116,7 +116,6 @@ public class UsuarioShiroRepositorio {
 			}
 			this.createPermisosBasicos();
 			this.createPermisosBasicosEscritura();
-			this.createPermisosRepo();
 
 		} else {
 			this.actualizarUserPass();
@@ -165,6 +164,7 @@ public class UsuarioShiroRepositorio {
 		permiso.setNombre("Servicio ");
 		permiso.setPath("services:*:*:*");
 		permisos.add(permiso);
+		createPermisosRepo(permisos);
 
 		rolRepositorio.addRol("IMPS (LECTURA)", permisos);
 	}
@@ -203,13 +203,13 @@ public class UsuarioShiroRepositorio {
 		permiso.setNombre("Servicio ");
 		permiso.setPath("services:*:*:*");
 		permisos.add(permiso);
-
+		createPermisosRepo(permisos);
 		rolRepositorio.addRol("IMPS (ADMINISTRADOR)", permisos);
 	}
 
 
-	private void createPermisosRepo() {
-		List<Permiso> permisos = new ArrayList<Permiso>();
+	private void createPermisosRepo(List<Permiso> permisos) {
+//		List<Permiso> permisos = new ArrayList<Permiso>();
 		// read_dashboard,block_disposiciones,read_expediente,read_memo,read_nota,read_resoluciones,read_service
 
 		Permiso permiso = new Permiso();
@@ -252,7 +252,7 @@ public class UsuarioShiroRepositorio {
 		permiso.setPath("dom.resoluciones:ResolucionesRepositorio:*:*");
 		permisos.add(permiso);
 
-		rolRepositorio.addRol("IMPS (ACCIONES)", permisos);
+		//		rolRepositorio.addRol("IMPS (ACCIONES)", permisos);
 	}
 
 	@ActionSemantics(Of.SAFE)
