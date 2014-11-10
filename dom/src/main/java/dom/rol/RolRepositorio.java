@@ -50,13 +50,13 @@ public class RolRepositorio {
 	}
 
 	@ActionSemantics(Of.SAFE)
-	@MemberOrder(sequence = "1")
+	@MemberOrder(sequence = "2")
 	@Named("Lista de Roles")
 	public List<Rol> listAll() {
 		return container.allInstances(Rol.class);
 	}
 
-	@MemberOrder(sequence = "2")
+	@MemberOrder(sequence = "1")
 	@Named("Crear Rol")
 	@Hidden(where = Where.OBJECT_FORMS)
 	public Rol addRol(final @Named("Nombre") String nombre,
