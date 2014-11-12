@@ -22,9 +22,7 @@
 package dom.permiso;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -34,7 +32,6 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
-import org.reflections.Reflections;
 
 @DomainService(menuOrder = "82", repositoryFor = Permiso.class)
 @Named("Permisos")
@@ -183,25 +180,25 @@ public class PermisoRepositorio {
 		}
 	}
 
-	public void prueba(final @Named("package") Package pack,
-			final @Named("Clases Reflection") String clases) {
-
-	}
-
-	public List<String> choices1Prueba(Package pack, String clases) {
-		Reflections reflections = new Reflections("dom.rol");
-
-		Set<Class<? extends Object>> allClasses = reflections
-				.getSubTypesOf(Object.class);
-
-		System.out.println("CLase " + allClasses.size());
-		List<String> lista = new ArrayList<String>();
-		for (Iterator<Class<? extends Object>> it = allClasses.iterator(); it
-				.hasNext();) {
-			lista.add(it.next().toString());
-		}
-		return lista;
-	}
+//	public void prueba(final @Named("package") Package pack,
+//			final @Named("Clases Reflection") String clases) {
+//
+//	}
+//
+//	public List<String> choices1Prueba(Package pack, String clases) {
+//		Reflections reflections = new Reflections("dom.rol");
+//
+//		Set<Class<? extends Object>> allClasses = reflections
+//				.getSubTypesOf(Object.class);
+//
+//		System.out.println("CLase " + allClasses.size());
+//		List<String> lista = new ArrayList<String>();
+//		for (Iterator<Class<? extends Object>> it = allClasses.iterator(); it
+//				.hasNext();) {
+//			lista.add(it.next().toString());
+//		}
+//		return lista;
+//	}
 
 	@javax.inject.Inject
 	DomainObjectContainer container;
