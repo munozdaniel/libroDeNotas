@@ -154,12 +154,12 @@ public class UsuarioShiroRepositorio {
 		permiso.setNombre("Resoluciones (Lectura)");
 		permiso.setPath("dom.resoluciones:*:*:r");
 		permisos.add(permiso);
-		
+
 		permiso = new Permiso();
 		permiso.setNombre("Disposiciones (Lectura)");
 		permiso.setPath("dom.disposiciones:DisposicionRepositorio:*:*:r");
 		permisos.add(permiso);
-		
+
 		permiso = new Permiso();
 		permiso.setNombre("Servicio ");
 		permiso.setPath("services:*:*:*");
@@ -207,9 +207,8 @@ public class UsuarioShiroRepositorio {
 		rolRepositorio.addRol("IMPS (ADMINISTRADOR)", permisos);
 	}
 
-
 	private void createPermisosRepo(List<Permiso> permisos) {
-//		List<Permiso> permisos = new ArrayList<Permiso>();
+		// List<Permiso> permisos = new ArrayList<Permiso>();
 		// read_dashboard,block_disposiciones,read_expediente,read_memo,read_nota,read_resoluciones,read_service
 
 		Permiso permiso = new Permiso();
@@ -252,7 +251,7 @@ public class UsuarioShiroRepositorio {
 		permiso.setPath("dom.resoluciones:ResolucionesRepositorio:*:*");
 		permisos.add(permiso);
 
-		//		rolRepositorio.addRol("IMPS (ACCIONES)", permisos);
+		// rolRepositorio.addRol("IMPS (ACCIONES)", permisos);
 	}
 
 	@ActionSemantics(Of.SAFE)
@@ -340,8 +339,9 @@ public class UsuarioShiroRepositorio {
 		System.out.println("------------externos---------");
 		PersistenceManagerFactory pm = this.conexion();
 		persistencia = pm.getPersistenceManager();
-		Query q = persistencia.newQuery("javax.jdo.query.SQL",
-				"SELECT * FROM usuarios");
+		Query q = persistencia
+				.newQuery("javax.jdo.query.SQL",
+						"SELECT usuario_id,usuario_nick, usuario_contrasenia FROM usuarios");
 		q.setResultClass(Usuario.class);
 		List<Usuario> results = (List<Usuario>) (q.execute());
 		return results;
