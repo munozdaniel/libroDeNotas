@@ -2,6 +2,8 @@ package dom.sector;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -30,7 +32,15 @@ public class SectorRepositorio {
 	public String iconName() {
 		return "Tecnico";
 	}
-
+	@Programmatic
+	@PostConstruct
+	public void init() {
+		List<Sector> lista = this.listar();
+		if(lista.isEmpty())
+		{
+			this.nuevoSector("OTRO SECTOR", "None", false, false, false, "Admin");
+		}
+	}
 	// //////////////////////////////////////
 	// Insertar un Sector.
 	// //////////////////////////////////////
