@@ -18,9 +18,8 @@
  * 
  * 
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-*/
+ */
 package dom.usuario;
-
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -33,6 +32,8 @@ import javax.jdo.annotations.VersionStrategy;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.DescribedAs;
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
@@ -40,6 +41,7 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Title;
 
 import dom.rol.Rol;
+
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id")
@@ -53,6 +55,7 @@ public class UsuarioShiro {
 	@MemberOrder(sequence = "1")
 	@Column(allowsNull = "false")
 	@Title
+	@Disabled
 	public String getNick() {
 		return nick;
 	}
@@ -65,6 +68,8 @@ public class UsuarioShiro {
 
 	@MemberOrder(sequence = "2")
 	@Column(allowsNull = "false")
+	@Disabled
+	@Hidden
 	public String getPassword() {
 		return password;
 	}

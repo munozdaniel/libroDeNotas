@@ -114,24 +114,66 @@ public class UsuarioShiroRepositorio {
 							decodedBytes)));
 				}
 			}
-			this.createPermisosBasicos();
-			this.createPermisosBasicosEscritura();
+			this.crearRolPermisosMenu();
+			this.crearRolPermisosLectura();
+			this.crearRolPermisosEscritura();
 
 		} else {
 			this.actualizarUserPass();
 		}
 	}
 
-	@Inject
-	private RolRepositorio rolRepositorio;
+	private void crearRolPermisosMenu() {
+		List<Permiso> permisos = new ArrayList<Permiso>();
+		Permiso permiso = new Permiso();
+		permiso.setNombre("Inicio");
+		permiso.setPath("dom.inicio:*:*:r");
+		permisos.add(permiso);
 
-	private void createPermisosBasicos() {
+		// permiso = new Permiso();
+		// permiso.setNombre("Documento (Lectura)");
+		// permiso.setPath("dom.documento:*:*:r");
+		// permisos.add(permiso);
+		//
+		// permiso = new Permiso();
+		// permiso.setNombre("Documento (Escritura)");
+		// permiso.setPath("dom.documento:*:*:*");
+		// permisos.add(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Menu Disposiciones");
+		permiso.setPath("dom.disposiciones:DisposicionRepositorio:*:*");
+		permisos.add(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Menu Expedientes");
+		permiso.setPath("dom.expediente:ExpedienteRepositorio:*:*");
+		permisos.add(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Menu Memo");
+		permiso.setPath("dom.memo:MemoRepositorio:*:*");
+		permisos.add(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Menu Notas");
+		permiso.setPath("dom.nota:NotaRepositorio:*:*");
+		permisos.add(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Menu Resoluciones");
+		permiso.setPath("dom.resoluciones:ResolucionesRepositorio:*:*");
+		permisos.add(permiso);
+		rolRepositorio.addRol("MENU", permisos);
+	}
+
+	private void crearRolPermisosLectura() {
 		List<Permiso> permisos = new ArrayList<Permiso>();
 		// read_dashboard,block_disposiciones,read_expediente,read_memo,read_nota,read_resoluciones,read_service
 
 		Permiso permiso = new Permiso();
 
-		permiso.setNombre("Disposiciones (LECTURA)");
+		permiso.setNombre("Documento (Lectura)");
 		permiso.setPath("dom.documento:*:*:r");
 		permisos.add(permiso);
 
@@ -164,12 +206,11 @@ public class UsuarioShiroRepositorio {
 		permiso.setNombre("Servicio ");
 		permiso.setPath("services:*:*:*");
 		permisos.add(permiso);
-		createPermisosRepo(permisos);
 
 		rolRepositorio.addRol("IMPS (LECTURA)", permisos);
 	}
 
-	private void createPermisosBasicosEscritura() {
+	private void crearRolPermisosEscritura() {
 		List<Permiso> permisos = new ArrayList<Permiso>();
 		// read_dashboard,block_disposiciones,read_expediente,read_memo,read_nota,read_resoluciones,read_service
 
@@ -203,56 +244,12 @@ public class UsuarioShiroRepositorio {
 		permiso.setNombre("Servicio ");
 		permiso.setPath("services:*:*:*");
 		permisos.add(permiso);
-		createPermisosRepo(permisos);
 		rolRepositorio.addRol("IMPS (ADMINISTRADOR)", permisos);
 	}
 
-	private void createPermisosRepo(List<Permiso> permisos) {
-		// List<Permiso> permisos = new ArrayList<Permiso>();
-		// read_dashboard,block_disposiciones,read_expediente,read_memo,read_nota,read_resoluciones,read_service
+	@Inject
+	private RolRepositorio rolRepositorio;
 
-		Permiso permiso = new Permiso();
-		permiso.setNombre("Inicio");
-		permiso.setPath("dom.inicio:*:*:r");
-		permisos.add(permiso);
-
-		permiso = new Permiso();
-		permiso.setNombre("Documento (Lectura)");
-		permiso.setPath("dom.documento:*:*:r");
-		permisos.add(permiso);
-
-		permiso = new Permiso();
-		permiso.setNombre("Documento (Escritura)");
-		permiso.setPath("dom.documento:*:*:*");
-		permisos.add(permiso);
-
-		permiso = new Permiso();
-		permiso.setNombre("Disposiciones (Acciones)");
-		permiso.setPath("dom.disposiciones:DisposicionRepositorio:*:*");
-		permisos.add(permiso);
-
-		permiso = new Permiso();
-		permiso.setNombre("Expedientes (Acciones)");
-		permiso.setPath("dom.expediente:ExpedienteRepositorio:*:*");
-		permisos.add(permiso);
-
-		permiso = new Permiso();
-		permiso.setNombre("Memo (Acciones)");
-		permiso.setPath("dom.memo:MemoRepositorio:*:*");
-		permisos.add(permiso);
-
-		permiso = new Permiso();
-		permiso.setNombre("Nota (Acciones)");
-		permiso.setPath("dom.nota:NotaRepositorio:*:*");
-		permisos.add(permiso);
-
-		permiso = new Permiso();
-		permiso.setNombre("Resoluciones (Acciones)");
-		permiso.setPath("dom.resoluciones:ResolucionesRepositorio:*:*");
-		permisos.add(permiso);
-
-		// rolRepositorio.addRol("IMPS (ACCIONES)", permisos);
-	}
 
 	@ActionSemantics(Of.SAFE)
 	@MemberOrder(sequence = "1")
