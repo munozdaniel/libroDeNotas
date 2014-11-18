@@ -102,4 +102,6 @@ public class Rol implements Comparable<Rol> {
 		return this.getNombre().compareTo(other.getNombre());
 	}
 
+
+	
 }
