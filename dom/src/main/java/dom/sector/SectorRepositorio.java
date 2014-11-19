@@ -125,7 +125,7 @@ public class SectorRepositorio {
 	 * @param nombreSector
 	 * @return
 	 */
-	
+	@Programmatic
 	@MemberOrder(sequence = "21")
 	public Sector buscarPorNombre(
 			final String nombre) {

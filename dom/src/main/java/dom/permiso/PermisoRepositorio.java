@@ -53,7 +53,7 @@ public class PermisoRepositorio {
 
 	}
 	@MemberOrder(sequence = "1")
-	@Named("Nuevo Permiso")
+	@Named("Agregar Permiso")
 	public Permiso addPermiso(
 			final @Named("Nombre") String nombre,
 			final @Optional @Named("Package") String pack,
