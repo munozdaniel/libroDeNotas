@@ -20,6 +20,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 package dom.usuario;
+
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -41,7 +42,6 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Title;
 
 import dom.rol.Rol;
-
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "id")
@@ -82,7 +82,7 @@ public class UsuarioShiro {
 	@Element(dependent = "false")
 	private SortedSet<Rol> listaDeRoles = new TreeSet<Rol>();
 
-	@MemberOrder(sequence = "3")
+	@MemberOrder(name = "lista de roles", sequence = "3")
 	@Render(org.apache.isis.applib.annotation.Render.Type.EAGERLY)
 	public SortedSet<Rol> getListaDeRoles() {
 		return listaDeRoles;
@@ -92,7 +92,7 @@ public class UsuarioShiro {
 		this.listaDeRoles = listaDeRoles;
 	}
 
-	@MemberOrder(sequence = "3")
+	@MemberOrder(name = "lista de roles", sequence = "3")
 	@Named("Agregar Rol")
 	@DescribedAs("Agrega un Rol al Usuario.")
 	public UsuarioShiro addRole(final @Named("Role") Rol rol) {
@@ -106,11 +106,15 @@ public class UsuarioShiro {
 		this.listaDeRoles = listaDeRoles;
 	}
 
-	@MemberOrder(sequence = "5")
-	@Named("Eliminar")
+	@MemberOrder(name = "lista de roles", sequence = "3")
+	@Named("Eliminar Rol")
 	public UsuarioShiro removeRole(final @Named("Rol") Rol rol) {
-
-		getListaDeRoles().remove(rol);
+		if (rol.getNombre().equalsIgnoreCase("SUPERUSUARIO"))
+			this.container.warnUser("No se puede eliminar el rol SUPERUSUARIO");
+		else {
+			rol.removePermiso();
+			getListaDeRoles().remove(rol);
+		}
 		return this;
 	}
 

@@ -47,6 +47,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import dom.permiso.Permiso;
+import dom.permiso.PermisoRepositorio;
 import dom.rol.Rol;
 import dom.rol.RolRepositorio;
 
@@ -117,12 +118,54 @@ public class UsuarioShiroRepositorio {
 			this.crearRolPermisosMenu();
 			this.crearRolPermisosLectura();
 			this.crearRolPermisosEscritura();
+			this.crearRolPermisosDisposicion();
 
 		} else {
 			this.actualizarUserPass();
 		}
 	}
+	private void crearRolPermisosDisposicion()
+	{
+		List<Permiso> permisos = new ArrayList<Permiso>();
+		Permiso permiso = new Permiso();
+		permiso.setNombre("Disposiciones (Lectura)");
+		permiso.setPath("dom.disposiciones:*:*:r");
+		permisos.add(permiso);
+		permiso = new Permiso();
+		permiso.setNombre("Bloquear Menu Disposiciones");
+		permiso.setPath("dom.disposiciones:DisposicionRepositorio:*:r");
+		permisos.add(permiso);
+		rolRepositorio.addRol("MENU DISPOSICIONES (Bloquear)", permisos);
+		
+		permisos = new ArrayList<Permiso>();
+		permiso = new Permiso();
+		permiso.setNombre("Disposiciones (Escritura)");
+		permiso.setPath("dom.disposiciones:*:*:*");
+		permisos.add(permiso);
+		rolRepositorio.addRol("DISPOSICIONES (Escritura)", permisos);
 
+		permiso = new Permiso();
+		permiso.setNombre("Bloquear Menu Resoluciones");
+		permiso.setPath("dom.disposiciones:DisposicionRepositorio:*:r");
+		permisoRepositorio.addPermiso(permiso);
+		permiso = new Permiso();
+		permiso.setNombre("Bloquear Menu Expedientes");
+		permiso.setPath("dom.Expediente:ExpedienteRepositorio:*:r");
+		permisoRepositorio.addPermiso(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Bloquear Menu Notas");
+		permiso.setPath("dom.nota:NotaRepositorio:*:r");
+		permisoRepositorio.addPermiso(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Bloquear Menu Memo");
+		permiso.setPath("dom.Memo:MemoRepositorio:*:r");
+		permisoRepositorio.addPermiso(permiso);
+
+	}
+	@Inject
+	private PermisoRepositorio permisoRepositorio;
 	private void crearRolPermisosMenu() {
 		List<Permiso> permisos = new ArrayList<Permiso>();
 		Permiso permiso = new Permiso();
@@ -139,11 +182,12 @@ public class UsuarioShiroRepositorio {
 		// permiso.setNombre("Documento (Escritura)");
 		// permiso.setPath("dom.documento:*:*:*");
 		// permisos.add(permiso);
-
-		permiso = new Permiso();
-		permiso.setNombre("Menu Disposiciones");
-		permiso.setPath("dom.disposiciones:DisposicionRepositorio:*:*");
-		permisos.add(permiso);
+		
+		// permiso = new Permiso();
+		// permiso.setNombre("Menu Disposiciones");
+		// permiso.setPath("dom.disposiciones:DisposicionRepositorio:*:*");
+		// permisos.add(permiso);
+		
 
 		permiso = new Permiso();
 		permiso.setNombre("Menu Expedientes");
@@ -197,10 +241,10 @@ public class UsuarioShiroRepositorio {
 		permiso.setPath("dom.resoluciones:*:*:r");
 		permisos.add(permiso);
 
-		permiso = new Permiso();
-		permiso.setNombre("Disposiciones (Lectura)");
-		permiso.setPath("dom.disposiciones:DisposicionRepositorio:*:*:r");
-		permisos.add(permiso);
+//		permiso = new Permiso();
+//		permiso.setNombre("Disposiciones (Lectura)");
+//		permiso.setPath("dom.disposiciones:*:*:r");
+//		permisos.add(permiso);
 
 		permiso = new Permiso();
 		permiso.setNombre("Servicio ");
@@ -216,10 +260,15 @@ public class UsuarioShiroRepositorio {
 
 		Permiso permiso = new Permiso();
 
-		permiso.setNombre("Disposiciones (Escritura)");
+		permiso.setNombre("Documentos (Escritura)");
 		permiso.setPath("dom.documento:*:*:*");
 		permisos.add(permiso);
 
+//		permiso = new Permiso();
+//		permiso.setNombre("Disposiciones (Escritura)");
+//		permiso.setPath("dom.disposiciones:*:*:*");
+//		permisos.add(permiso);
+		
 		permiso = new Permiso();
 		permiso.setNombre("Expedientes (Escritura)");
 		permiso.setPath("dom.expediente:*:*:*");
@@ -279,7 +328,7 @@ public class UsuarioShiroRepositorio {
 		return listashiro;
 
 	}
-
+	@Programmatic
 	@MemberOrder(sequence = "10")
 	@Named("Agregar Usuario")
 	public UsuarioShiro addUsuarioShiro(final @Named("Nick") String nick,
