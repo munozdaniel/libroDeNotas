@@ -88,10 +88,15 @@ public class RolRepositorio {
 	@ActionSemantics(Of.NON_IDEMPOTENT)
 	@MemberOrder(sequence = "4")
 	@Named("Eliminar Rol")
-	public String removeRol(@Named("Rol") Rol rol) {
-		String roleName = rol.getNombre();
-		container.remove(rol);
-		return "El Rol " + roleName + " se ha eliminado correctamente.";
+	@Programmatic
+	public void removeRol(@Named("Rol") Rol rol) {
+		if (!rol.getNombre().equalsIgnoreCase("SUPERUSUARIO")) {
+			String roleName = rol.getNombre();
+			container.remove(rol);
+			this.container.warnUser("El Rol " + roleName + " se ha eliminado correctamente.");
+		}
+		else
+			this.container.warnUser("El Rol SUPERUSUARIO NO PUEDE SER ELIMINADO.");
 	}
 
 	@javax.inject.Inject

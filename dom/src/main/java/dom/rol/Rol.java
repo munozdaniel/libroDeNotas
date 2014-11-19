@@ -35,6 +35,7 @@ import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ObjectType;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
 
 import dom.permiso.Permiso;
@@ -67,7 +68,7 @@ public class Rol implements Comparable<Rol> {
 	@Element(dependent = "false")
 	private SortedSet<Permiso> listaPermisos = new TreeSet<Permiso>();
 
-	@MemberOrder(sequence = "3")
+	@MemberOrder(name="lista de permisos",sequence = "3")
 	@Render(org.apache.isis.applib.annotation.Render.Type.EAGERLY)
 	public SortedSet<Permiso> getListaPermisos() {
 		return listaPermisos;
@@ -77,7 +78,7 @@ public class Rol implements Comparable<Rol> {
 		this.listaPermisos = listaPermisos;
 	}
 
-	@MemberOrder(sequence = "4")
+	@MemberOrder(name="lista de permisos",sequence = "3")
 	@Named("Agregar Permiso")
 	@DescribedAs("Agregar un Permiso a este Rol.")
 	public Rol addPermiso(final @Named("Permission") Permiso permiso) {
@@ -85,14 +86,18 @@ public class Rol implements Comparable<Rol> {
 		return this;
 	}
 
-	@MemberOrder(sequence = "5")
+	@MemberOrder(name="lista de permisos",sequence = "3")
 	@Named("Eliminar Permiso")
 	@DescribedAs("Remover permiso para este Rol.")
 	public Rol removePermiso(final @Named("Permission") Permiso permiso) {
 		getListaPermisos().remove(permiso);
 		return this;
 	}
-
+	@Programmatic
+	public Rol removePermiso() {
+		this.setListaPermisos(null);
+		return this;
+	}
 	public SortedSet<Permiso> choices0RemovePermiso() {
 		return getListaPermisos();
 	}
@@ -101,7 +106,6 @@ public class Rol implements Comparable<Rol> {
 	public int compareTo(Rol other) {
 		return this.getNombre().compareTo(other.getNombre());
 	}
-
-
+	
 	
 }
