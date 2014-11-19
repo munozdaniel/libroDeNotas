@@ -32,6 +32,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 
 @DomainService(menuOrder = "82", repositoryFor = Permiso.class)
 @Named("Permisos")
@@ -44,7 +45,13 @@ public class PermisoRepositorio {
 	public String iconName() {
 		return "Tecnico";
 	}
+	@Programmatic
+	public void addPermiso(final Permiso permiso)
+	{
+		container.persistIfNotAlready(permiso);
+		container.flush();
 
+	}
 	@MemberOrder(sequence = "1")
 	@Named("Nuevo Permiso")
 	public Permiso addPermiso(
