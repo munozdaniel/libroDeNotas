@@ -38,9 +38,9 @@ import dom.sector.SectorRepositorio;
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.disposiciones.Disposicion ORDER BY nro_Disposicion DESC"),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Disposicion " + "WHERE  (ultimo == true)"),
+				+ "FROM dom.disposiciones.Disposicion " + "WHERE  (ultimo == true)"),
 		@javax.jdo.annotations.Query(name = "filtrarPorFechas", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.disposicion.Disposicion "
+				+ "FROM dom.disposiciones.Disposicion "
 				+ "WHERE  :desde <= fecha && fecha<=:hasta ORDER BY fecha DESC ") })
 @ObjectType("DISPOSICION")
 @Audited
