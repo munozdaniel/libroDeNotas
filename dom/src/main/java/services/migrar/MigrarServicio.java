@@ -36,7 +36,6 @@ import dom.sector.SectorRepositorio;
  * @author munoz
  * 
  */
-@DomainService
 public class MigrarServicio {
 	
 	public List<Sector> migrarSectores() {

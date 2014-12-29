@@ -36,14 +36,14 @@ import dom.sector.SectorRepositorio;
 		@javax.jdo.annotations.Query(name = "buscarPorNroMemo", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.memo.Memo "
 				+ "WHERE  "
-				+ "nro_nota.indexOf(:nro_nota) >= 0"),
+				+ "nro_memo.indexOf(:nro_memo) >= 0"),
 		@javax.jdo.annotations.Query(name = "listarHabilitados", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.memo.Memo "
-				+ "WHERE  habilitado == true ORDER BY nro_memo DESC"),
+				+ "WHERE  habilitado == true ORDER BY fecha DESC"),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.memo.Memo ORDER BY nro_memo DESC"),
+				+ "FROM dom.memo.Memo ORDER BY fecha DESC"),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Memo " + "WHERE  (ultimo == true)"),
+				+ "FROM dom.memo.Memo " + "WHERE  (ultimo == true)"),
 		@javax.jdo.annotations.Query(name = "filtrarPorFechas", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.memo.Memo "
 				+ "WHERE  :desde <= fecha && fecha<=:hasta ORDER BY fecha DESC ") })

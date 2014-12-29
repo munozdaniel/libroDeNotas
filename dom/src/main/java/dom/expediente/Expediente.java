@@ -40,12 +40,12 @@ import dom.sector.SectorRepositorio;
 		@javax.jdo.annotations.Query(name = "buscarPorNroExpediente", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.expediente.Expediente "
 				+ "WHERE  "
-				+ "nro_nota.indexOf(:nro_nota) >= 0"),
+				+ "nro_expediente.indexOf(:nro_expediente) >= 0"),
 		@javax.jdo.annotations.Query(name = "listarHabilitados", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.expediente.Expediente "
-				+ "WHERE  habilitado == true ORDER BY nro_expediente DESC"),
+				+ "WHERE  habilitado == true ORDER BY fecha DESC"),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.expediente.Expediente ORDER BY nro_expediente DESC"),
+				+ "FROM dom.expediente.Expediente ORDER BY fecha DESC"),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.expediente.Expediente " + "WHERE  (ultimo == true)"),
 		@javax.jdo.annotations.Query(name = "filtrarPorFechas", language = "JDOQL", value = "SELECT "

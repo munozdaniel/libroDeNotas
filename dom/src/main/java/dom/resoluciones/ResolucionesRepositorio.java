@@ -46,7 +46,7 @@ public class ResolucionesRepositorio {
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
 	public Resoluciones addResoluciones(
-			final @Named("Fecha:") LocalDate fecha,
+			final @Named("Fecha:")  LocalDate fecha,
 			final @Named("De: ") Sector sector,
 			final @Named("Descripción:") @MultiLine(numberOfLines = 2) @MaxLength(255) String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
@@ -57,11 +57,17 @@ public class ResolucionesRepositorio {
 
 	public String validateAddResoluciones(final LocalDate fecha,
 			final Sector sector, final String descripcion, final Blob adjunto) {
-		if (!this.ocupado) {
-			this.ocupado = true;
-			return null;
-		} else
-			return "Sistema ocupado, intente nuevamente.";
+
+		if (fecha.getYear() < LocalDate.now().getYear())
+			return "Fecha Incorrecta: El Año no debe ser menor al año actual.";
+		else {
+			if (!this.ocupado) {
+				this.ocupado = true;
+				return null;
+			} else
+				return "Sistema ocupado, intente nuevamente.";
+		}
+
 	}
 
 	@Programmatic
@@ -97,7 +103,7 @@ public class ResolucionesRepositorio {
 			// }
 			// Si no habian nota, o si es el ultimo del año, el proximo
 			// nro
-						// comienza en 1.
+			// comienza en 1.
 			unaResolucion.setNro_resolucion(nro);
 			unaResolucion.setUltimo(true);
 			unaResolucion.setUltimoDelAnio(false);

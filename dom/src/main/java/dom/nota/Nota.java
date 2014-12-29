@@ -31,9 +31,9 @@ import dom.documento.Documento;
 				+ "WHERE destino.indexOf(:destino) >= 0"),
 		@javax.jdo.annotations.Query(name = "listarHabilitados", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota "
-				+ "WHERE  habilitado == true ORDER BY nro_nota DESC "),
+				+ "WHERE  habilitado == true ORDER BY fecha DESC "),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Nota ORDER BY nro_nota DESC  "),
+				+ "FROM dom.nota.Nota ORDER BY fecha DESC  "),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = " SELECT  "
 				+ "FROM dom.nota.Nota " + "WHERE  (ultimo == true)  "),
 		@javax.jdo.annotations.Query(name = "esNuevoAnio", language = "JDOQL", value = "SELECT "
