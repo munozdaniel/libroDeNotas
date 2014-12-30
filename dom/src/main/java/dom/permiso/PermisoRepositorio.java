@@ -24,6 +24,8 @@ package dom.permiso;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -51,6 +53,65 @@ public class PermisoRepositorio {
 		container.persistIfNotAlready(permiso);
 		container.flush();
 
+	}
+	@Programmatic
+	@PostConstruct
+	public void init() {
+		//Se crean todos los permisos que van a ser utilizados (y buscados ) por los roles.
+		Permiso permiso = new Permiso();
+		
+		//MENU::
+		permiso = new Permiso();
+		permiso.setNombre("Menu Expedientes");
+		permiso.setPath("dom.expediente:ExpedienteRepositorio:*:*");
+		this.addPermiso(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Menu Memo");
+		permiso.setPath("dom.memo:MemoRepositorio:*:*");
+		this.addPermiso(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Menu Notas");
+		permiso.setPath("dom.nota:NotaRepositorio:*:*");
+		this.addPermiso(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Menu Resoluciones");
+		permiso.setPath("dom.resoluciones:ResolucionesRepositorio:*:*");
+		this.addPermiso(permiso);
+		
+		permiso = new Permiso();
+		permiso.setNombre("Menu Disposiciones");
+		permiso.setPath("dom.disposiciones:DisposicionRepositorio:*:*");
+		this.addPermiso(permiso);
+		
+		//BLOQUEAR MENU::
+
+		permiso = new Permiso();
+		permiso.setNombre("Bloquear Menu Resoluciones");
+		permiso.setPath("dom.disposiciones:DisposicionRepositorio:*:r");
+		this.addPermiso(permiso);
+		
+		permiso = new Permiso();
+		permiso.setNombre("Bloquear Menu Expedientes");
+		permiso.setPath("dom.Expediente:ExpedienteRepositorio:*:r");
+		this.addPermiso(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Bloquear Menu Notas");
+		permiso.setPath("dom.nota:NotaRepositorio:*:r");
+		this.addPermiso(permiso);
+
+		permiso = new Permiso();
+		permiso.setNombre("Bloquear Menu Memo");
+		permiso.setPath("dom.Memo:MemoRepositorio:*:r");
+		this.addPermiso(permiso);
+		
+		permiso = new Permiso();
+		permiso.setNombre("Bloquear Menu Disposiciones");
+		permiso.setPath("dom.disposiciones:DisposicionRepositorio:*:r");
+		this.addPermiso(permiso);
 	}
 	@MemberOrder(sequence = "1")
 	@Named("Agregar Permiso")
