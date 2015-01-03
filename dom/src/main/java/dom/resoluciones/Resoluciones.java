@@ -34,12 +34,12 @@ import dom.sector.SectorRepositorio;
 				+ "WHERE habilitado == false"),
 		@javax.jdo.annotations.Query(name = "listarHabilitados", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.resoluciones.Resoluciones "
-				+ "WHERE  habilitado == true  ORDER BY nro_resolucion DESC"),
+				+ "WHERE  habilitado == true  ORDER BY nro_resolucion DESC, fecha DESC"),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.resoluciones.Resoluciones   ORDER BY nro_resolucion DESC"),
+				+ "FROM dom.resoluciones.Resoluciones   ORDER BY nro_resolucion DESC, fecha DESC"),
 		@javax.jdo.annotations.Query(name = "filtrarPorFechas", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.resoluciones.Resoluciones "
-				+ "WHERE  :desde <= fecha && fecha<=:hasta ORDER BY fecha DESC "),
+				+ "WHERE  :desde <= fecha && fecha<=:hasta ORDER BY fecha DESC, nro_resolucion DESC "),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = " SELECT  "
 				+ "FROM dom.resoluciones.Resoluciones " + "WHERE  (ultimo == true)  ") })
 @ObjectType("RESOLUCIONES")

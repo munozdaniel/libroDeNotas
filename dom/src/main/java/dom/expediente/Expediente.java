@@ -40,17 +40,17 @@ import dom.sector.SectorRepositorio;
 		@javax.jdo.annotations.Query(name = "buscarPorNroExpediente", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.expediente.Expediente "
 				+ "WHERE  "
-				+ "nro_expediente.indexOf(:nro_expediente) >= 0"),
+				+ "nro_expediente.indexOf(:nro_expediente) >= 0 ORDER BY fecha DESC, nro_expediente DESC"),
 		@javax.jdo.annotations.Query(name = "listarHabilitados", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.expediente.Expediente "
-				+ "WHERE  habilitado == true ORDER BY fecha DESC"),
+				+ "WHERE  habilitado == true ORDER BY fecha DESC, nro_expediente DESC"),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.expediente.Expediente ORDER BY fecha DESC"),
+				+ "FROM dom.expediente.Expediente ORDER BY fecha DESC, nro_expediente DESC"),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.expediente.Expediente " + "WHERE  (ultimo == true)"),
 		@javax.jdo.annotations.Query(name = "filtrarPorFechas", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.expediente.Expediente "
-				+ "WHERE  :desde <= fecha && fecha<=:hasta ORDER BY fecha DESC ") })
+				+ "WHERE  :desde <= fecha && fecha<=:hasta ORDER BY fecha DESC, nro_expediente DESC ") })
 @ObjectType("EXPEDIENTE")
 @Audited
 @AutoComplete(repository = ExpedienteRepositorio.class, action = "autoComplete")

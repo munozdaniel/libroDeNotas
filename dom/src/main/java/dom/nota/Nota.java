@@ -31,17 +31,17 @@ import dom.documento.Documento;
 				+ "WHERE destino.indexOf(:destino) >= 0"),
 		@javax.jdo.annotations.Query(name = "listarHabilitados", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota "
-				+ "WHERE  habilitado == true ORDER BY fecha DESC "),
+				+ "WHERE  habilitado == true ORDER BY fecha DESC, nro_nota DESC "),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Nota ORDER BY fecha DESC  "),
+				+ "FROM dom.nota.Nota ORDER BY fecha DESC, nro_nota DESC  "),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = " SELECT  "
 				+ "FROM dom.nota.Nota " + "WHERE  (ultimo == true)  "),
 		@javax.jdo.annotations.Query(name = "esNuevoAnio", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota "
-				+ "WHERE fecha == :fecha ORDER BY nro_nota DESC "),
+				+ "WHERE fecha == :fecha ORDER BY nro_nota DESC, fecha DESC "),
 		@javax.jdo.annotations.Query(name = "filtrarPorFechas", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota "
-				+ "WHERE  :desde <= fecha && fecha<=:hasta ORDER BY fecha DESC ") })
+				+ "WHERE  :desde <= fecha && fecha<=:hasta ORDER BY fecha DESC, nro_nota DESC ") })
 @ObjectType("NOTA")
 @AutoComplete(repository = NotaRepositorio.class, action = "autoComplete")
 @Bookmarkable
@@ -98,8 +98,6 @@ public class Nota extends Documento {
 	}
 
 	public boolean hideEliminar() {
-		// TODO: return true if action is hidden, false if
-		// visible
 		if (this.container.getUser().isCurrentUser("root"))
 			return false;
 		else

@@ -34,14 +34,14 @@ import dom.sector.SectorRepositorio;
 				+ "WHERE habilitado == false"),
 		@javax.jdo.annotations.Query(name = "listarHabilitados", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.disposiciones.Disposicion "
-				+ "WHERE  habilitado == true  ORDER BY fecha DESC"),
+				+ "WHERE  habilitado == true  ORDER BY fecha DESC, nro_Disposicion DESC"),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.disposiciones.Disposicion ORDER BY fecha DESC"),
+				+ "FROM dom.disposiciones.Disposicion ORDER BY fecha DESC, nro_Disposicion DESC"),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.disposiciones.Disposicion " + "WHERE  (ultimo == true)"),
 		@javax.jdo.annotations.Query(name = "filtrarPorFechas", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.disposiciones.Disposicion "
-				+ "WHERE  :desde <= fecha && fecha<=:hasta ORDER BY fecha DESC ") })
+				+ "WHERE  :desde <= fecha && fecha<=:hasta ORDER BY fecha DESC, nro_Disposicion DESC ") })
 @ObjectType("DISPOSICION")
 @Audited
 @AutoComplete(repository = DisposicionRepositorio.class, action = "autoComplete")
