@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MultiLine;
@@ -200,6 +201,7 @@ public class ExpedienteRepositorio {
 	@MemberOrder(sequence = "30")
 	@Named("Filtro por Fecha")
 	@DescribedAs("Seleccione una fecha de inicio y una fecha final.")
+	@Hidden
 	public List<Expediente> filtrarPorFecha(
 			final @Named("Desde:") LocalDate desde,
 			final @Named("Hasta:") LocalDate hasta) {
@@ -230,7 +232,7 @@ public class ExpedienteRepositorio {
 	@javax.inject.Inject
 	private SectorRepositorio sectorRepositorio;
 
-	/**
+	/***************************************************************
 	 * PARA MIGRAR
 	 */
 	@Programmatic
@@ -275,6 +277,39 @@ public class ExpedienteRepositorio {
 		container.flush();
 
 		return doc;
+	}
+
+	@MemberOrder(sequence = "30")
+	@Named("Filtro por Sector y Fecha")
+	public List<Expediente> filtrarPorSector(
+			final @Named("Sector") @Optional Sector sector,
+			final @Named("Desde:") LocalDate desde,
+			final @Named("Hasta:") LocalDate hasta) {
+
+		if (sector == null) {
+			final List<Expediente> lista = this.container
+					.allMatches(new QueryDefault<Expediente>(
+							Expediente.class, "filtrarPorFechas", "desde",
+							desde, "hasta", hasta));
+			if (lista.isEmpty())
+				this.container.informUser("NO SE ENCONTRARON REGISTROS.");
+
+			return lista;
+		} else {
+			List<Expediente> lista = new ArrayList<Expediente>();
+			lista = this.container.allMatches(new QueryDefault<Expediente>(
+					Expediente.class, "filtrarCompleto", "sector", sector,
+					"desde", desde, "hasta", hasta));
+			if (lista.isEmpty())
+				this.container.informUser("NO SE ENCONTRARON REGISTROS.");
+
+			return lista;
+		}
+
+	}
+
+	public List<Sector> choices0FiltrarPorSector() {
+		return sectorRepositorio.listarResoluciones();
 	}
 
 }

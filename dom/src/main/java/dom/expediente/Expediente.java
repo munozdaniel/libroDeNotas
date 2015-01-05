@@ -48,6 +48,9 @@ import dom.sector.SectorRepositorio;
 				+ "FROM dom.expediente.Expediente ORDER BY fecha DESC, nro_expediente DESC"),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.expediente.Expediente " + "WHERE  (ultimo == true)"),
+		@javax.jdo.annotations.Query(name = "filtrarCompleto", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.expediente.Expediente "
+				+ "WHERE  :desde <= fecha && fecha<=:hasta && sector==:sector ORDER BY fecha DESC, nro_expediente DESC "),
 		@javax.jdo.annotations.Query(name = "filtrarPorFechas", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.expediente.Expediente "
 				+ "WHERE  :desde <= fecha && fecha<=:hasta ORDER BY fecha DESC, nro_expediente DESC ") })
