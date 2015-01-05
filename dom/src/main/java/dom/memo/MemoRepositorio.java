@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MultiLine;
@@ -269,6 +270,7 @@ public class MemoRepositorio {
 	@MemberOrder(sequence = "30")
 	@Named("Filtro por Fecha")
 	@DescribedAs("Seleccione una fecha de inicio y una fecha final.")
+	@Hidden
 	public List<Memo> filtrarPorFecha(final @Named("Desde:") LocalDate desde,
 			final @Named("Hasta:") LocalDate hasta) {
 
@@ -281,7 +283,51 @@ public class MemoRepositorio {
 		return lista;
 	}
 
-	/**
+	@MemberOrder(sequence = "30")
+	@Named("Filtro por Sector y Fecha")
+	public List<Memo> filtrarCompleto(
+			final @DescribedAs("Seleccione un Destino") @Named("Sector Origen") @Optional Sector sectorOrigen,
+			final @DescribedAs("Seleccione un Origen") @Named("Sector Destino") @Optional String destino,
+			final @Named("Desde:") LocalDate desde,
+			final @Named("Hasta:") LocalDate hasta) {
+
+		if (sectorOrigen == null && (destino == null || destino.trim() == "")) {
+			final List<Memo> lista = this.container
+					.allMatches(new QueryDefault<Memo>(Memo.class,
+							"filtrarPorFechas", "desde", desde, "hasta", hasta));
+			if (lista.isEmpty()) {
+				this.container.informUser("NO SE ENCONTRARON REGISTROS.");
+			}
+			return lista;
+		} else {
+			List<Memo> lista = new ArrayList<Memo>();
+			Sector sectorDestino = sectorRepositorio.buscarPorNombre(destino);
+			lista = this.container.allMatches(new QueryDefault<Memo>(
+					Memo.class, "filtrarCompleto", "origen", sectorOrigen,
+					"destino", sectorDestino, "otroDestino", destino, "desde",
+					desde, "hasta", hasta));
+			if (lista.isEmpty())
+				this.container.informUser("NO SE ENCONTRARON REGISTROS.");
+
+			return lista;
+		}
+
+	}
+
+	public String validateFiltrarCompleto(Sector sectorOrigen, String destino,
+			LocalDate desde, LocalDate hasta) {
+		if (sectorOrigen == null && (destino != null || destino != ""))
+			return "Por favor ingrese un sector de origen.";
+		if (sectorOrigen != null && (destino == null || destino == ""))
+			return "Por favor ingrese un sector de destino.";
+		return null;
+	}
+
+	public List<Sector> choices0FiltrarCompleto() {
+		return sectorRepositorio.listarResoluciones();
+	}
+
+	/******************************************************************************
 	 * PARA MIGRAR
 	 */
 	@Programmatic

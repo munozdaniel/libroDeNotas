@@ -44,6 +44,11 @@ import dom.sector.SectorRepositorio;
 				+ "FROM dom.memo.Memo ORDER BY fecha DESC, nro_memo DESC"),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.memo.Memo " + "WHERE  (ultimo == true)"),
+
+		@javax.jdo.annotations.Query(name = "filtrarCompleto", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.memo.Memo "
+				+ "WHERE  (:desde <= fecha && fecha<=:hasta)&&(sector==:origen && (destinoSector==:destino || otroDestino ==:otroDestino))  "
+				+ "ORDER BY fecha DESC, nro_memo DESC "),
 		@javax.jdo.annotations.Query(name = "filtrarPorFechas", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.memo.Memo "
 				+ "WHERE  :desde <= fecha && fecha<=:hasta ORDER BY fecha DESC, nro_memo DESC ") })
@@ -165,6 +170,7 @@ public class Memo extends Documento {
 		else
 			return true;
 	}
+
 	@Named("Para")
 	@Mandatory
 	public List<Sector> choicesSector() {
