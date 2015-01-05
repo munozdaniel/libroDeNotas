@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MultiLine;
@@ -64,7 +65,8 @@ public class NotaRepositorio {
 		Nota nota = nuevaNota(sector, destino, descripcion,
 				this.currentUserName(), adjunto);
 		if (nota != null) {
-			this.container.informUser("La Nota ha sido guardada correctamente.");
+			this.container
+					.informUser("La Nota ha sido guardada correctamente.");
 			return nota;
 		}
 		this.container.informUser("SISTEMA OCUPADO, INTENTELO NUEVAMENTE.");
@@ -231,6 +233,7 @@ public class NotaRepositorio {
 	@MemberOrder(sequence = "30")
 	@Named("Filtro por Fecha")
 	@DescribedAs("Seleccione una fecha de inicio y una fecha final.")
+	@Hidden
 	public List<Nota> filtrarPorFecha(final @Named("Desde:") LocalDate desde,
 			final @Named("Hasta:") LocalDate hasta) {
 
@@ -246,51 +249,76 @@ public class NotaRepositorio {
 	private String currentUserName() {
 		return container.getUser().getName();
 	}
+	@Hidden
 	public enum TipoSector {
-	    ORIGEN("ORIGEN"),
-	    DESTINO("DESTINO")
-	    ;
+		ORIGEN("ORIGEN"), DESTINO("DESTINO");
 
-	    private final String text;
+		private final String text;
 
-	    /**
-	     * @param text
-	     */
-	    private TipoSector(final String text) {
-	        this.text = text;
-	    }
+		/**
+		 * @param text
+		 */
+		private TipoSector(final String text) {
+			this.text = text;
+		}
 
-	    /* (non-Javadoc)
-	     * @see java.lang.Enum#toString()
-	     */
-	    @Override
-	    public String toString() {
-	        return text;
-	    }
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Enum#toString()
+		 */
+		@Override
+		public String toString() {
+			return text;
+		}
 	}
-	public List<Nota> filtrarPorSector(final @Named("Tipo") TipoSector tipo,final @Named("Sector") String sector)
-	{
+	@Hidden
+	public List<Nota> filtrarPorSector(final @Named("Tipo") TipoSector tipo,
+			final @Named("Sector") String sector) {
 		List<Nota> lista = new ArrayList<Nota>();
-		if(tipo.name().equalsIgnoreCase("ORIGEN"))
-		{			
-			//this.container.informUser("BUSCANDO "+tipo.name());
+		if (tipo.name().equalsIgnoreCase("ORIGEN")) {
+			// this.container.informUser("BUSCANDO "+tipo.name());
 			Sector sectorOrigen = sectorRepositorio.buscarPorNombre(sector);
-			lista = this.container
-					.allMatches(new QueryDefault<Nota>(Nota.class,
-							"filtrarPorOrigen", "sector", sectorOrigen));
+			lista = this.container.allMatches(new QueryDefault<Nota>(
+					Nota.class, "filtrarPorOrigen", "sector", sectorOrigen));
+		} else {
+			// this.container.informUser("BUSCANDO "+tipo.name());
+			lista = this.container.allMatches(new QueryDefault<Nota>(
+					Nota.class, "filtrarPorDestino", "sector", sector
+							.toUpperCase()));
 		}
-		else
-		{			
-			//this.container.informUser("BUSCANDO "+tipo.name());
-			lista = this.container
-					.allMatches(new QueryDefault<Nota>(Nota.class,
-							"filtrarPorDestino", "sector", sector.toUpperCase())); 
-		}
-		if(lista.isEmpty())
+		if (lista.isEmpty())
 			this.container.informUser("NO SE ENCONTRARON RESULTADOS.");
-		
+
 		return lista;
 	}
+	@MemberOrder(sequence = "30")
+	@Named("Filtro por Sector y Fecha")
+	public List<Nota> filtrarCompleto(
+			final @Named("Sector Origen") Sector origen,
+			final @Named("Sector Destino") String destino,
+			final @Named("Desde:") LocalDate desde,
+			final @Named("Hasta:") LocalDate hasta) {
+		List<Nota> lista = new ArrayList<Nota>();
+		if (origen == null && destino == null) {
+			lista = this.container.allMatches(new QueryDefault<Nota>(
+					Nota.class, "filtrarPorFechas", "desde", desde, "hasta",
+					hasta));
+		} else {
+			lista = this.container.allMatches(new QueryDefault<Nota>(
+					Nota.class, "filtrarCompleto", "origen", origen, "destino",
+					destino, "desde", desde, "hasta", hasta));
+		}
+		if (lista.isEmpty())
+			this.container.informUser("NO SE ENCONTRARON RESULTADOS.");
+
+		return lista;
+	}
+	public List<Sector> choices0FiltrarCompleto() {
+		List<Sector> lista = sectorRepositorio.listar();
+		return lista;
+	}
+	
 
 	/*********************************************************************************
 	 * PARA MIGRAR

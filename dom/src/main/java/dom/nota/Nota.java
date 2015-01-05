@@ -39,9 +39,10 @@ import dom.documento.Documento;
 		@javax.jdo.annotations.Query(name = "esNuevoAnio", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota "
 				+ "WHERE fecha == :fecha ORDER BY nro_nota DESC, fecha DESC "),
-		@javax.jdo.annotations.Query(name = "filtrarPorOrigen", language = "JDOQL", value = "SELECT "
+		@javax.jdo.annotations.Query(name = "filtrarCompleto", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota  "
-				+ "WHERE sector==:sector ORDER BY fecha DESC, nro_nota DESC  "),
+				+ "WHERE sector==:origen && destino==:destino && :desde <= fecha && fecha<=:hasta"
+				+ " ORDER BY fecha DESC, nro_nota DESC  "),
 
 		@javax.jdo.annotations.Query(name = "filtrarPorDestino", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota "
