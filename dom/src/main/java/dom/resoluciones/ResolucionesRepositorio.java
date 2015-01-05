@@ -57,17 +57,11 @@ public class ResolucionesRepositorio {
 
 	public String validateAddResoluciones(final LocalDate fecha,
 			final Sector sector, final String descripcion, final Blob adjunto) {
-
-		if (fecha.getYear() < LocalDate.now().getYear())
-			return "Fecha Incorrecta: El Año no debe ser menor al año actual.";
-		else {
 			if (!this.ocupado) {
 				this.ocupado = true;
 				return null;
 			} else
 				return "Sistema ocupado, intente nuevamente.";
-		}
-
 	}
 
 	@Programmatic
