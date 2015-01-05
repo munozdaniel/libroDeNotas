@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DescribedAs;
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -46,7 +47,7 @@ public class ResolucionesRepositorio {
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
 	public Resoluciones addResoluciones(
-			final @Named("Fecha:")  LocalDate fecha,
+			final @Named("Fecha:") LocalDate fecha,
 			final @Named("De: ") Sector sector,
 			final @Named("Descripción:") @MultiLine(numberOfLines = 2) @MaxLength(255) String descripcion,
 			final @Optional @Named("Ajuntar:") Blob adjunto) {
@@ -57,11 +58,11 @@ public class ResolucionesRepositorio {
 
 	public String validateAddResoluciones(final LocalDate fecha,
 			final Sector sector, final String descripcion, final Blob adjunto) {
-			if (!this.ocupado) {
-				this.ocupado = true;
-				return null;
-			} else
-				return "Sistema ocupado, intente nuevamente.";
+		if (!this.ocupado) {
+			this.ocupado = true;
+			return null;
+		} else
+			return "Sistema ocupado, intente nuevamente.";
 	}
 
 	@Programmatic
@@ -193,6 +194,7 @@ public class ResolucionesRepositorio {
 	@MemberOrder(sequence = "30")
 	@Named("Filtro por Fecha")
 	@DescribedAs("Seleccione una fecha de inicio y una fecha final.")
+	@Disabled
 	public List<Resoluciones> filtrarPorFecha(
 			final @Named("Desde:") LocalDate desde,
 			final @Named("Hasta:") LocalDate hasta) {
@@ -204,6 +206,38 @@ public class ResolucionesRepositorio {
 			this.container.warnUser("No se encontraron Registros.");
 		}
 		return lista;
+	}
+
+	@MemberOrder(sequence = "30")
+	@Named("Filtro por Sector y Fecha")
+	public List<Resoluciones> filtrarPorSector(
+			final @Named("Sector") @Optional Sector sector,
+			final @Named("Desde:") LocalDate desde,
+			final @Named("Hasta:") LocalDate hasta) {
+
+		if (sector == null) {
+			final List<Resoluciones> lista = this.container
+					.allMatches(new QueryDefault<Resoluciones>(
+							Resoluciones.class, "filtrarPorFechas", "desde",
+							desde, "hasta", hasta));
+			if (lista.isEmpty())
+				this.container.informUser("NO SE ENCONTRARON REGISTROS.");
+
+			return lista;
+		} else {
+			List<Resoluciones> lista = new ArrayList<Resoluciones>();
+			lista = this.container.allMatches(new QueryDefault<Resoluciones>(
+					Resoluciones.class, "filtrarCompleto", "sector", sector,
+					"desde", desde, "hasta", hasta));
+			if (lista.isEmpty())
+				this.container.informUser("NO SE ENCONTRARON REGISTROS.");
+
+			return lista;
+		}
+
+	}
+	public List<Sector> choices1FiltrarPorSector() {
+		return sectorRepositorio.listarResoluciones();
 	}
 
 	// //////////////////////////////////////
@@ -223,7 +257,7 @@ public class ResolucionesRepositorio {
 	@javax.inject.Inject
 	private SectorRepositorio sectorRepositorio;
 
-	/**
+	/****************************************************************************************
 	 * PARA MIGRAR
 	 */
 	@Programmatic
