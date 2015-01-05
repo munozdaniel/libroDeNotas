@@ -246,7 +246,52 @@ public class NotaRepositorio {
 	private String currentUserName() {
 		return container.getUser().getName();
 	}
-	
+	public enum TipoSector {
+	    ORIGEN("ORIGEN"),
+	    DESTINO("DESTINO")
+	    ;
+
+	    private final String text;
+
+	    /**
+	     * @param text
+	     */
+	    private TipoSector(final String text) {
+	        this.text = text;
+	    }
+
+	    /* (non-Javadoc)
+	     * @see java.lang.Enum#toString()
+	     */
+	    @Override
+	    public String toString() {
+	        return text;
+	    }
+	}
+	public List<Nota> filtrarPorSector(final @Named("Tipo") TipoSector tipo,final @Named("Sector") String sector)
+	{
+		List<Nota> lista = new ArrayList<Nota>();
+		if(tipo.name().equalsIgnoreCase("ORIGEN"))
+		{			
+			//this.container.informUser("BUSCANDO "+tipo.name());
+			Sector sectorOrigen = sectorRepositorio.buscarPorNombre(sector);
+			lista = this.container
+					.allMatches(new QueryDefault<Nota>(Nota.class,
+							"filtrarPorOrigen", "sector", sectorOrigen));
+		}
+		else
+		{			
+			//this.container.informUser("BUSCANDO "+tipo.name());
+			lista = this.container
+					.allMatches(new QueryDefault<Nota>(Nota.class,
+							"filtrarPorDestino", "sector", sector.toUpperCase())); 
+		}
+		if(lista.isEmpty())
+			this.container.informUser("NO SE ENCONTRARON RESULTADOS.");
+		
+		return lista;
+	}
+
 	/*********************************************************************************
 	 * PARA MIGRAR
 	 */
