@@ -205,12 +205,13 @@ public class MemoRepositorio {
 		return lista;
 	}
 
-	public Sector default1AddMemo() {
-		List<Sector> lista = this.sectorRepositorio.listar();
-		if (!lista.isEmpty())
-			return lista.get(0);
-		return null;
-	}
+	//
+	// public Sector default1AddMemo() {
+	// List<Sector> lista = this.sectorRepositorio.listar();
+	// if (!lista.isEmpty())
+	// return lista.get(0);
+	// return null;
+	// }
 
 	// //////////////////////////////////////
 	// Buscar Tecnico
