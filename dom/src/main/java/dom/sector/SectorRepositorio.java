@@ -13,7 +13,8 @@ import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
-@DomainService(menuOrder="10")
+
+@DomainService(menuOrder = "10")
 @Named("SECTOR")
 public class SectorRepositorio {
 
@@ -32,15 +33,17 @@ public class SectorRepositorio {
 	public String iconName() {
 		return "Tecnico";
 	}
+
 	@Programmatic
 	@PostConstruct
 	public void init() {
 		List<Sector> lista = this.listar();
-		if(lista.isEmpty())
-		{
-			this.nuevoSector("OTRO SECTOR", "None", false, false, false, "Admin");
+		if (lista.isEmpty()) {
+			this.nuevoSector("OTRO SECTOR", "None", false, false, false,
+					"Admin");
 		}
 	}
+
 	// //////////////////////////////////////
 	// Insertar un Sector.
 	// //////////////////////////////////////
@@ -66,15 +69,15 @@ public class SectorRepositorio {
 		unSector.setHabilitado(true);
 		unSector.setCreadoPor(creadoPor);
 		unSector.setResponsable(responsable);
-		if(resolucion !=null)
+		if (resolucion != null)
 			unSector.setResolucion(resolucion);
 		else
 			unSector.setResolucion(false);
-		if(disposicion != null)
+		if (disposicion != null)
 			unSector.setDisposicion(disposicion);
 		else
 			unSector.setDisposicion(false);
-		if(expediente != null)
+		if (expediente != null)
 			unSector.setExpediente(expediente);
 		else
 			unSector.setExpediente(false);
@@ -85,7 +88,7 @@ public class SectorRepositorio {
 
 	/**
 	 * listar Devuelve todos los sectores. Hay que chequear aquellos sectores
-	 * que corresponden solo a Resolucion o Disposicion, etc. 
+	 * que corresponden solo a Resolucion o Disposicion, etc.
 	 * 
 	 * @return
 	 */
@@ -99,7 +102,7 @@ public class SectorRepositorio {
 					.warnUser("No se encontraron sectores cargados en el sistema.");
 		return listarSectores;
 	}
-	
+
 	/**
 	 * Buscar
 	 * 
@@ -115,10 +118,10 @@ public class SectorRepositorio {
 						"buscarPorNombre", "nombre_sector", nombreSector
 								.toUpperCase().trim()));
 		if (listarSectores.isEmpty())
-			this.container
-					.warnUser("No se encontraron sectores.");
+			this.container.warnUser("No se encontraron sectores.");
 		return listarSectores;
 	}
+
 	/**
 	 * Buscar Sector por id para migrar los datos.
 	 * 
@@ -127,16 +130,17 @@ public class SectorRepositorio {
 	 */
 	@Programmatic
 	@MemberOrder(sequence = "21")
-	public Sector buscarPorNombre(
-			final String nombre) {
-		final Sector sector = this.container
-				.uniqueMatch(new QueryDefault<Sector>(Sector.class,
-						"buscarNombre", "nombre", nombre.toUpperCase()));
-		if (sector==null)
-			this.container
-					.warnUser("No se encontraron sectores.");
+	public Sector buscarPorNombre(final String nombre) {
+		Sector sector = null;
+		if (nombre != null && nombre != "")
+			sector = this.container.uniqueMatch(new QueryDefault<Sector>(
+					Sector.class, "buscarNombre", "nombre", nombre
+							.toUpperCase()));
+		if (sector == null)
+			this.container.warnUser("No se encontraron sectores.");
 		return sector;
 	}
+
 	/**
 	 * autoComplete
 	 * 

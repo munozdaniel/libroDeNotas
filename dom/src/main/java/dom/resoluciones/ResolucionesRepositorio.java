@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DescribedAs;
-import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MultiLine;
@@ -194,7 +194,7 @@ public class ResolucionesRepositorio {
 	@MemberOrder(sequence = "30")
 	@Named("Filtro por Fecha")
 	@DescribedAs("Seleccione una fecha de inicio y una fecha final.")
-	@Disabled
+	@Hidden
 	public List<Resoluciones> filtrarPorFecha(
 			final @Named("Desde:") LocalDate desde,
 			final @Named("Hasta:") LocalDate hasta) {
@@ -236,7 +236,8 @@ public class ResolucionesRepositorio {
 		}
 
 	}
-	public List<Sector> choices1FiltrarPorSector() {
+
+	public List<Sector> choices0FiltrarPorSector() {
 		return sectorRepositorio.listarResoluciones();
 	}
 

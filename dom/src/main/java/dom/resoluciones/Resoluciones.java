@@ -40,7 +40,7 @@ import dom.sector.SectorRepositorio;
 		@javax.jdo.annotations.Query(name = "filtrarPorFechas", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.resoluciones.Resoluciones "
 				+ "WHERE  :desde <= fecha && fecha<=:hasta ORDER BY fecha DESC, nro_resolucion DESC "),
-		@javax.jdo.annotations.Query(name = "filtrarPorFechas", language = "JDOQL", value = "SELECT "
+		@javax.jdo.annotations.Query(name = "filtrarCompleto", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.resoluciones.Resoluciones "
 				+ "WHERE  :desde <= fecha && fecha<=:hasta && sector==:sector ORDER BY fecha DESC, nro_resolucion DESC "),
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = " SELECT  "
