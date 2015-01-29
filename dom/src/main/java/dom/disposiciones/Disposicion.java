@@ -11,8 +11,10 @@ import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.ObjectType;
 
 import dom.documento.Documento;
@@ -53,7 +55,7 @@ public class Disposicion extends Documento {
 	// //////////////////////////////////////
 
 	public String title() {
-		return "Disposicion: " + this.getNro_Disposicion();
+		return "Disposicion Nº " + String.format("%03d",this.getNro_Disposicion());
 	}
 
 	public String iconName() {
@@ -73,12 +75,27 @@ public class Disposicion extends Documento {
 	@Disabled
 	@MemberOrder(sequence = "10")
 	@javax.jdo.annotations.Column(allowsNull = "false")
+	@Hidden
 	public int getNro_Disposicion() {
 		return nro_Disposicion;
 	}
 
 	public void setNro_Disposicion(int nro_Disposicion) {
 		this.nro_Disposicion = nro_Disposicion;
+	}
+	
+	/**
+	 * Metodo de solo lectura, no se persiste. Su funcion es la de mostrar
+	 * nro_nota con tres digitos.
+	 */
+	@SuppressWarnings("unused")
+	private String nro;
+	@Disabled
+	@MemberOrder(sequence = "0")
+	@Named("Nro")
+	@NotPersisted
+	public String getNro() {
+		return 	String.format("%03d",this.getNro_Disposicion());
 	}
 
 	@Override

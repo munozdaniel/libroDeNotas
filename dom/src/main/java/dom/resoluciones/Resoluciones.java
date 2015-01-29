@@ -10,8 +10,11 @@ import org.apache.isis.applib.annotation.Audited;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.ObjectType;
 
 import dom.documento.Documento;
@@ -34,9 +37,9 @@ import dom.sector.SectorRepositorio;
 				+ "WHERE habilitado == false"),
 		@javax.jdo.annotations.Query(name = "listarHabilitados", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.resoluciones.Resoluciones "
-				+ "WHERE  habilitado == true  ORDER BY nro_resolucion DESC, fecha DESC"),
+				+ "WHERE  habilitado == true  ORDER BY fecha DESC,nro_resolucion DESC "),
 		@javax.jdo.annotations.Query(name = "listar", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.resoluciones.Resoluciones   ORDER BY nro_resolucion DESC, fecha DESC"),
+				+ "FROM dom.resoluciones.Resoluciones   ORDER BY  fecha DESC,nro_resolucion DESC"),
 		@javax.jdo.annotations.Query(name = "filtrarPorFechas", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.resoluciones.Resoluciones "
 				+ "WHERE  :desde <= fecha && fecha<=:hasta ORDER BY fecha DESC, nro_resolucion DESC "),
@@ -57,7 +60,7 @@ public class Resoluciones extends Documento {
 	// //////////////////////////////////////
 
 	public String title() {
-		return "RESOLUCION Nº " + this.getNro_resolucion();
+		return "Resolución Nº " + String.format("%03d",this.getNro_resolucion());
 	}
 
 	public String iconName() {
@@ -72,12 +75,31 @@ public class Resoluciones extends Documento {
 	@Named("Nro")
 	@MemberOrder(sequence = "0")
 	@javax.jdo.annotations.Column(allowsNull = "false")
+	@Hidden
 	public int getNro_resolucion() {
 		return nro_resolucion;
 	}
 
 	public void setNro_resolucion(int nro_resolucion) {
 		this.nro_resolucion = nro_resolucion;
+	}
+	
+	/**
+	 * Metodo de solo lectura, no se persiste. Su funcion es la de mostrar
+	 * nro_nota con tres digitos.
+	 */
+	@SuppressWarnings("unused")
+	private String nro;
+	@Disabled
+	@MemberOrder(sequence = "0")
+	@Named("Nro")
+	@NotPersisted
+	public String getNro() {
+		return 	String.format("%03d",this.getNro_resolucion());
+	}
+
+	public void setNro(String nro) {
+		this.nro = nro;
 	}
 
 	@Named("Eliminar")

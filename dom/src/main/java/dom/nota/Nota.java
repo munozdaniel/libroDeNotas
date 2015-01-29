@@ -12,8 +12,10 @@ import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.ObjectType;
 
 import dom.documento.Documento;
@@ -61,7 +63,7 @@ public class Nota extends Documento {
 	// //////////////////////////////////////
 
 	public String title() {
-		return "NOTA Nº " + this.getNro_nota();
+		return "Nota Nº " + String.format("%04d",this.getNro_nota()) ;
 	}
 
 	public String iconName() {
@@ -78,12 +80,31 @@ public class Nota extends Documento {
 	// @Persistent(valueStrategy = IdGeneratorStrategy.INCREMENT)
 	@MemberOrder(sequence = "0")
 	@Named("Nro")
+	@Hidden
 	public int getNro_nota() {
 		return nro_nota;
 	}
 
 	public void setNro_nota(final int nro_nota) {
 		this.nro_nota = nro_nota;
+	}
+
+	/**
+	 * Metodo de solo lectura, no se persiste. Su funcion es la de mostrar
+	 * nro_nota con tres digitos.
+	 */
+	@SuppressWarnings("unused")
+	private String nro;
+	@Disabled
+	@MemberOrder(sequence = "0")
+	@Named("Nro")
+	@NotPersisted
+	public String getNro() {
+		return 	String.format("%04d",this.getNro_nota()); 
+	}
+
+	public void setNro(String nro) {
+		this.nro = nro;
 	}
 
 	private String destino;
@@ -112,6 +133,8 @@ public class Nota extends Documento {
 		else
 			return true;
 	}
+
+
 
 	@javax.inject.Inject
 	private NotaRepositorio notaRepositorio;

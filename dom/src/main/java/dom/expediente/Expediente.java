@@ -16,6 +16,7 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MaxLength;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Where;
 
@@ -65,7 +66,7 @@ public class Expediente extends Documento {
 	// //////////////////////////////////////
 
 	public String title() {
-		return "Expediente: " + this.getNro_expediente();
+		return "Expediente Nº " + String.format("%03d",this.getNro_expediente());
 	}
 
 	public String iconName() {
@@ -85,6 +86,7 @@ public class Expediente extends Documento {
 	@MemberOrder(sequence = "10")
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Disabled
+	@Hidden
 	public int getNro_expediente() {
 		return nro_expediente;
 	}
@@ -92,7 +94,21 @@ public class Expediente extends Documento {
 	public void setNro_expediente(int nro_expediente) {
 		this.nro_expediente = nro_expediente;
 	}
-
+	
+	/**
+	 * Metodo de solo lectura, no se persiste. Su funcion es la de mostrar
+	 * nro_nota con tres digitos.
+	 */
+	@SuppressWarnings("unused")
+	private String nro;
+	@Disabled
+	@MemberOrder(sequence = "0")
+	@Named("Nro")
+	@NotPersisted
+	public String getNro() {
+		return 	String.format("%03d",this.getNro_expediente());
+	}
+	
 	private String expte_cod_empresa;
 
 	@Named("Empresa")

@@ -12,9 +12,11 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.CssClass;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.ObjectType;
 
 import dom.documento.Documento;
@@ -63,7 +65,7 @@ public class Memo extends Documento {
 	// //////////////////////////////////////
 
 	public String title() {
-		return "MEMO Nº " + this.getNro_memo();
+		return "Memo Nº " + String.format("%03d",this.getNro_memo());
 	}
 
 	public String iconName() {
@@ -79,6 +81,7 @@ public class Memo extends Documento {
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Disabled
 	@Named("Nro")
+	@Hidden
 	public int getNro_memo() {
 		return nro_memo;
 	}
@@ -87,6 +90,24 @@ public class Memo extends Documento {
 		this.nro_memo = nro_memo;
 	}
 
+	/**
+	 * Metodo de solo lectura, no se persiste. Su funcion es la de mostrar
+	 * nro_nota con tres digitos.
+	 */
+	@SuppressWarnings("unused")
+	private String nro;
+	@Disabled
+	@MemberOrder(sequence = "0")
+	@Named("Nro")
+	@NotPersisted
+	public String getNro() {
+		return 	String.format("%03d",this.getNro_memo());
+	}
+
+	public void setNro(String nro) {
+		this.nro = nro;
+	}
+	
 	private Sector destinoSector;
 
 	@Disabled
