@@ -49,8 +49,38 @@ import dom.sector.SectorRepositorio;
 
 		@javax.jdo.annotations.Query(name = "filtrarCompleto", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.memo.Memo "
-				+ "WHERE  (:desde <= fecha && fecha<=:hasta)&&(sector==:origen && (destinoSector==:destino || otroDestino ==:otroDestino))  "
+				+ "WHERE  (:desde <= fecha && fecha<=:hasta)&&(sector==:origen && "
+				+ "(destinoSector==:destino || otroDestino.toUpperCase().indexOf(:otroDestino)))  "
 				+ "ORDER BY fecha DESC, nro_memo DESC "),
+
+		@javax.jdo.annotations.Query(name = "filtrarOrigen", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.memo.Memo "
+				+ "WHERE  sector==:origen "
+				+ "ORDER BY fecha DESC, nro_memo DESC "),
+
+		@javax.jdo.annotations.Query(name = "filtrarDestino", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.memo.Memo "
+				+ "WHERE "
+				+ "(destinoSector==:destino || otroDestino.toUpperCase().indexOf(:otroDestino)) "
+				+ "ORDER BY fecha DESC, nro_memo DESC "),
+
+		@javax.jdo.annotations.Query(name = "filtrarFechaYOrigen", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.memo.Memo "
+				+ "WHERE  (:desde <= fecha && fecha<=:hasta)&&(sector==:origen) "
+				+ "ORDER BY fecha DESC, nro_memo DESC "),
+
+		@javax.jdo.annotations.Query(name = "filtrarFechaYDestino", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.memo.Memo "
+				+ "WHERE  (:desde <= fecha && fecha<=:hasta)&& "
+				+ "(destinoSector==:destino || otroDestino.toUpperCase().indexOf(:otroDestino))  "
+				+ "ORDER BY fecha DESC, nro_memo DESC "),
+
+		@javax.jdo.annotations.Query(name = "filtrarOrigenYDestino", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.memo.Memo "
+				+ "WHERE (sector==:origen && "
+				+ "(destinoSector==:destino || otroDestino.toUpperCase().indexOf(:otroDestino)))  "
+				+ "ORDER BY fecha DESC, nro_memo DESC "),
+
 		@javax.jdo.annotations.Query(name = "filtrarPorFechas", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.memo.Memo "
 				+ "WHERE  :desde <= fecha && fecha<=:hasta ORDER BY fecha DESC, nro_memo DESC ") })
@@ -65,7 +95,7 @@ public class Memo extends Documento {
 	// //////////////////////////////////////
 
 	public String title() {
-		return "Memo Nº " + String.format("%03d",this.getNro_memo());
+		return "Memo Nº " + String.format("%03d", this.getNro_memo());
 	}
 
 	public String iconName() {
@@ -96,18 +126,19 @@ public class Memo extends Documento {
 	 */
 	@SuppressWarnings("unused")
 	private String nro;
+
 	@Disabled
 	@MemberOrder(sequence = "0")
 	@Named("Nro")
 	@NotPersisted
 	public String getNro() {
-		return 	String.format("%03d",this.getNro_memo());
+		return String.format("%03d", this.getNro_memo());
 	}
 
 	public void setNro(String nro) {
 		this.nro = nro;
 	}
-	
+
 	private Sector destinoSector;
 
 	@Disabled
