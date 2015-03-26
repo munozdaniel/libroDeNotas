@@ -291,7 +291,9 @@ public class MemoRepositorio {
 			final @Optional @Named("Desde:") LocalDate desde,
 			final @Optional @Named("Hasta:") LocalDate hasta) {
 		List<Memo> lista = new ArrayList<Memo>();
+
 		Sector sectorDestino = sectorRepositorio.buscarPorNombre(destino);
+
 		// Todos ===========================================================
 		if (origen != null && destino != null && desde != null && hasta != null)
 			lista = this.container.allMatches(new QueryDefault<Memo>(
@@ -314,11 +316,19 @@ public class MemoRepositorio {
 					// solo destino ========================================
 					if (origen == null && destino != null && desde == null
 							&& hasta == null) {
-						lista = this.container
-								.allMatches(new QueryDefault<Memo>(Memo.class,
-										"filtrarDestino", "sectorDestino",
-										sectorDestino, "otroDestino", destino
-												.toUpperCase()));
+						if (sectorDestino != null)
+							lista = this.container
+									.allMatches(new QueryDefault<Memo>(
+											Memo.class, "filtrarDestino",
+											"sectorDestino", sectorDestino,
+											"otroDestino", destino
+													.toUpperCase()));
+						else
+							lista = this.container
+									.allMatches(new QueryDefault<Memo>(
+											Memo.class, "filtrarOtroDestino",
+											"otroDestino", destino
+													.toUpperCase()));
 
 					} else {
 						// fecha y Origen ===================================
@@ -333,27 +343,50 @@ public class MemoRepositorio {
 							// fecha y Destino ==============================
 							if (origen == null && destino != null
 									&& desde != null && hasta != null)
-								lista = this.container
-										.allMatches(new QueryDefault<Memo>(
-												Memo.class,
-												"filtrarFechaYDestino",
-												"otroDestino", "sectorDestino",
-												sectorDestino, destino
-														.toUpperCase(),
-												"desde", desde, "hasta", hasta));
+								if (sectorDestino != null)
+									lista = this.container
+											.allMatches(new QueryDefault<Memo>(
+													Memo.class,
+													"filtrarFechaYDestino",
+													"sectorDestino",
+													sectorDestino,
+													"otroDestino", destino
+															.toUpperCase(),
+													"desde", desde, "hasta",
+													hasta));
+								else
+									lista = this.container
+											.allMatches(new QueryDefault<Memo>(
+													Memo.class,
+													"filtrarFechaYOtroDestino",
+													"otroDestino", destino
+															.toUpperCase(),
+													"desde", desde, "hasta",
+													hasta));
+
 							else {
 								// Origen y Destino ============================
 								if (origen != null && destino != null
 										&& desde == null && hasta == null)
-									lista = this.container
-											.allMatches(new QueryDefault<Memo>(
-													Memo.class,
-													"filtrarOrigenYDestino",
-													"origen", origen,
-													"sectorDestino",
-													sectorDestino,
-													"otroDestino", destino
-															.toUpperCase()));
+									if (sectorDestino != null)
+										lista = this.container
+												.allMatches(new QueryDefault<Memo>(
+														Memo.class,
+														"filtrarOrigenYDestino",
+														"origen", origen,
+														"sectorDestino",
+														sectorDestino,
+														"otroDestino", destino
+																.toUpperCase()));
+
+									else
+										lista = this.container
+												.allMatches(new QueryDefault<Memo>(
+														Memo.class,
+														"filtrarOrigenYOtroDestino",
+														"origen", origen,
+														"otroDestino", destino
+																.toUpperCase()));
 							}
 
 						}
