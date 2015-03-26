@@ -299,45 +299,52 @@ public class NotaRepositorio {
 			final @Optional @Named("Desde:") LocalDate desde,
 			final @Optional @Named("Hasta:") LocalDate hasta) {
 		List<Nota> lista = new ArrayList<Nota>();
-
-		if (origen != null && destino != null && desde != null && hasta != null)// todos
+		// TODOS
+		// ================================================================
+		if (origen != null && destino != null && desde != null && hasta != null)
 			lista = this.container.allMatches(new QueryDefault<Nota>(
 					Nota.class, "filtrarCompleto", "origen", origen, "destino",
 					destino.toUpperCase(), "desde", desde, "hasta", hasta));
 		else {
+			// SOLO FECHAS
+			// =======================================================
 			if (origen == null && destino == null && desde != null
-					&& hasta != null)// fechas
+					&& hasta != null)
 				lista = this.filtrarPorFecha(desde, hasta);
 			else {
+				// SOLO ORIGEN
+				// =======================================================
 				if (origen != null && destino == null && desde == null
-						&& hasta == null)// origen
+						&& hasta == null)
 					lista = this.container.allMatches(new QueryDefault<Nota>(
 							Nota.class, "filtrarOrigen", "origen", origen));
 				else {
+					// SOLO DESTINO
+					// =======================================================
 					if (origen == null && destino != null && desde == null
-							&& hasta == null)// destino
-					{
+							&& hasta == null) {
 						lista = this.container
 								.allMatches(new QueryDefault<Nota>(Nota.class,
 										"filtrarDestino", "destino", destino
 												.toUpperCase()));
 						this.container.warnUser("DESTINO"
 								+ destino.toUpperCase());
-						;
+
 					} else {
+						// FECHAS Y ORIGEN
+						// =======================================================
 						if (origen != null && destino == null && desde != null
-								&& hasta != null)// fecha y
-													// origen
+								&& hasta != null)
 							lista = this.container
 									.allMatches(new QueryDefault<Nota>(
 											Nota.class, "filtrarFechaYOrigen",
 											"origen", origen, "desde", desde,
 											"hasta", hasta));
 						else {
+							// FECHAS Y DESTINO
+							// =======================================================
 							if (origen == null && destino != null
-									&& desde != null && hasta != null)// fecha
-																		// y
-																		// destino
+									&& desde != null && hasta != null)
 								lista = this.container
 										.allMatches(new QueryDefault<Nota>(
 												Nota.class,
@@ -345,16 +352,19 @@ public class NotaRepositorio {
 												"destino", destino
 														.toUpperCase(),
 												"desde", desde, "hasta", hasta));
-							else if (origen != null && destino != null
-									&& desde == null && hasta == null)// origen
-																		// y
-																		// destino
-								lista = this.container
-										.allMatches(new QueryDefault<Nota>(
-												Nota.class,
-												"filtrarOrigenYDestino",
-												"origen", origen, "destino",
-												destino.toUpperCase()));
+							else {
+								// ORIGEN Y DESTINO
+								// =======================================================
+								if (origen != null && destino != null
+										&& desde == null && hasta == null)
+									lista = this.container
+											.allMatches(new QueryDefault<Nota>(
+													Nota.class,
+													"filtrarOrigenYDestino",
+													"origen", origen,
+													"destino", destino
+															.toUpperCase()));
+							}
 
 						}
 					}
