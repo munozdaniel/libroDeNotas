@@ -50,7 +50,7 @@ import dom.sector.SectorRepositorio;
 		@javax.jdo.annotations.Query(name = "filtrarCompleto", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.memo.Memo "
 				+ "WHERE  (:desde <= fecha && fecha<=:hasta)&&(sector==:origen && "
-				+ "(destinoSector==:destino || otroDestino.toUpperCase().indexOf(:otroDestino)))  "
+				+ "(destinoSector==:sectorDestino || otroDestino.toUpperCase().indexOf(:otroDestino)>=0))  "
 				+ "ORDER BY fecha DESC, nro_memo DESC "),
 
 		@javax.jdo.annotations.Query(name = "filtrarOrigen", language = "JDOQL", value = "SELECT "
@@ -61,7 +61,13 @@ import dom.sector.SectorRepositorio;
 		@javax.jdo.annotations.Query(name = "filtrarDestino", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.memo.Memo "
 				+ "WHERE "
-				+ "(destinoSector==:destino || otroDestino.toUpperCase().indexOf(:otroDestino)) "
+				+ "(destinoSector==:sectorDestino || otroDestino.toUpperCase().indexOf(:otroDestino)>=0) "
+				+ "ORDER BY fecha DESC, nro_memo DESC "),
+
+		@javax.jdo.annotations.Query(name = "filtrarOtroDestino", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.memo.Memo "
+				+ "WHERE "
+				+ "(otroDestino.toUpperCase().indexOf(:otroDestino)>=0) "
 				+ "ORDER BY fecha DESC, nro_memo DESC "),
 
 		@javax.jdo.annotations.Query(name = "filtrarFechaYOrigen", language = "JDOQL", value = "SELECT "
@@ -72,13 +78,25 @@ import dom.sector.SectorRepositorio;
 		@javax.jdo.annotations.Query(name = "filtrarFechaYDestino", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.memo.Memo "
 				+ "WHERE  (:desde <= fecha && fecha<=:hasta)&& "
-				+ "(destinoSector==:destino || otroDestino.toUpperCase().indexOf(:otroDestino))  "
+				+ "(destinoSector==:sectorDestino || otroDestino.toUpperCase().indexOf(:otroDestino)>=0)  "
+				+ "ORDER BY fecha DESC, nro_memo DESC "),
+
+		@javax.jdo.annotations.Query(name = "filtrarFechaYOtroDestino", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.memo.Memo "
+				+ "WHERE  (:desde <= fecha && fecha<=:hasta)&& "
+				+ "( otroDestino.toUpperCase().indexOf(:otroDestino)>=0)  "
 				+ "ORDER BY fecha DESC, nro_memo DESC "),
 
 		@javax.jdo.annotations.Query(name = "filtrarOrigenYDestino", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.memo.Memo "
-				+ "WHERE (sector==:origen && "
-				+ "(destinoSector==:destino || otroDestino.toUpperCase().indexOf(:otroDestino)))  "
+				+ "WHERE ((destinoSector==:sectorDestino) || (otroDestino.toUpperCase().indexOf(:otroDestino)>=0)) "
+				+ " && (sector==:origen) "
+				+ "ORDER BY fecha DESC, nro_memo DESC "),
+
+		@javax.jdo.annotations.Query(name = "filtrarOrigenYOtroDestino", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.memo.Memo "
+				+ "WHERE ((otroDestino.toUpperCase().indexOf(:otroDestino)>=0)) "
+				+ " && (sector==:origen) "
 				+ "ORDER BY fecha DESC, nro_memo DESC "),
 
 		@javax.jdo.annotations.Query(name = "filtrarPorFechas", language = "JDOQL", value = "SELECT "
