@@ -210,7 +210,7 @@ public class ResolucionesRepositorio {
 
 	@MemberOrder(sequence = "30")
 	@Named("Filtro por Sector y Fecha")
-	public List<Resoluciones> filtrarPorSector(
+	public List<Resoluciones> filtrarCompleto(
 			final @Named("Sector") @Optional Sector sector,
 			final @Named("Desde:") LocalDate desde,
 			final @Named("Hasta:") LocalDate hasta) {
@@ -237,7 +237,7 @@ public class ResolucionesRepositorio {
 
 	}
 
-	public List<Sector> choices0FiltrarPorSector() {
+	public List<Sector> choices0FiltrarCompleto() {
 		return sectorRepositorio.listarResoluciones();
 	}
 
