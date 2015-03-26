@@ -42,6 +42,10 @@ import dom.documento.Documento;
 				+ "FROM dom.nota.Nota "
 				+ "WHERE fecha == :fecha ORDER BY nro_nota DESC, fecha DESC "),
 
+		@javax.jdo.annotations.Query(name = "filtrarPorDescripcion", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota "
+				+ "WHERE descripcion.toUpperCase().indexOf(:descripcion)>=0 ORDER BY nro_nota DESC, fecha DESC "),
+
 		@javax.jdo.annotations.Query(name = "filtrarCompleto", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota  "
 				+ "WHERE sector==:origen && destino.toUpperCase().indexOf(:destino) >= 0 && :desde <= fecha && fecha<=:hasta"

@@ -209,18 +209,19 @@ public class NotaRepositorio {
 	public List<Nota> filtrarPorDescripcion(
 			final @Named("Descripcion") @MaxLength(255) @MultiLine(numberOfLines = 2) String descripcion) {
 
-		List<Nota> lista = this.listar();
-		Nota unaNota = new Nota();
-		List<Nota> listaRetorno = new ArrayList<Nota>();
-		for (int i = 0; i < lista.size(); i++) {
-			unaNota = new Nota();
-			unaNota = lista.get(i);
-			if (unaNota.getDescripcion().contains(descripcion.toUpperCase()))
-				listaRetorno.add(unaNota);
+		List<Nota> lista = this.container.allMatches(new QueryDefault<Nota>(
+				Nota.class, "filtrarPorDescripcion", "descripcion", descripcion
+						.toUpperCase()));
+		if (lista.isEmpty()) {
+			this.container.warnUser("No se encontraron Registros.");
 		}
-		if (listaRetorno.isEmpty())
-			this.container.warnUser("No se encotraron Registros.");
-		return listaRetorno;
+		return lista;
+	}
+
+	public String validateFiltrarPorDescripcion(final String descripcion) {
+		if (descripcion.trim() == "" || descripcion == null)
+			return "Por favor, ingrese una descripción.";
+		return null;
 	}
 
 	/**
