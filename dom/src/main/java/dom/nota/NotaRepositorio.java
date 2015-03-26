@@ -249,6 +249,7 @@ public class NotaRepositorio {
 	private String currentUserName() {
 		return container.getUser().getName();
 	}
+
 	@Hidden
 	public enum TipoSector {
 		ORIGEN("ORIGEN"), DESTINO("DESTINO");
@@ -272,53 +273,117 @@ public class NotaRepositorio {
 			return text;
 		}
 	}
-	@Hidden
-	public List<Nota> filtrarPorSector(final @Named("Tipo") TipoSector tipo,
-			final @Named("Sector") String sector) {
-		List<Nota> lista = new ArrayList<Nota>();
-		if (tipo.name().equalsIgnoreCase("ORIGEN")) {
-			// this.container.informUser("BUSCANDO "+tipo.name());
-			Sector sectorOrigen = sectorRepositorio.buscarPorNombre(sector);
-			lista = this.container.allMatches(new QueryDefault<Nota>(
-					Nota.class, "filtrarPorOrigen", "sector", sectorOrigen));
-		} else {
-			// this.container.informUser("BUSCANDO "+tipo.name());
-			lista = this.container.allMatches(new QueryDefault<Nota>(
-					Nota.class, "filtrarPorDestino", "sector", sector
-							.toUpperCase()));
-		}
-		if (lista.isEmpty())
-			this.container.informUser("NO SE ENCONTRARON RESULTADOS.");
 
-		return lista;
-	}
+	/*
+	 * @Hidden public List<Nota> filtrarPorSector(final @Named("Tipo")
+	 * TipoSector tipo, final @Named("Sector") String sector) { List<Nota> lista
+	 * = new ArrayList<Nota>(); if (tipo.name().equalsIgnoreCase("ORIGEN")) { //
+	 * this.container.informUser("BUSCANDO "+tipo.name()); Sector sectorOrigen =
+	 * sectorRepositorio.buscarPorNombre(sector); lista =
+	 * this.container.allMatches(new QueryDefault<Nota>( Nota.class,
+	 * "filtrarPorOrigen", "sector", sectorOrigen)); } else { //
+	 * this.container.informUser("BUSCANDO "+tipo.name()); lista =
+	 * this.container.allMatches(new QueryDefault<Nota>( Nota.class,
+	 * "filtrarPorDestino", "sector", sector .toUpperCase())); } if
+	 * (lista.isEmpty())
+	 * this.container.informUser("NO SE ENCONTRARON RESULTADOS.");
+	 * 
+	 * return lista; }
+	 */
+
 	@MemberOrder(sequence = "30")
 	@Named("Filtro por Sector y Fecha")
 	public List<Nota> filtrarCompleto(
-			final @Named("Sector Origen") Sector origen,
-			final @Named("Sector Destino") String destino,
-			final @Named("Desde:") LocalDate desde,
-			final @Named("Hasta:") LocalDate hasta) {
+			final @Optional @Named("Sector Origen") Sector origen,
+			final @Optional @Named("Sector Destino") String destino,
+			final @Optional @Named("Desde:") LocalDate desde,
+			final @Optional @Named("Hasta:") LocalDate hasta) {
 		List<Nota> lista = new ArrayList<Nota>();
-		if (origen == null && destino == null) {
-			lista = this.container.allMatches(new QueryDefault<Nota>(
-					Nota.class, "filtrarPorFechas", "desde", desde, "hasta",
-					hasta));
-		} else {
+
+		if (origen != null && destino != null && desde != null && hasta != null)// todos
 			lista = this.container.allMatches(new QueryDefault<Nota>(
 					Nota.class, "filtrarCompleto", "origen", origen, "destino",
-					destino, "desde", desde, "hasta", hasta));
+					destino.toUpperCase(), "desde", desde, "hasta", hasta));
+		else {
+			if (origen == null && destino == null && desde != null
+					&& hasta != null)// fechas
+				lista = this.filtrarPorFecha(desde, hasta);
+			else {
+				if (origen != null && destino == null && desde == null
+						&& hasta == null)// origen
+					lista = this.container.allMatches(new QueryDefault<Nota>(
+							Nota.class, "filtrarOrigen", "origen", origen));
+				else {
+					if (origen == null && destino != null && desde == null
+							&& hasta == null)// destino
+					{
+						lista = this.container
+								.allMatches(new QueryDefault<Nota>(Nota.class,
+										"filtrarDestino", "destino", destino
+												.toUpperCase()));
+						this.container.warnUser("DESTINO"
+								+ destino.toUpperCase());
+						;
+					} else {
+						if (origen != null && destino == null && desde != null
+								&& hasta != null)// fecha y
+													// origen
+							lista = this.container
+									.allMatches(new QueryDefault<Nota>(
+											Nota.class, "filtrarFechaYOrigen",
+											"origen", origen, "desde", desde,
+											"hasta", hasta));
+						else {
+							if (origen == null && destino != null
+									&& desde != null && hasta != null)// fecha
+																		// y
+																		// destino
+								lista = this.container
+										.allMatches(new QueryDefault<Nota>(
+												Nota.class,
+												"filtrarFechaYDestino",
+												"destino", destino
+														.toUpperCase(),
+												"desde", desde, "hasta", hasta));
+							else if (origen != null && destino != null
+									&& desde == null && hasta == null)// origen
+																		// y
+																		// destino
+								lista = this.container
+										.allMatches(new QueryDefault<Nota>(
+												Nota.class,
+												"filtrarOrigenYDestino",
+												"origen", origen, "destino",
+												destino.toUpperCase()));
+
+						}
+					}
+				}
+			}
 		}
+
 		if (lista.isEmpty())
 			this.container.informUser("NO SE ENCONTRARON RESULTADOS.");
 
 		return lista;
 	}
+
+	public String validateFiltrarCompleto(final Sector origen,
+			final String destino, final LocalDate desde, final LocalDate hasta) {
+		if ((desde != null && hasta == null))
+			return "Por favor, ingrese una fecha final estimativa.";
+		else if (desde == null && hasta != null)
+			return "Por favor, ingrese una fecha inicial estimativa.";
+		else if (origen == null && destino == null && desde == null
+				&& hasta == null)
+			return "Por favor, ingrese datos para realizar la busqueda.";
+		return null;
+	}
+
 	public List<Sector> choices0FiltrarCompleto() {
 		List<Sector> lista = sectorRepositorio.listar();
 		return lista;
 	}
-	
 
 	/*********************************************************************************
 	 * PARA MIGRAR
