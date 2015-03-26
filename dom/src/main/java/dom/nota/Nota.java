@@ -41,14 +41,36 @@ import dom.documento.Documento;
 		@javax.jdo.annotations.Query(name = "esNuevoAnio", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota "
 				+ "WHERE fecha == :fecha ORDER BY nro_nota DESC, fecha DESC "),
+
 		@javax.jdo.annotations.Query(name = "filtrarCompleto", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota  "
-				+ "WHERE sector==:origen && destino==:destino && :desde <= fecha && fecha<=:hasta"
+				+ "WHERE sector==:origen && destino.toUpperCase().indexOf(:destino) >= 0 && :desde <= fecha && fecha<=:hasta"
 				+ " ORDER BY fecha DESC, nro_nota DESC  "),
 
-		@javax.jdo.annotations.Query(name = "filtrarPorDestino", language = "JDOQL", value = "SELECT "
-				+ "FROM dom.nota.Nota "
-				+ "WHERE destino.toUpperCase.equals(:sector) ORDER BY fecha DESC, nro_nota DESC "),
+		@javax.jdo.annotations.Query(name = "filtrarOrigen", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota  "
+				+ "WHERE sector==:origen"
+				+ " ORDER BY fecha DESC, nro_nota DESC  "),
+
+		@javax.jdo.annotations.Query(name = "filtrarDestino", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota  "
+				+ "WHERE  destino.toUpperCase().indexOf(:destino) >= 0"
+				+ " ORDER BY fecha DESC, nro_nota DESC  "),
+
+		@javax.jdo.annotations.Query(name = "filtrarFechaYOrigen", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota  "
+				+ "WHERE sector==:origen && :desde <= fecha && fecha<=:hasta"
+				+ " ORDER BY fecha DESC, nro_nota DESC  "),
+
+		@javax.jdo.annotations.Query(name = "filtrarFechaYDestino", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota  "
+				+ "WHERE destino.toUpperCase().indexOf(:destino) >= 0 && :desde <= fecha && fecha<=:hasta"
+				+ " ORDER BY fecha DESC, nro_nota DESC  "),
+
+		@javax.jdo.annotations.Query(name = "filtrarOrigenYDestino", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.nota.Nota  "
+				+ "WHERE sector==:origen && destino.toUpperCase().indexOf(:destino) >= 0 "
+				+ " ORDER BY fecha DESC, nro_nota DESC  "),
 
 		@javax.jdo.annotations.Query(name = "filtrarPorFechas", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.nota.Nota "
@@ -63,7 +85,7 @@ public class Nota extends Documento {
 	// //////////////////////////////////////
 
 	public String title() {
-		return "Nota Nº " + String.format("%04d",this.getNro_nota()) ;
+		return "Nota Nº " + String.format("%04d", this.getNro_nota());
 	}
 
 	public String iconName() {
@@ -95,12 +117,13 @@ public class Nota extends Documento {
 	 */
 	@SuppressWarnings("unused")
 	private String nro;
+
 	@Disabled
 	@MemberOrder(sequence = "0")
 	@Named("Nro")
 	@NotPersisted
 	public String getNro() {
-		return 	String.format("%04d",this.getNro_nota()); 
+		return String.format("%04d", this.getNro_nota());
 	}
 
 	public void setNro(String nro) {
@@ -133,8 +156,6 @@ public class Nota extends Documento {
 		else
 			return true;
 	}
-
-
 
 	@javax.inject.Inject
 	private NotaRepositorio notaRepositorio;
