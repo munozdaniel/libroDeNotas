@@ -286,40 +286,98 @@ public class MemoRepositorio {
 	@MemberOrder(sequence = "30")
 	@Named("Filtro por Sector y Fecha")
 	public List<Memo> filtrarCompleto(
-			final @DescribedAs("Seleccione un Destino") @Named("Sector Origen") @Optional Sector sectorOrigen,
+			final @DescribedAs("Seleccione un Destino") @Named("Sector Origen") @Optional Sector origen,
 			final @DescribedAs("Seleccione un Origen") @Named("Sector Destino") @Optional String destino,
-			final @Named("Desde:") LocalDate desde,
-			final @Named("Hasta:") LocalDate hasta) {
-
-		if (sectorOrigen == null && (destino == null || destino.trim() == "")) {
-			final List<Memo> lista = this.container
-					.allMatches(new QueryDefault<Memo>(Memo.class,
-							"filtrarPorFechas", "desde", desde, "hasta", hasta));
-			if (lista.isEmpty()) {
-				this.container.informUser("NO SE ENCONTRARON REGISTROS.");
-			}
-			return lista;
-		} else {
-			List<Memo> lista = new ArrayList<Memo>();
-			Sector sectorDestino = sectorRepositorio.buscarPorNombre(destino);
+			final @Optional @Named("Desde:") LocalDate desde,
+			final @Optional @Named("Hasta:") LocalDate hasta) {
+		List<Memo> lista = new ArrayList<Memo>();
+		Sector sectorDestino = sectorRepositorio.buscarPorNombre(destino);
+		// Todos ===========================================================
+		if (origen != null && destino != null && desde != null && hasta != null)
 			lista = this.container.allMatches(new QueryDefault<Memo>(
-					Memo.class, "filtrarCompleto", "origen", sectorOrigen,
-					"destino", sectorDestino, "otroDestino", destino, "desde",
-					desde, "hasta", hasta));
-			if (lista.isEmpty())
-				this.container.informUser("NO SE ENCONTRARON REGISTROS.");
+					Memo.class, "filtrarCompleto", "origen", origen,
+					"sectorDestino", sectorDestino, "otroDestino", destino
+							.toUpperCase(), "desde", desde, "hasta", hasta));
 
-			return lista;
+		else {
+			// solo las fechas ============================================
+			if (origen == null && destino == null && desde != null
+					&& hasta != null)
+				lista = this.filtrarPorFecha(desde, hasta);
+			else {
+				// solo origen =============================================
+				if (origen != null && destino == null && desde == null
+						&& hasta == null)
+					lista = this.container.allMatches(new QueryDefault<Memo>(
+							Memo.class, "filtrarOrigen", "origen", origen));
+				else {
+					// solo destino ========================================
+					if (origen == null && destino != null && desde == null
+							&& hasta == null) {
+						lista = this.container
+								.allMatches(new QueryDefault<Memo>(Memo.class,
+										"filtrarDestino", "sectorDestino",
+										sectorDestino, "otroDestino", destino
+												.toUpperCase()));
+
+					} else {
+						// fecha y Origen ===================================
+						if (origen != null && destino == null && desde != null
+								&& hasta != null)
+							lista = this.container
+									.allMatches(new QueryDefault<Memo>(
+											Memo.class, "filtrarFechaYOrigen",
+											"origen", origen, "desde", desde,
+											"hasta", hasta));
+						else {
+							// fecha y Destino ==============================
+							if (origen == null && destino != null
+									&& desde != null && hasta != null)
+								lista = this.container
+										.allMatches(new QueryDefault<Memo>(
+												Memo.class,
+												"filtrarFechaYDestino",
+												"otroDestino", "sectorDestino",
+												sectorDestino, destino
+														.toUpperCase(),
+												"desde", desde, "hasta", hasta));
+							else {
+								// Origen y Destino ============================
+								if (origen != null && destino != null
+										&& desde == null && hasta == null)
+									lista = this.container
+											.allMatches(new QueryDefault<Memo>(
+													Memo.class,
+													"filtrarOrigenYDestino",
+													"origen", origen,
+													"sectorDestino",
+													sectorDestino,
+													"otroDestino", destino
+															.toUpperCase()));
+							}
+
+						}
+					}
+				}
+			}
 		}
+
+		if (lista.isEmpty())
+			this.container.informUser("NO SE ENCONTRARON REGISTROS.");
+
+		return lista;
 
 	}
 
-	public String validateFiltrarCompleto(Sector sectorOrigen, String destino,
+	public String validateFiltrarCompleto(Sector origen, String destino,
 			LocalDate desde, LocalDate hasta) {
-		if (sectorOrigen == null && (destino != null || destino != ""))
-			return "Por favor ingrese un sector de origen.";
-		if (sectorOrigen != null && (destino == null || destino == ""))
-			return "Por favor ingrese un sector de destino.";
+		if ((desde != null && hasta == null))
+			return "Por favor, ingrese una fecha final estimativa.";
+		else if (desde == null && hasta != null)
+			return "Por favor, ingrese una fecha inicial estimativa.";
+		else if (origen == null && destino == null && desde == null
+				&& hasta == null)
+			return "Por favor, ingrese datos para realizar la busqueda.";
 		return null;
 	}
 
