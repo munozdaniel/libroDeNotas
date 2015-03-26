@@ -16,6 +16,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.ObjectType;
+import org.joda.time.LocalDate;
 
 import dom.documento.Documento;
 import dom.sector.Sector;
@@ -100,6 +101,19 @@ public class Resoluciones extends Documento {
 
 	public void setNro(String nro) {
 		this.nro = nro;
+	}
+	private LocalDate fechaCreacion;
+
+	@javax.jdo.annotations.Column(allowsNull = "false")
+	@Named("Fecha de Creacion")
+	@Hidden
+	@MemberOrder(sequence = "1")
+	public LocalDate getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	public void setFechaCreacion(LocalDate fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
 	}
 
 	@Named("Eliminar")
