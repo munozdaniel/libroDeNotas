@@ -47,6 +47,11 @@ import dom.sector.SectorRepositorio;
 		@javax.jdo.annotations.Query(name = "recuperarUltimo", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.memo.Memo " + "WHERE  (ultimo == true)"),
 
+		@javax.jdo.annotations.Query(name = "filtrarPorDescripcion", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.memo.Memo "
+				+ "WHERE descripcion.toUpperCase().indexOf(:descripcion)>=0 "
+				+ "ORDER BY fecha DESC, nro_memo DESC "),
+
 		@javax.jdo.annotations.Query(name = "filtrarCompleto", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.memo.Memo "
 				+ "WHERE  (:desde <= fecha && fecha<=:hasta)&&(sector==:origen && "

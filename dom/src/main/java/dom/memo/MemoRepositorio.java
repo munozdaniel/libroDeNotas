@@ -246,18 +246,19 @@ public class MemoRepositorio {
 	public List<Memo> filtrarPorDescripcion(
 			final @Named("Descripcion") @MaxLength(255) @MultiLine(numberOfLines = 2) String descripcion) {
 
-		List<Memo> lista = this.listar();
-		Memo unMemo = new Memo();
-		List<Memo> listaRetorno = new ArrayList<Memo>();
-		for (int i = 0; i < lista.size(); i++) {
-			unMemo = new Memo();
-			unMemo = lista.get(i);
-			if (unMemo.getDescripcion().contains(descripcion.toUpperCase()))
-				listaRetorno.add(unMemo);
+		List<Memo> lista = this.container.allMatches(new QueryDefault<Memo>(
+				Memo.class, "filtrarPorDescripcion", "descripcion", descripcion
+						.toUpperCase()));
+		if (lista.isEmpty()) {
+			this.container.warnUser("No se encontraron Registros.");
 		}
-		if (listaRetorno.isEmpty())
-			this.container.warnUser("No se encotraron Registros.");
-		return listaRetorno;
+		return lista;
+	}
+
+	public String validateFiltrarPorDescripcion(final String descripcion) {
+		if (descripcion.trim() == "" || descripcion == null)
+			return "Por favor, ingrese una descripción.";
+		return null;
 	}
 
 	/**
