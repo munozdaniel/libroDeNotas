@@ -109,7 +109,7 @@ public class ResolucionesRepositorio {
 			unaResolucion.setAdjuntar(adjunto);
 			unaResolucion.setTime(LocalDateTime.now().withMillisOfSecond(3));
 			unaResolucion.setSector(sector);
-
+			unaResolucion.setFechaCreacion(LocalDate.now());
 			container.persistIfNotAlready(unaResolucion);
 			container.flush();
 			return unaResolucion;

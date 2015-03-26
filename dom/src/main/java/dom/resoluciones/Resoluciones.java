@@ -104,7 +104,7 @@ public class Resoluciones extends Documento {
 	}
 	private LocalDate fechaCreacion;
 
-	@javax.jdo.annotations.Column(allowsNull = "false")
+	@javax.jdo.annotations.Column(allowsNull = "true")
 	@Named("Fecha de Creacion")
 	@Hidden
 	@MemberOrder(sequence = "1")
