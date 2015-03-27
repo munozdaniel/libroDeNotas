@@ -43,7 +43,7 @@ public class MemoRepositorio {
 	public String iconName() {
 		return "memo";
 	}
-
+	//FIXME: HABRIA QUE QUITAR OTRO SECTOR. CHEQUEAR QUE NO HAYA PROBLEMAS AL HACERLO. EN NOTA TMB.
 	@Named("Enviar")
 	@MemberOrder(sequence = "10")
 	public Memo addMemo(
@@ -423,8 +423,8 @@ public class MemoRepositorio {
 		return null;
 	}
 
-	public List<Sector> choices0FiltrarCompleto() {
-		return sectorRepositorio.listarResoluciones();
+	public List<Sector> choices0FiltrarCompleto() {//Habria que eliminar el primer elemento? OTRO SECTOR? o eliminarlo de la BD
+		return sectorRepositorio.listar();
 	}
 
 	/******************************************************************************
