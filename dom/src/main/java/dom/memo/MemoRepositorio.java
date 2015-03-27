@@ -297,10 +297,18 @@ public class MemoRepositorio {
 
 		// Todos ===========================================================
 		if (origen != null && destino != null && desde != null && hasta != null)
-			lista = this.container.allMatches(new QueryDefault<Memo>(
-					Memo.class, "filtrarCompleto", "origen", origen,
-					"sectorDestino", sectorDestino, "otroDestino", destino
-							.toUpperCase(), "desde", desde, "hasta", hasta));
+			if (sectorDestino != null)
+				lista = this.container
+						.allMatches(new QueryDefault<Memo>(Memo.class,
+								"filtrarCompleto", "origen", origen,
+								"sectorDestino", sectorDestino, "otroDestino",
+								destino.toUpperCase(), "desde", desde, "hasta",
+								hasta));
+			else
+				lista = this.container.allMatches(new QueryDefault<Memo>(
+						Memo.class, "filtrarCompletoOtroDestino", "origen",
+						origen, "otroDestino", destino.toUpperCase(), "desde",
+						desde, "hasta", hasta));
 
 		else {
 			// solo las fechas ============================================

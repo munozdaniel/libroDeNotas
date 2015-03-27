@@ -54,8 +54,14 @@ import dom.sector.SectorRepositorio;
 
 		@javax.jdo.annotations.Query(name = "filtrarCompleto", language = "JDOQL", value = "SELECT "
 				+ "FROM dom.memo.Memo "
-				+ "WHERE  (:desde <= fecha && fecha<=:hasta)&&(sector==:origen && "
-				+ "(destinoSector==:sectorDestino || otroDestino.toUpperCase().indexOf(:otroDestino)>=0))  "
+				+ "WHERE  :desde <= fecha && fecha<=:hasta && sector==:origen && "
+				+ "(destinoSector==:sectorDestino || otroDestino.toUpperCase().indexOf(:otroDestino)>=0)  "
+				+ "ORDER BY fecha DESC, nro_memo DESC "),
+				
+		@javax.jdo.annotations.Query(name = "filtrarCompletoOtroDestino", language = "JDOQL", value = "SELECT "
+				+ "FROM dom.memo.Memo "
+				+ "WHERE  :desde <= fecha && fecha<=:hasta && sector==:origen && "
+				+ "(otroDestino.toUpperCase().indexOf(:otroDestino)>=0)  "
 				+ "ORDER BY fecha DESC, nro_memo DESC "),
 
 		@javax.jdo.annotations.Query(name = "filtrarOrigen", language = "JDOQL", value = "SELECT "
